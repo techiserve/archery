@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
         User::create([
             'name' => 'Vincent', // Change name as needed
             'email' => 'v.mhokore@techiserve.com', // Change email as needed
-            'password' => Hash::make('password123'), // Make sure the password is hashed
+            'password' => Hash::make('password12345678'), // Make sure the password is hashed
         ]);
     }
 }
