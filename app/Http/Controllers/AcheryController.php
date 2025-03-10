@@ -41,9 +41,7 @@ class AcheryController extends Controller
         $archer->currentGrading = $request->grading;
         $archer->createdBy = $user;    
         $archer->save();
-
-
-        
+      
         if($archer){
 
           return redirect()->back()->with('success', 'Archer created successfully!');

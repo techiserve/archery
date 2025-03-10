@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('arrow6')->nullable();
             $table->string('roundtotal')->nullable();
             $table->string('cumtotal')->nullable();
+            $table->string('grandtotal')->nullable();
             $table->string('time')->nullable();
             $table->string('createdBy')->nullable();
             $table->string('updatedBy')->nullable();

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->integer('event_id')->nullable();
             $table->string('archer_id')->nullable();
             $table->string('arrow1')->nullable();
+            $table->string('archergrading_id')->nullable();
             $table->string('arrow2')->nullable();
             $table->string('arrow3')->nullable();
             $table->string('arrow4')->nullable();
