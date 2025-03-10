@@ -158,7 +158,7 @@
 
 
                         <!-- Layouts -->
-                        <li class="menu-item">
+                        <!-- <li class="menu-item">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon icon-base bx bx-user"></i>
                 <div data-i18n="Layouts">Users</div>
@@ -182,7 +182,7 @@
                 </li>
                
               </ul>
-            </li>
+            </li> -->
 
 
 
