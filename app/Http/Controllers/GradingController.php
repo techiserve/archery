@@ -141,6 +141,8 @@ class GradingController extends Controller
          $grading->createdBy = $request->user;   
          $grading->save(); 
 
+        // dd($grading);
+
          $round1 = new Round1();
          $round1->archergrading_id = $grading->id;
          $round1->event_id = $request->event;
@@ -295,7 +297,7 @@ class GradingController extends Controller
 
           ]);
              
-             return redirect()->route('events.manage')->with('success', 'Archer passed and has been upgraded!');
+             return redirect()->route('events.showEvent', ['id' => $request->event])->with('success', 'Archer passed and has been upgraded!');
 
          }else{
 

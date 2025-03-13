@@ -65,7 +65,7 @@
           <ul class="menu-inner py-1">
             <!-- Page -->
             <li class="menu-item active">
-              <a href="index.html" class="menu-link">
+              <a href="/dashboard" class="menu-link">
                 <i class="menu-icon icon-base bx bx-home-smile"></i>
                 <div data-i18n="Page 1">Dashboard</div>
               </a>
@@ -88,11 +88,11 @@
                     <div data-i18n="Content navbar">Manage Archers</div>
                   </a>
                 </li>
-                <li class="menu-item">
+                <!-- <li class="menu-item">
                   <a href="/archers/metadata" class="menu-link">
                     <div data-i18n="Content nav + Sidebar">Meta Data</div>
                   </a>
-                </li>
+                </li> -->
         
               </ul>
             </li>
@@ -116,13 +116,13 @@
                     <div data-i18n="Content navbar">Grading</div>
                   </a>
                 </li>
-                <li class="menu-item">
+                <!-- <li class="menu-item">
                   <a href="/grading/metadata" class="menu-link">
                     <div data-i18n="Content nav + Sidebar">Meta Data</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                    
+                     -->
               </ul>
             </li>
 

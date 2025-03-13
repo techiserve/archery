@@ -21,29 +21,33 @@
                     <tr>
                      
                         <th>Name</th>
-                        <th>Surname</th>
-                        <th>Dob</th>
+                        <th>Event</th>
+                        <th>Date</th>
                         <th>Category</th>
                         <th>Grading</th>
+                        <th>Grading for</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($all as $pple )  
                     <tr>
-                           
-                      
+
                         <td>{{ $pple->name }}</td>
-                        <td>{{ $pple->surname }}</td>
-                        <td>{{ $pple->dob }}</td>
+                        @foreach($events as $event)
+                        @if($pple->event == $event->id)
+                        <td>{{ $event->name }}</td>
+                        @endif
+                        @endforeach
+                        <td>{{ $pple->date }}</td>
                         <td>{{ $pple->ageCategory }}</td>
                         <td>{{ $pple->currentGrading }}</td>
-                        <td>     <a  href="/viewmore/{{$pple->id}}" class='btn btn-success btn-sm' style='color: white;'>
+                        <td>{{ $pple->gradingfor }}</td>
+                        <td>     <a  href="/historydetails/{{$pple->id}}" class='btn btn-success btn-sm' style='color: white;'>
                       <span class='fa fa-pencil'></span>
                       <span class='hidden-sm hidden-sm hidden-md'>View More</span>
                    </a>&nbsp;</td>
-                
-                    
+                 
                     </tr>
                     @endforeach
                 </tbody>
