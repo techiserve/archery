@@ -137,11 +137,16 @@ class GradingController extends Controller
          $grading->currentGrading = $request->curentgrading;
          $grading->gradingfor = $request->gradefor;
          $grading->totalScore = $request->figure;
+
+         $grading->withKhatrah = $request->has('khatrah') ? 1 : 0;
+         $grading->arrowinhand = $request->has('timed') ? 1 : 0;
+         $grading->timed = $request->has('inhand') ? 1 : 0;
+         $grading->thumbring =$request->has('thumb') ? 1 : 0;
+
          $grading->scoredBy = $request->user;
          $grading->createdBy = $request->user;   
          $grading->save(); 
 
-        // dd($grading);
 
          $round1 = new Round1();
          $round1->archergrading_id = $grading->id;
@@ -296,14 +301,17 @@ class GradingController extends Controller
             'currentGrading' => $request->gradefor,
 
           ]);
+         // dd('done');
              
              return redirect()->route('events.showEvent', ['id' => $request->event])->with('success', 'Archer passed and has been upgraded!');
 
          }else{
 
-            return back()->with('error', 'Archer! failed to be upgraded');
+        //  dd('not done');
+            return redirect()->route('events.showEvent', ['id' => $request->event])->with('error', 'Archer failed to be upgraded!');
       
          }
+      //  dd('done');
 
       
         
