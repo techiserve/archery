@@ -6,6 +6,7 @@ use App\Models\MinScores;
 use App\Models\Archer;
 use App\Models\Archergrading;
 use App\Models\Eventcategory;
+use App\Models\Eventcategoryscore;
 use App\Models\Event;
 use App\Models\Round1;
 use App\Models\Round2;
@@ -324,18 +325,30 @@ class GradingController extends Controller
 
     public function storeCategory(Request $request)
     {
+
+     // dd($request->all());
         $user = Auth::user()->id;
        
         $archer = new Eventcategory();
         $archer->name = $request->name;
         $archer->desc = $request->desc;
-        $archer->score1 = $request->score1;
-        $archer->score2 = $request->score2;
-        $archer->score3 = $request->score3;
+        $archer->rounds = $request->rounds;
+        $archer->arrows = $request->arrows;
         $archer->createdBy = $user;    
         $archer->save();
 
-      
+       $scores = $request->input('score'); 
+
+       foreach ($scores as $score) {
+         
+      //  dd($score);
+
+        $event = new Eventcategoryscore();
+        $event->eventcategory_id = $archer->id;
+        $event->score = $score;
+        $event->save();
+       
+       }
   
           if($archer){
           

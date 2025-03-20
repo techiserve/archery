@@ -31,19 +31,22 @@
                 <tbody>
                     @foreach ($all as $pple )  
                     <tr>
-                           
-                      
+   
                         <td>{{ $pple->name }}</td>
                         <td>{{ $pple->surname }}</td>
                         <td>{{ $pple->dob }}</td>
                         <td>{{ $pple->ageCategory }}</td>
-                        <td>{{ $pple->currentGrading }}</td>
+                        <td>{{ $pple->currentGradingDominant }}</td>
                         <td>     <a  href="/viewmore/{{$pple->id}}" class='btn btn-success btn-sm' style='color: white;'>
                       <span class='fa fa-pencil'></span>
                       <span class='hidden-sm hidden-sm hidden-md'>View More</span>
-                   </a>&nbsp;</td>
+                   </a>&nbsp;
                 
-                    
+                   <a  href="/archer/edit/{{$pple->id}}" class='btn btn-info btn-sm' style='color: white;'>
+                      <span class='fa fa-pencil'></span>
+                      <span class='hidden-sm hidden-sm hidden-md'>Edit Archer</span>
+                   </a>&nbsp;</td>
+                               
                     </tr>
                     @endforeach
                 </tbody>

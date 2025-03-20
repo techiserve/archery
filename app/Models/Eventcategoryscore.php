@@ -4,16 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Eventcategory extends Model
+class Eventcategoryscore extends Model
 {
-    //
     protected $fillable = [
 
-        'name',
-        'desc',
-        'rounds',
-        'arrows',
-        'score3',
+        'eventcategory_id',
+        'score',
         'createdBy',
         'updatedBy',
         'status'

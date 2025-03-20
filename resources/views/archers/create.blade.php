@@ -33,7 +33,8 @@
                           <input
                             type="date"
                             name="dob" 
-                            id="multicol-password"
+                            id="dob"
+                            onchange="calculateAgeDetails()" 
                             class="form-control"
                             placeholder=""
                             aria-describedby="multicol-password2" />
@@ -42,13 +43,14 @@
                         </div>
                       </div>
                     </div>
+                    
                     <div class="col-md-6">
                       <div class="form-password-toggle">
-                        <label class="form-label" for="multicol-confirm-password">Category</label>
+                        <label class="form-label" for="multicol-confirm-password">Email</label>
                         <div class="input-group input-group-merge">
                           <input
-                            type="text"
-                            name="category" 
+                            type="email"
+                            name="email" 
                             id="multicol-confirm-password"
                             class="form-control"
                             placeholder=""
@@ -63,13 +65,138 @@
                  </br>
                   <div class="row g-6">
                     <div class="col-md-6">
-                      <label class="form-label" for="multicol-first-name">Current Grading</label>
-                      <input type="text" id="multicol-first-name" name="grading" class="form-control" placeholder="" />
+                      <label class="form-label" for="multicol-first-name">Current Grading Dominant</label>
+                      <select class="form-select" id="exampleFormControlSelect1" name="cgd" aria-label="Default select example">
+                           <option value="SC1">SC1</option>   
+                           <option value="SC2">SC2</option>
+                           <option value="SC3">SC3</option>  
+                           <option value="SJ1">SJ1</option>   
+                           <option value="SJ2">SJ2</option>
+                           <option value="SJ3">SJ3</option>  
+                           <option value="SA1">SA1</option>   
+                           <option value="SA2">SA2</option>
+                           <option value="SA3">SA3</option> 
+
+                           <option value="AC1">AC1</option>   
+                           <option value="AC2">AC2</option>
+                           <option value="AC3">AC3</option>  
+                           <option value="AJ1">AJ1</option>   
+                           <option value="AJ2">AJ2</option>
+                           <option value="AJ3">AJ3</option>  
+                           <option value="AA1">AA1</option>   
+                           <option value="AA2">AA2</option>
+                           <option value="AA3">AA3</option> 
+
+                           <option value="MC1">MC1</option>   
+                           <option value="MC2">MC2</option>
+                           <option value="MC3">MC3</option>  
+                           <option value="MJ1">MJ1</option>   
+                           <option value="MJ2">MJ2</option>
+                           <option value="MJ3">MJ3</option>  
+                           <option value="MA1">MA1</option>   
+                           <option value="MA2">MA2</option>
+                           <option value="MA3">MA3</option> 
+                     </select>
                     </div>
                    
-                  
+                    <div class="col-md-6">
+                      <label class="form-label" for="multicol-first-name">Current Grading Weak</label>
+                      <select class="form-select" id="exampleFormControlSelect1" name="cgw" aria-label="Default select example">
+                           <option value="SC1">SC1</option>   
+                           <option value="SC2">SC2</option>
+                           <option value="SC3">SC3</option>  
+                           <option value="SJ1">SJ1</option>   
+                           <option value="SJ2">SJ2</option>
+                           <option value="SJ3">SJ3</option>  
+                           <option value="SA1">SA1</option>   
+                           <option value="SA2">SA2</option>
+                           <option value="SA3">SA3</option> 
+
+                           <option value="AC1">AC1</option>   
+                           <option value="AC2">AC2</option>
+                           <option value="AC3">AC3</option>  
+                           <option value="AJ1">AJ1</option>   
+                           <option value="AJ2">AJ2</option>
+                           <option value="AJ3">AJ3</option>  
+                           <option value="AA1">AA1</option>   
+                           <option value="AA2">AA2</option>
+                           <option value="AA3">AA3</option> 
+
+                           <option value="MC1">MC1</option>   
+                           <option value="MC2">MC2</option>
+                           <option value="MC3">MC3</option>  
+                           <option value="MJ1">MJ1</option>   
+                           <option value="MJ2">MJ2</option>
+                           <option value="MJ3">MJ3</option>  
+                           <option value="MA1">MA1</option>   
+                           <option value="MA2">MA2</option>
+                           <option value="MA3">MA3</option> 
+                     </select>
+                    </div>
+                    </div>  
+                    </br>
                    
+                    <div class="row g-6">
+                    <div class="col-md-6">
+                      <label class="form-label" for="multicol-first-name">Current Proficiency</label>
+              
+                      <select class="form-select" id="exampleFormControlSelect1" name="cp" aria-label="Default select example">
+                           <option value="SC1">SC1</option>   
+                           <option value="SC2">SC2</option>
+                           <option value="SC3">SC3</option>  
+                           <option value="SJ1">SJ1</option>   
+                           <option value="SJ2">SJ2</option>
+                           <option value="SJ3">SJ3</option>  
+                           <option value="SA1">SA1</option>   
+                           <option value="SA2">SA2</option>
+                           <option value="SA3">SA3</option> 
+
+                           <option value="AC1">AC1</option>   
+                           <option value="AC2">AC2</option>
+                           <option value="AC3">AC3</option>  
+                           <option value="AJ1">AJ1</option>   
+                           <option value="AJ2">AJ2</option>
+                           <option value="AJ3">AJ3</option>  
+                           <option value="AA1">AA1</option>   
+                           <option value="AA2">AA2</option>
+                           <option value="AA3">AA3</option> 
+
+                           <option value="MC1">MC1</option>   
+                           <option value="MC2">MC2</option>
+                           <option value="MC3">MC3</option>  
+                           <option value="MJ1">MJ1</option>   
+                           <option value="MJ2">MJ2</option>
+                           <option value="MJ3">MJ3</option>  
+                           <option value="MA1">MA1</option>   
+                           <option value="MA2">MA2</option>
+                           <option value="MA3">MA3</option> 
+                     </select> 
+           
+                    </div>
+                   
+                    <div class="col-md-6">
+                      <label class="form-label" for="multicol-first-name">Age Group</label>
+                      <input type="text" id="ageCategory"  class="form-control"  name="ag" readonly>
+                    </div>
+                    </div>  
+                    </br>
+                    <div class="row g-6">
+                    <div class="col-md-6">
+                      <label class="form-label" for="multicol-first-name">Age Group Proficiency</label>
+                      <input type="text" id="ageGroup"  class="form-control"  name="agp" readonly>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label" for="multicol-first-name">Dominant Hand</label>
+                      <select class="form-select" id="exampleFormControlSelect1" name="dh" aria-label="Default select example">
+ 
+                           <option value="Left">Left</option>
+                           <option value="Right">Right</option>  
+                     </select>
+                    </div>
+
                   </div>
+
+                  
                   <div class="pt-6">
                     <button type="submit" class="btn btn-primary me-3">Submit</button>
                     <button type="reset" class="btn btn-label-secondary">Cancel</button>
@@ -81,3 +208,55 @@
              
 </div>
 @endsection
+<script>
+        function calculateAgeDetails() {
+            const dobInput = document.getElementById("dob").value;
+            const ageCategoryInput = document.getElementById("ageCategory");
+            const ageGroupInput = document.getElementById("ageGroup");
+
+            if (!dobInput) return; // Exit if no date is selected
+
+            const dob = new Date(dobInput);
+            const today = new Date();
+
+            // Calculate exact age
+            let age = today.getFullYear() - dob.getFullYear();
+            const monthDiff = today.getMonth() - dob.getMonth();
+
+            // Adjust age if birthdate hasn't occurred yet this year
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+                age--;
+            }
+
+            // Calculate "Year of Living"
+            let yearOfLiving = today.getFullYear() - dob.getFullYear() + 1; // +1 ensures it's their current living year
+
+            // Determine Age Category (Exact Age)
+            let category = "";
+            if (age >= 5 && age <= 12) {
+                category = "Cub";
+            } else if (age >= 13 && age <= 16) {
+                category = "Junior";
+            } else if (age >= 17) {
+                category = "Adult";
+            } else {
+                category = "Too Young";
+            }
+
+            // Determine Age Group Proficiency (Year of Living)
+            let proficiency = "";
+            if (yearOfLiving >= 5 && yearOfLiving <= 12) {
+                proficiency = "Cub";
+            } else if (yearOfLiving >= 13 && yearOfLiving <= 16) {
+                proficiency = "Junior";
+            } else if (yearOfLiving >= 17) {
+                proficiency = "Adult";
+            } else {
+                proficiency = "Too Young";
+            }
+
+            // Populate the fields
+            ageCategoryInput.value = category;
+            ageGroupInput.value = proficiency;
+        }
+    </script>

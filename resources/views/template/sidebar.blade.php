@@ -112,8 +112,13 @@
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="/grading/grade" class="menu-link">
-                    <div data-i18n="Content navbar">Grading</div>
+                  <a href="/events/manage" class="menu-link">
+                    <div data-i18n="Content navbar">Capture Scores</div>
+                  </a>
+                </li>
+                <li class="menu-item">
+                  <a href="/events/viewscore" class="menu-link">
+                    <div data-i18n="Content navbar">View Scores</div>
                   </a>
                 </li>
                 <!-- <li class="menu-item">
@@ -146,10 +151,11 @@
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="/events/manage" class="menu-link">
-                    <div data-i18n="Content navbar">Scoring Management</div>
+                  <a href="/events/create" class="menu-link">
+                    <div data-i18n="Collapsed menu">View Events</div>
                   </a>
                 </li>
+               
              
                 <li class="menu-item">
                     

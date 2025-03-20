@@ -17,8 +17,12 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('dob')->nullable();
             $table->string('ageCategory')->nullable();
-            $table->string('currentGrading')->nullable();
-            $table->string('style')->nullable();
+            $table->string('currentGradingDominant')->nullable();
+            $table->string('currentGradingWeak')->nullable();
+            $table->string('currentProficiency')->nullable();
+            $table->string('agegroupProficiency')->nullable();
+            $table->string('email')->nullable();
+            $table->string('hand')->nullable();
             $table->string('createdBy')->nullable();
             $table->string('updatedBy')->nullable();
             $table->string('status')->nullable();

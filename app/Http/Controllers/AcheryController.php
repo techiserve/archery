@@ -53,7 +53,13 @@ class AcheryController extends Controller
         $archer->surname = $request->surname;
         $archer->dob = $request->dob;
         $archer->ageCategory = $request->category;
-        $archer->currentGrading = $request->grading;
+        $archer->currentGradingWeak = $request->cgw;
+        $archer->currentGradingDominant = $request->cgd;
+        $archer->hand = $request->hand;
+        $archer->email = $request->email;
+        $archer->currentProficiency = $request->cp;
+        $archer->agegroupProficiency = $request->agp;
+        $archer->hand = $request->dh;
         $archer->createdBy = $user;    
         $archer->save();
       
@@ -104,7 +110,9 @@ class AcheryController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $archer = Archer::where('id',$id)->first();
+
+        return view('archers.edit', compact('archer'));
     }
 
     /**
@@ -112,7 +120,34 @@ class AcheryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+    
+       $user = Auth::user()->id;
+    
+ 
+         $archer =  Archer::where('id', $id)->update([
+
+         'name' => $request->name,
+         'surname' => $request->surname,
+         'dob' => $request->dob,
+         'ageCategory' => $request->ag,
+         'currentGradingWeak' => $request->cgw,
+         'currentGradingDominant' => $request->cgd,
+         'hand' => $request->hand,
+         'email' => $request->email,
+         'currentProficiency' => $request->cp,
+         'agegroupProficiency' => $request->agp,
+         'hand' => $request->dh,
+         'updatedBy' => $user,  
+    ]); 
+
+
+    if($archer){
+
+        return redirect()->back()->with('success', 'Archer updated successfully!');
+      }
+        return back()->with('error', 'Failed to update Archer!');
+     
+         
     }
 
     /**

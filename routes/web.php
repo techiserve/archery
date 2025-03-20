@@ -36,6 +36,8 @@ Route::get('/archers/create', [AcheryController::class, 'create'])->name('achers
 Route::post('/archers/store', [AcheryController::class, 'store'])->name('achers.store');
 Route::get('/archers/index', [AcheryController::class, 'index'])->name('achers.index');
 Route::get('/viewmore/{id}', [AcheryController::class, 'viewmore'])->name('viewmore');
+Route::get('/archer/edit/{id}', [AcheryController::class, 'edit'])->name('archer.edit');
+Route::put('/archer/update/{id}', [AcheryController::class, 'update'])->name('archer.update');
 Route::get('/historydetails/{id}', [AcheryController::class, 'historydetails'])->name('historydetails');
 
 Route::get('/grading/scores', [GradingController::class, 'scores'])->name('grading.scores');
@@ -51,6 +53,7 @@ Route::get('/events/scoring', [GradingController::class, 'scoring'])->name('even
 Route::get('/events/showEvent/{id}', [GradingController::class, 'showEvent'])->name('events.showEvent');
 Route::get('/gradearcher/{id}', [GradingController::class, 'gradearcher'])->name('gradearcher');
 Route::post('/event/storeCategory', [GradingController::class, 'storeCategory'])->name('event.storeCategory');
+
 
 Route::post('/grading/details', [GradingController::class, 'gradingdetail'])->name('grading.details');
 Route::post('/grading/confirmscores', [GradingController::class, 'finalgradingdetail'])->name('grading.confirmscores');
