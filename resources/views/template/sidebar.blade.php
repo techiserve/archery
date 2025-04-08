@@ -142,7 +142,12 @@
               <ul class="menu-sub">
               <li class="menu-item">
                   <a href="/events/createCategory" class="menu-link">
-                    <div data-i18n="Collapsed menu">Create Event Cateogry</div>
+                    <div data-i18n="Collapsed menu">Create Event Category</div>
+                  </a>
+                </li>
+                <li class="menu-item">
+                  <a href="/events/createCategory" class="menu-link">
+                    <div data-i18n="Collapsed menu">Manage Event Category</div>
                   </a>
                 </li>
                 <li class="menu-item">
@@ -152,9 +157,14 @@
                 </li>
                 <li class="menu-item">
                   <a href="/events/create" class="menu-link">
-                    <div data-i18n="Collapsed menu">View Events</div>
+                    <div data-i18n="Collapsed menu">Manage Event</div>
                   </a>
                 </li>
+                <!-- <li class="menu-item">
+                  <a href="/events/create" class="menu-link">
+                    <div data-i18n="Collapsed menu">View Events</div>
+                  </a>
+                </li> -->
                
              
                 <li class="menu-item">
