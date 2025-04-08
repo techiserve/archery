@@ -146,7 +146,7 @@
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="/events/createCategory" class="menu-link">
+                  <a href="/events/editevent" class="menu-link">
                     <div data-i18n="Collapsed menu">Manage Event Category</div>
                   </a>
                 </li>
@@ -156,7 +156,7 @@
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="/events/create" class="menu-link">
+                  <a href="/events/editeventCategory" class="menu-link">
                     <div data-i18n="Collapsed menu">Manage Event</div>
                   </a>
                 </li>
