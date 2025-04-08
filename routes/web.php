@@ -43,8 +43,10 @@ Route::get('/historydetails/{id}', [AcheryController::class, 'historydetails'])-
 Route::get('/grading/scores', [GradingController::class, 'scores'])->name('grading.scores');
 Route::post('/grading/store', [GradingController::class, 'store'])->name('grading.store');
 
-
+//events
 Route::get('/events/createCategory', [GradingController::class, 'createCategory'])->name('events.createCategory');
+Route::get('/events/indexeventCategory', [GradingController::class, 'indexeventCategory'])->name('events.indexeventCategory');
+Route::get('/events/indexevent', [GradingController::class, 'indexevent'])->name('events.indexevent');
 Route::post('/event/storeCategory', [GradingController::class, 'storeCategory'])->name('event.storeCategory');
 Route::post('/event/eventStore', [GradingController::class, 'eventStore'])->name('event.eventStore');
 Route::get('/events/create', [GradingController::class, 'createEvent'])->name('events.create');

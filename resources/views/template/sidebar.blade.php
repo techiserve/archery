@@ -106,11 +106,11 @@
               </a>
 
               <ul class="menu-sub">
-                <li class="menu-item">
+                <!-- <li class="menu-item">
                   <a href="/grading/scores" class="menu-link">
                     <div data-i18n="Collapsed menu">Scores</div>
                   </a>
-                </li>
+                </li> -->
                 <li class="menu-item">
                   <a href="/events/manage" class="menu-link">
                     <div data-i18n="Content navbar">Capture Scores</div>
@@ -146,7 +146,7 @@
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="/events/editevent" class="menu-link">
+                  <a href="/events/indexeventCategory" class="menu-link">
                     <div data-i18n="Collapsed menu">Manage Event Category</div>
                   </a>
                 </li>
@@ -156,7 +156,7 @@
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="/events/editeventCategory" class="menu-link">
+                  <a href="/events/indexevent" class="menu-link">
                     <div data-i18n="Collapsed menu">Manage Event</div>
                   </a>
                 </li>

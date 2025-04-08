@@ -26,10 +26,19 @@
                         
                         </td> 
                         <td>{{ $archer->name }}</td>
-                        <td>{{ $archer->cat }}</td>
+                        @foreach($categories as $category)
+                        @if($archer->cat == $category->id)
+                        <td>{{ $category->name }}</td>
+                        @endif
+                        @endforeach
                         <td>{{ $archer->doe }}</td>
                     
-                        <td><span class="badge bg-label-success"> Graded </span></td>
+                        <td>
+                        <a  href="/editevent/{{$archer->id}}" class='btn btn-success btn-sm' style='color: white;'>
+                      <span class='fa fa-pencil'></span>
+                      <span class='hidden-sm hidden-sm hidden-md'>Edit Event</span>
+                   </a>&nbsp;
+                   </td>
                     </tr>
                     @endforeach
                 </tbody>

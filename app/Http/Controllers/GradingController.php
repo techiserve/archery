@@ -688,17 +688,24 @@ class GradingController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function indexeventCategory()
     {
-        //
+      $categories = Eventcategory::all();
+
+      return view('events.indexeventCategory', compact('categories'));
+
     }
+
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function indexevent()
     {
-        //
+      $events = Event::all();
+      $categories = Eventcategory::all();
+
+      return view('events.indexevent', compact('events','categories'));
     }
 
     /**
