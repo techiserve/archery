@@ -37,12 +37,16 @@
                     <input type="text" name="eventcategory" value="{{ $eventcategory }}" class="form-control" />
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Bow Used</label>
-                    <input type="text" name="bowused" value="{{ $bowused }}" class="form-control" />
+                    <label class="form-label">Age Category</label>
+                    <input type="text" name="age" value="{{ $age }}" class="form-control" />
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Current Grading</label>
                     <input type="text" name="curentgrading" value="{{ $curentgrading }}" class="form-control" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Current Proficiency</label>
+                    <input type="text" name="currentprof" value="{{ $currentprof }}" class="form-control" />
                 </div>
                 @if( $gradefor == 'Grading A')
                 <div class="col-md-4">
@@ -50,13 +54,14 @@
                     <input type="text" name="gradefor" value="{{ $gradefor }}" class="form-control" readonly/>
                 </div>
                 @endif
-                <div class="col-md-4">
-                    <label class="form-label">Age Category</label>
-                    <input type="text" name="age" value="{{ $age }}" class="form-control" />
-                </div>
+              
                 <div class="col-md-4">
                     <label class="form-label">Arrow Used</label>
                     <input type="text" name="arrow" value="{{ $arrow }}" class="form-control" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Bow Used</label>
+                    <input type="text" name="bowused" value="{{ $bowused }}" class="form-control" />
                 </div>
                 
                 <input type="hidden" name="event" value="{{ $event }}">

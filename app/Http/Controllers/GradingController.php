@@ -108,7 +108,7 @@ class GradingController extends Controller
          $archergrading = Archergrading::where('archer_id', $eventyacho->archer_id)->where('event', $eventyacho->event_id)->first();
 
          if($archergrading){
-       
+          $currentprof = $archer->currentProficiency;
           $name = $archergrading->name;
           $date = $archergrading->date;
           $bowused = $archergrading->bowUsed;
@@ -119,6 +119,7 @@ class GradingController extends Controller
           $eventcategory = $categories->id; 
           $archer = $archergrading->archer_id;
           $event = $archergrading->event;
+        
  
           $figure = MinScores::where('level' ,$gradefor)->pluck($age)->first();
           $scores  = Eventcategoryscore::where('eventcategory_id', $eventcategory)->pluck('score');
@@ -143,7 +144,7 @@ class GradingController extends Controller
          
          
  
-         return view('events.finalgrading', compact('lastrecord','cumtotal','currentRound','noofrounds','remaining_rounds','name','date','figure','bowused','curentgrading','age','arrow','gradefor','scores','category','eventcategory','archer','event'));
+         return view('events.finalgrading', compact('lastrecord','currentprof','cumtotal','currentRound','noofrounds','remaining_rounds','name','date','figure','bowused','curentgrading','age','arrow','gradefor','scores','category','eventcategory','archer','event'));
 
          }
 
@@ -430,7 +431,7 @@ class GradingController extends Controller
       //  dd($categories);
      // $eventyacho = Eventscore::where('id', $id)->first();
       $archer = Archer::where('id', $request->archer )->first();
-   
+      $currentprof = $archer->currentProficiency;
       $scores = MinScores::all();
       $event =  Event::where('id',  $request->event)->first();
       $categories = Eventcategory::where('id', $request->cat )->first();  
@@ -445,6 +446,7 @@ class GradingController extends Controller
        $eventcategory = $categories->name; 
        $archer = $request->archer;
        $event = $request->event;
+      
 
       // dd($gradefor);
         if($gradefor != '0'){
@@ -474,7 +476,7 @@ class GradingController extends Controller
       $currentRound =  1;
     }
      
-       return view('events.finalgrading', compact('lastrecord','currentRound','cumtotal','noofrounds','remaining_rounds','name','date','figure','bowused','curentgrading','age','arrow','gradefor','scores','category','eventcategory','archer','event'));
+       return view('events.finalgrading', compact('lastrecord','currentRound','currentprof','cumtotal','noofrounds','remaining_rounds','name','date','figure','bowused','curentgrading','age','arrow','gradefor','scores','category','eventcategory','archer','event'));
 
 
     
