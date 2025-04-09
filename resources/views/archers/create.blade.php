@@ -45,28 +45,17 @@
                     </div>
                     
                     <div class="col-md-6">
-                      <div class="form-password-toggle">
-                        <label class="form-label" for="multicol-confirm-password">Email</label>
-                        <div class="input-group input-group-merge">
-                          <input
-                            type="email"
-                            name="email" 
-                            id="multicol-confirm-password"
-                            class="form-control"
-                            placeholder=""
-                            aria-describedby="multicol-confirm-password2" />
-                          <span class="input-group-text cursor-pointer" id="multicol-confirm-password2"
-                            ><i class=""></i
-                          ></span>
-                        </div>
-                      </div>
+                      <label class="form-label" for="multicol-first-name">Age Group</label>
+                      <input type="text" id="ageCategory"  class="form-control"  name="ag" readonly>
                     </div>
+
+              
                   </div>
                  </br>
                   <div class="row g-6">
                     <div class="col-md-6">
                       <label class="form-label" for="multicol-first-name">Current Grading Dominant</label>
-                      <select class="form-select" id="exampleFormControlSelect1" name="cgd" aria-label="Default select example">
+                      <select class="form-select" id="cgdSelect" name="cgd" aria-label="Default select example">
                            <option value="SC1">SC1</option>   
                            <option value="SC2">SC2</option>
                            <option value="SC3">SC3</option>  
@@ -101,7 +90,7 @@
                    
                     <div class="col-md-6">
                       <label class="form-label" for="multicol-first-name">Current Grading Weak</label>
-                      <select class="form-select" id="exampleFormControlSelect1" name="cgw" aria-label="Default select example">
+                      <select class="form-select" id="cgwSelect" name="cgw" aria-label="Default select example">
                            <option value="SC1">SC1</option>   
                            <option value="SC2">SC2</option>
                            <option value="SC3">SC3</option>  
@@ -174,9 +163,24 @@
            
                     </div>
                    
+                 
+
                     <div class="col-md-6">
-                      <label class="form-label" for="multicol-first-name">Age Group</label>
-                      <input type="text" id="ageCategory"  class="form-control"  name="ag" readonly>
+                      <div class="form-password-toggle">
+                        <label class="form-label" for="multicol-confirm-password">Email</label>
+                        <div class="input-group input-group-merge">
+                          <input
+                            type="email"
+                            name="email" 
+                            id="multicol-confirm-password"
+                            class="form-control"
+                            placeholder=""
+                            aria-describedby="multicol-confirm-password2" />
+                          <span class="input-group-text cursor-pointer" id="multicol-confirm-password2"
+                            ><i class=""></i
+                          ></span>
+                        </div>
+                      </div>
                     </div>
                     </div>  
                     </br>
@@ -209,54 +213,79 @@
 </div>
 @endsection
 <script>
-        function calculateAgeDetails() {
-            const dobInput = document.getElementById("dob").value;
-            const ageCategoryInput = document.getElementById("ageCategory");
-            const ageGroupInput = document.getElementById("ageGroup");
+    function calculateAgeDetails() {
+        const dobInput = document.getElementById("dob").value;
+        const ageCategoryInput = document.getElementById("ageCategory");
+        const ageGroupInput = document.getElementById("ageGroup");
+        const cgdSelect = document.getElementById("cgdSelect");
+        const cgwSelect = document.getElementById("cgwSelect");
 
-            if (!dobInput) return; // Exit if no date is selected
+        if (!dobInput) return;
 
-            const dob = new Date(dobInput);
-            const today = new Date();
+        const dob = new Date(dobInput);
+        const today = new Date();
 
-            // Calculate exact age
-            let age = today.getFullYear() - dob.getFullYear();
-            const monthDiff = today.getMonth() - dob.getMonth();
+        let age = today.getFullYear() - dob.getFullYear();
+        const monthDiff = today.getMonth() - dob.getMonth();
 
-            // Adjust age if birthdate hasn't occurred yet this year
-            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
-                age--;
-            }
-
-            // Calculate "Year of Living"
-            let yearOfLiving = today.getFullYear() - dob.getFullYear() + 1; // +1 ensures it's their current living year
-
-            // Determine Age Category (Exact Age)
-            let category = "";
-            if (age >= 5 && age <= 12) {
-                category = "Cub";
-            } else if (age >= 13 && age <= 16) {
-                category = "Junior";
-            } else if (age >= 17) {
-                category = "Adult";
-            } else {
-                category = "Too Young";
-            }
-
-            // Determine Age Group Proficiency (Year of Living)
-            let proficiency = "";
-            if (yearOfLiving >= 5 && yearOfLiving <= 12) {
-                proficiency = "Cub";
-            } else if (yearOfLiving >= 13 && yearOfLiving <= 16) {
-                proficiency = "Junior";
-            } else if (yearOfLiving >= 17) {
-                proficiency = "Adult";
-            } else {
-                proficiency = "Too Young";
-            }
-
-            // Populate the fields
-            ageCategoryInput.value = category;
-            ageGroupInput.value = proficiency;
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+            age--;
         }
-    </script>
+
+        let yearOfLiving = today.getFullYear() - dob.getFullYear() + 1;
+
+        let category = "";
+        if (age >= 5 && age <= 12) {
+            category = "Cub";
+        } else if (age >= 13 && age <= 16) {
+            category = "Junior";
+        } else if (age >= 17) {
+            category = "Adult";
+        } else {
+            category = "Too Young";
+        }
+
+        let proficiency = "";
+        if (yearOfLiving >= 5 && yearOfLiving <= 12) {
+            proficiency = "Cub";
+        } else if (yearOfLiving >= 13 && yearOfLiving <= 16) {
+            proficiency = "Junior";
+        } else if (yearOfLiving >= 17) {
+            proficiency = "Adult";
+        } else {
+            proficiency = "Too Young";
+        }
+
+        ageCategoryInput.value = category;
+        ageGroupInput.value = proficiency;
+
+        const optionsByCategory = {
+    "Cub": ["SC1", "SC2", "SC3", "AC1", "AC2", "AC3","MC1",  "MC2", "MC3"],
+    "Junior": ["SJ1", "SJ2", "SJ3","AJ1",  "AJ2", "AJ3","MJ1",  "MJ2", "MJ3"],
+    "Adult": ["SA1", "SA2", "SA3", "AA1", "AA2", "AA3", "MA1", "MA2", "MA3"]
+};
+
+        // Helper to populate dropdown options
+        function populateOptions(selectElement, category) {
+            selectElement.innerHTML = "";
+
+            if (optionsByCategory[category]) {
+                optionsByCategory[category].forEach(value => {
+                    const option = document.createElement("option");
+                    option.value = value;
+                    option.text = value;
+                    selectElement.appendChild(option);
+                });
+            } else {
+                const option = document.createElement("option");
+                option.value = "";
+                option.text = "N/A";
+                selectElement.appendChild(option);
+            }
+        }
+
+        // Update both selects
+        populateOptions(cgdSelect, category);
+        populateOptions(cgwSelect, category);
+    }
+</script>

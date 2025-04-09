@@ -23,7 +23,6 @@
                     @foreach ($categories as $archer)  
                     <tr  onclick="window.location='{{ route('events.showEvent', $archer->id) }}'" style="cursor:pointer;">
                         <td>
-                        
                         </td> 
                         <td>{{ $archer->name }}</td>
                         <td>{{ $archer->rounds }}</td>

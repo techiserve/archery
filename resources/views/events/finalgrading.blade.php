@@ -44,10 +44,12 @@
                     <label class="form-label">Current Grading</label>
                     <input type="text" name="curentgrading" value="{{ $curentgrading }}" class="form-control" />
                 </div>
+                @if( $gradefor == 'Grading A')
                 <div class="col-md-4">
                     <label class="form-label">Grading for</label>
                     <input type="text" name="gradefor" value="{{ $gradefor }}" class="form-control" readonly/>
                 </div>
+                @endif
                 <div class="col-md-4">
                     <label class="form-label">Age Category</label>
                     <input type="text" name="age" value="{{ $age }}" class="form-control" />
@@ -64,9 +66,9 @@
         <div class="card">
             <h2>Scoring Table</h2>
             <select id="round-select" class="input-field" name="round" onchange="generateTable()">
-                @for ($i = 1; $i <= $category->rounds; $i++)
-                    <option value="{{ $i }}">Round {{ $i }}</option>
-                @endfor
+           
+                    <option value="{{ $currentRound }}">Round {{ $currentRound }}</option>
+              
             </select>
             <div id="scoring-card" class="table-container"></div>
         </div>
@@ -77,83 +79,93 @@
 @endsection
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    generateTable();
-});
+    document.addEventListener("DOMContentLoaded", function() {
+        generateTable();
+    });
 
-let latestCumTotal = @json($cumtotal ?? 0);
-let numberOfRounds = @json($noofrounds ?? 1);
-let requiredTotal = @json($figure ?? 0);
-let remainingRounds = @json($remaining_rounds ?? $category->rounds - 1);
+    let latestCumTotal = @json($cumtotal ?? 0);
+    let numberOfRounds = @json($noofrounds ?? 1);
+    let requiredTotal = @json($figure ?? 0);
+    let remainingRounds = @json($remaining_rounds ?? ($category->rounds - 1));
+    let eventCategory = @json($eventcategory ?? '');
 
-function generateTable() {
-    let arrows = @json($category->arrows);
-    let scoringCard = document.getElementById('scoring-card');
-    let selectedRound = document.getElementById('round-select').value;
-    let possibleScores = @json($scores);
+    function generateTable() {
+        let arrows = @json($category->arrows);
+        let scoringCard = document.getElementById('scoring-card');
+        let selectedRound = document.getElementById('round-select').value;
+        let possibleScores = @json($scores);
 
-    let html = `<table>
-                    <thead>
-                        <tr>
-                            <th>Arrow</th>
-                            <th>Score</th>
-                        </tr>
-                    </thead>
-                    <tbody>`;
+        let html = `<table>
+                        <thead>
+                            <tr>
+                                <th>Arrow</th>
+                                <th>Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
 
-    for (let j = 1; j <= arrows; j++) {
-        html += `<tr>
-            <td>Arrow ${j}</td>
-            <td>
-                <select class='input-field arrow-score' name='scores[${selectedRound}][${j}]' data-round="${selectedRound}" required>
-                    <option value="M">M</option> <!-- First option is 'M' -->
-                    ${possibleScores.map(score => `<option value='${score}'>${score}</option>`).join('')}
-                </select>
-            </td>
-         </tr>`;
+        for (let j = 1; j <= arrows; j++) {
+            html += `<tr>
+                <td>Arrow ${j}</td>
+                <td>
+                    <select class='input-field arrow-score' name='scores[${selectedRound}][${j}]' data-round="${selectedRound}" required>
+                        <option value="M">M</option>
+                        ${possibleScores.map(score => `<option value='${score}'>${score}</option>`).join('')}
+                    </select>
+                </td>
+            </tr>`;
+        }
 
+        html += `<tr><td><strong>Round Total</strong></td>
+                    <td><input type='number' class='input-field' id='round_total' name='round_total' readonly /></td></tr>`;
+        html += `<tr><td><strong>Cum Total</strong></td>
+                    <td><input type='number' class='input-field' id='cum_total' name='cum_total' readonly /></td></tr>`;
+        html += `<tr><td><strong>Time</strong></td>
+                    <td><input type='time' class='input-field' name='time' required /></td></tr>`;
+        html += `<tr><td><strong>Total</strong></td>
+                    <td><input type='number' class='input-field' id='total' name='total' readonly /></td></tr>`;
+        html += `<tr><td><strong>Current P/R</strong></td>
+                    <td><input type='number' class='input-field' id='current_pr' name='current_pr' readonly /></td></tr>`;
+
+        // Only show Required P/R if event category is 'Grading A'
+        if (eventCategory === 'Grading A') {
+            html += `<tr><td><strong>Required P/R</strong></td>
+                        <td><input type='number' class='input-field' id='required_pr' name='required_pr' readonly /></td></tr>`;
+        }
+
+        html += `</tbody></table>`;
+
+        scoringCard.innerHTML = html;
+
+        document.querySelectorAll(".arrow-score").forEach(select => {
+            select.addEventListener("change", updateRoundTotal);
+        });
+
+        updateRoundTotal();
     }
-    
-    html += `<tr><td><strong>Round Total</strong></td>
-                <td><input type='number' class='input-field' id='round_total' name='round_total' readonly /></td></tr>`;
-    html += `<tr><td><strong>Cum Total</strong></td>
-                <td><input type='number' class='input-field' id='cum_total' name='cum_total' readonly /></td></tr>`;
-    html += `<tr><td><strong>Time</strong></td>
-                <td><input type='time' class='input-field' name='time' required /></td></tr>`;
-    html += `<tr><td><strong>Total</strong></td>
-                <td><input type='number' class='input-field' id='total' name='total' readonly /></td></tr>`;
-    html += `<tr><td><strong>Current P/R</strong></td>
-                <td><input type='number' class='input-field' id='current_pr' name='current_pr' readonly /></td></tr>`;
-    html += `<tr><td><strong>Required P/R</strong></td>
-                <td><input type='number' class='input-field' id='required_pr' name='required_pr' readonly /></td></tr>`;
-    html += `</tbody></table>`;
-    
-    scoringCard.innerHTML = html;
-    document.querySelectorAll(".arrow-score").forEach(select => {
-        select.addEventListener("change", updateRoundTotal);
+
+    function updateRoundTotal() {
+        let total = 0;
+        document.querySelectorAll(".arrow-score").forEach(select => {
+            total += parseInt(select.value) || 0;
+        });
+
+        document.getElementById("round_total").value = total;
+        let cumTotal = total + latestCumTotal;
+        document.getElementById("cum_total").value = cumTotal;
+        document.getElementById("total").value = cumTotal;
+        let currentPR = cumTotal / numberOfRounds;
+        document.getElementById("current_pr").value = currentPR.toFixed(2);
+
+        // Only update required_pr if the field exists
+        let requiredPrInput = document.getElementById("required_pr");
+        if (requiredPrInput) {
+            let requiredPR = (requiredTotal - cumTotal) / (remainingRounds || 1);
+            requiredPrInput.value = requiredPR.toFixed(2);
+        }
+    }
+
+    document.querySelector("form").addEventListener("submit", function() {
+        updateRoundTotal();
     });
-    updateRoundTotal();
-}
-
-function updateRoundTotal() {
-    let total = 0;
-    document.querySelectorAll(".arrow-score").forEach(select => {
-        total += parseInt(select.value) || 0;
-    });
-
-    console.log(numberOfRounds);
-
-    document.getElementById("round_total").value = total;
-    let cumTotal = total + latestCumTotal;
-    document.getElementById("cum_total").value = cumTotal;
-    document.getElementById("total").value = cumTotal;
-    let currentPR = cumTotal / numberOfRounds;
-    document.getElementById("current_pr").value = currentPR.toFixed(2);
-    let requiredPR = (requiredTotal - cumTotal) / (remainingRounds || 1);
-    document.getElementById("required_pr").value = requiredPR.toFixed(2);
-}
-
-document.querySelector("form").addEventListener("submit", function() {
-    updateRoundTotal();
-});
 </script>

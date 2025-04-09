@@ -52,7 +52,7 @@ class AcheryController extends Controller
         $archer->name = $request->name;
         $archer->surname = $request->surname;
         $archer->dob = $request->dob;
-        $archer->ageCategory = $request->category;
+        $archer->ageCategory = $request->ag;
         $archer->currentGradingWeak = $request->cgw;
         $archer->currentGradingDominant = $request->cgd;
         $archer->hand = $request->hand;

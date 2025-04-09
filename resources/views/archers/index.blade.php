@@ -23,6 +23,7 @@
                         <th>Name</th>
                         <th>Surname</th>
                         <th>Dob</th>
+                         <th>Age Group</th>
                         <th>Category</th>
                         <th>Grading</th>
                         <th>Action</th>

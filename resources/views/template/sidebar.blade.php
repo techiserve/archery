@@ -98,42 +98,8 @@
             </li>
 
 
-                        <!-- Layouts -->
-                        <li class="menu-item">
-              <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon icon-base bx bx-store"></i>
-                <div data-i18n="Layouts">Grading</div>
-              </a>
-
-              <ul class="menu-sub">
-                <!-- <li class="menu-item">
-                  <a href="/grading/scores" class="menu-link">
-                    <div data-i18n="Collapsed menu">Scores</div>
-                  </a>
-                </li> -->
-                <li class="menu-item">
-                  <a href="/events/manage" class="menu-link">
-                    <div data-i18n="Content navbar">Capture Scores</div>
-                  </a>
-                </li>
-                <li class="menu-item">
-                  <a href="/events/viewscore" class="menu-link">
-                    <div data-i18n="Content navbar">View Scores</div>
-                  </a>
-                </li>
-                <!-- <li class="menu-item">
-                  <a href="/grading/metadata" class="menu-link">
-                    <div data-i18n="Content nav + Sidebar">Meta Data</div>
-                  </a>
-                </li>
-                <li class="menu-item">
-                     -->
-              </ul>
-            </li>
-
-
-               <!-- Layouts -->
-               <li class="menu-item">
+                          <!-- Layouts -->
+                          <li class="menu-item">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon icon-base bx bx-store"></i>
                 <div data-i18n="Layouts">Events</div>
@@ -171,6 +137,43 @@
                     
               </ul>
             </li>
+
+
+                        <!-- Layouts -->
+                        <li class="menu-item">
+              <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon icon-base bx bx-store"></i>
+                <div data-i18n="Layouts">Scores</div>
+              </a>
+
+              <ul class="menu-sub">
+                <!-- <li class="menu-item">
+                  <a href="/grading/scores" class="menu-link">
+                    <div data-i18n="Collapsed menu">Scores</div>
+                  </a>
+                </li> -->
+                <li class="menu-item">
+                  <a href="/events/manage" class="menu-link">
+                    <div data-i18n="Content navbar">Capture Scores</div>
+                  </a>
+                </li>
+                <li class="menu-item">
+                  <a href="/events/viewscore" class="menu-link">
+                    <div data-i18n="Content navbar">View Scores</div>
+                  </a>
+                </li>
+                <!-- <li class="menu-item">
+                  <a href="/grading/metadata" class="menu-link">
+                    <div data-i18n="Content nav + Sidebar">Meta Data</div>
+                  </a>
+                </li>
+                <li class="menu-item">
+                     -->
+              </ul>
+            </li>
+
+
+ 
 
 
                         <!-- Layouts -->
