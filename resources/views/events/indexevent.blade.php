@@ -17,6 +17,7 @@
                         <th>Date of Event</th>
                   
                         <th>Status</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -32,7 +33,13 @@
                         @endif
                         @endforeach
                         <td>{{ $archer->doe }}</td>
-                    
+
+                        @if($archer->status == 1)
+                        <td><span class="badge bg-label-danger"> Ended </span></td>
+                        @else
+                        <td><span class="badge bg-label-success"> Open </span></td>
+                        @endif
+                  
                         <td>
                         <a  href="/editevent/{{$archer->id}}" class='btn btn-success btn-sm' style='color: white;'>
                       <span class='fa fa-pencil'></span>

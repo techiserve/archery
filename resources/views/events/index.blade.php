@@ -26,7 +26,11 @@
                         
                         </td> 
                         <td>{{ $archer->name }}</td>
-                        <td>{{ $archer->cat }}</td>
+                        @foreach($categories as $category)
+                        @if($archer->cat == $category->id)
+                        <td>{{ $category->name }}</td>
+                        @endif
+                        @endforeach
                         <td>{{ $archer->doe }}</td>
                     
                         <td><span class="badge bg-label-success"> Graded </span></td>

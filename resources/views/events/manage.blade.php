@@ -24,8 +24,9 @@
                         <th>Name</th>
                         <th>Category</th>
                         <th>Date of Event</th>
-                  
+                           
                         <th>Status</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -35,10 +36,32 @@
                         
                         </td> 
                         <td>{{ $archer->name }}</td>
-                        <td>{{ $archer->cat }}</td>
+                        @foreach($categories as $category)
+                        @if($archer->cat == $category->id)
+                        <td>{{ $category->name }}</td>
+                        @endif
+                        @endforeach
                         <td>{{ $archer->doe }}</td>
-                    
-                        <td><span class="badge bg-label-success"> Graded </span></td>
+
+                        @if($archer->status == 1)
+                        <td><span class="badge bg-label-danger"> Ended </span></td>
+                        @else
+                        <td><span class="badge bg-label-success"> Open </span></td>
+                        @endif
+
+                        <td>
+                        @if($archer->status != 1)  
+                        <a  href="/endevent/{{$archer->id}}" class='btn btn-danger btn-sm' style='color: white;'>
+                      <span class='fa fa-pencil'></span>
+                      <span class='hidden-sm hidden-sm hidden-md'>End Event</span>
+                      </a>&nbsp;
+                   
+                      <a  href="/events/showEvent/{{$archer->id}}"  class='btn btn-success btn-sm' style='color: white;'>
+                      <span class='fa fa-pencil'></span>
+                      <span class='hidden-sm hidden-sm hidden-md'>Score Archers</span>
+                     </a>&nbsp;
+                     @endif
+                   </td>
                     </tr>
                     @endforeach
                 </tbody>

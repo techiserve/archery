@@ -31,6 +31,7 @@ class GradingController extends Controller
     public function index()
     {
         $events = Event::all();
+        $cat = Eventcategory::all();
 
          return view('events.index', compact('events'));
     }
@@ -67,16 +68,22 @@ class GradingController extends Controller
     public function manage()
     {
         $archers = Event::all();
-       // $cat = Eventcategory::all();
+        $categories = Eventcategory::all();
 
-       return view('events.manage', compact('archers'));
+       return view('events.manage', compact('archers','categories'));
 
     }
 
 
     public function showEvent($id)
     {
-    
+         $event = Event::where('id',$id)->first();
+
+         if($event->status == 1){
+          
+           return back()->with('error', 'This event has been Ended!');
+         }
+
         $archers = Eventscore::where('event_id', $id)->get();
         $pples = archer::all();
   
@@ -256,7 +263,6 @@ class GradingController extends Controller
     public function storeCategory(Request $request)
     {
 
-     // dd($request->all());
         $user = Auth::user()->id;
        
         $archer = new Eventcategory();
@@ -271,8 +277,6 @@ class GradingController extends Controller
 
        foreach ($scores as $score) {
          
-      //  dd($score);
-
         $event = new Eventcategoryscore();
         $event->eventcategory_id = $archer->id;
         $event->score = $score;
@@ -319,7 +323,6 @@ class GradingController extends Controller
     public function eventStore(Request $request)
     {
 
-      //  dd($request->all());
 
         $user = Auth::user()->id;
        
@@ -381,6 +384,21 @@ class GradingController extends Controller
       $categories = Eventcategory::all();
 
       return view('events.indexevent', compact('events','categories'));
+    }
+
+
+    public function endevent($id)
+    {
+    
+        $EndEvent = Event::where('id', $id)->update([
+           'status' => 1
+        ]);
+  
+        if( $EndEvent){
+        return back()->with('success', 'Event Ended successfully!');
+        }else{
+        return back()->with('error', 'Failed to End Event!');
+        }
     }
 
     /**

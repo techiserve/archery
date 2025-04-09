@@ -10,12 +10,12 @@
             <div class="row g-6">
                 <div class="col-md-6">
                     <label class="form-label" for="multicol-username">Name</label>
-                    <input type="text" id="multicol-username" name="name" class="form-control" placeholder="Grading" />
+                    <input type="text" id="multicol-username" name="name" class="form-control" placeholder="Enter Name" />
                 </div>
                 <div class="col-md-6">
                     <label class="form-label" for="multicol-email">Description</label>
                     <div class="input-group input-group-merge">
-                        <input type="text" id="multicol-username" name="desc" class="form-control" placeholder="John Doe" />
+                        <input type="text" id="multicol-username" name="desc" class="form-control" placeholder="Enter Description" />
                     </div>
                 </div>
 
@@ -60,7 +60,7 @@
             div.classList.add("input-group", "mb-2", "score-input");
 
             div.innerHTML = `
-                <input type="number" name="score[]" class="form-control" placeholder="0-10" />
+                <input type="number" name="score[]" class="form-control" placeholder="0-100" />
                 <button type="button" class="btn btn-danger remove-score">-</button>
             `;
 

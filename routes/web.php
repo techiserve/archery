@@ -54,6 +54,7 @@ Route::get('/events/manage', [GradingController::class, 'manage'])->name('events
 Route::get('/events/scoring', [GradingController::class, 'scoring'])->name('events.scoring');
 Route::get('/events/showEvent/{id}', [GradingController::class, 'showEvent'])->name('events.showEvent');
 Route::get('/gradearcher/{id}', [GradingController::class, 'gradearcher'])->name('gradearcher');
+Route::get('/endevent/{id}', [GradingController::class, 'endevent'])->name('endevent');
 Route::post('/event/storeCategory', [GradingController::class, 'storeCategory'])->name('event.storeCategory');
 
 

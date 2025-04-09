@@ -41,7 +41,7 @@
                         <td>{{ $pple->currentGrading }}</td>
                         <td>     <a  href="/gradearcher/{{$archer->id}}" class='btn btn-success btn-sm' style='color: white;'>
                       <span class='fa fa-pencil'></span>
-                      <span class='hidden-sm hidden-sm hidden-md'>  Grade Archer</span>
+                      <span class='hidden-sm hidden-sm hidden-md'>  Capture Scores</span>
                    </a>&nbsp;</td>
                         @endif
                         @endforeach
