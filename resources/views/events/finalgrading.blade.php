@@ -88,6 +88,10 @@
     let requiredTotal = @json($figure ?? 0);
     let remainingRounds = @json($remaining_rounds ?? ($category->rounds - 1));
     let eventCategory = @json($eventcategory ?? '');
+    let now = new Date();
+let hours = String(now.getHours()).padStart(2, '0');
+let minutes = String(now.getMinutes()).padStart(2, '0');
+let currentTime = `${hours}:${minutes}`;
 
     function generateTable() {
         let arrows = @json($category->arrows);
@@ -121,7 +125,7 @@
         html += `<tr><td><strong>Cum Total</strong></td>
                     <td><input type='number' class='input-field' id='cum_total' name='cum_total' readonly /></td></tr>`;
         html += `<tr><td><strong>Time</strong></td>
-                    <td><input type='time' class='input-field' name='time' required /></td></tr>`;
+                    <td><input type='time' class='input-field' name='time' value='${currentTime}' required /></td></tr>`;
         html += `<tr><td><strong>Total</strong></td>
                     <td><input type='number' class='input-field' id='total' name='total' readonly /></td></tr>`;
         html += `<tr><td><strong>Current P/R</strong></td>

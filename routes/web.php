@@ -49,6 +49,7 @@ Route::get('/events/indexeventCategory', [GradingController::class, 'indexeventC
 Route::get('/events/indexevent', [GradingController::class, 'indexevent'])->name('events.indexevent');
 Route::post('/event/storeCategory', [GradingController::class, 'storeCategory'])->name('event.storeCategory');
 Route::post('/event/eventStore', [GradingController::class, 'eventStore'])->name('event.eventStore');
+Route::post('/event/archerDetails', [GradingController::class, 'archerDetails'])->name('event.archerDetails');
 Route::get('/events/create', [GradingController::class, 'createEvent'])->name('events.create');
 Route::get('/events/manage', [GradingController::class, 'manage'])->name('events.manage');
 Route::get('/events/scoring', [GradingController::class, 'scoring'])->name('events.scoring');

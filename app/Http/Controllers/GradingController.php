@@ -86,9 +86,11 @@ class GradingController extends Controller
 
         $archers = Eventscore::where('event_id', $id)->get();
         $pples = archer::all();
+        $cat = $event->cat;
+        $scores = MinScores::all();
   
 
-       return view('events.scoring', compact('archers','pples'));
+       return view('events.scoring', compact('archers','pples','cat','scores'));
     }
 
 
@@ -127,13 +129,19 @@ class GradingController extends Controller
          $noofrounds = $lastrecord->round ?? 1;
          $remaining_rounds =  $category->rounds - $noofrounds;
         // dd($noofrounds,$category->rounds );
+        if($lastrecord != null){
+          if($noofrounds < $category->rounds){
 
-         if($noofrounds < $category->rounds){
-          $currentRound = $noofrounds + 1;
-         }else{
-          $currentRound = $category->rounds;
-         }
-            // dd($currentRound);     
+            $currentRound = $noofrounds + 1;
+           }else{
+            $currentRound = $category->rounds;
+           }
+        }else{
+          
+          $currentRound =  1;
+        }
+         
+         
  
          return view('events.finalgrading', compact('lastrecord','cumtotal','currentRound','noofrounds','remaining_rounds','name','date','figure','bowused','curentgrading','age','arrow','gradefor','scores','category','eventcategory','archer','event'));
 
@@ -164,13 +172,19 @@ class GradingController extends Controller
          $scores  = Eventcategoryscore::where('eventcategory_id', $request->eventcategory_id)->pluck('score');
          $category = Eventcategory::where('id', $request->eventcategory_id)->first();
 
+      //   dd($gradefor);    
         $lastrecord = Scorecard::where('event_id', $event)->where('archer_id', $archer)->latest()->first();
         $cumtotal =  $lastrecord->cumtotal ?? 0;
         $noofrounds = $lastrecord->round ?? 1;
         $remaining_rounds =  $category->rounds - $noofrounds;
         //dd($remaining_rounds);
+        if($noofrounds < $category->rounds){
+          $currentRound = $noofrounds + 1;
+         }else{
+          $currentRound = $category->rounds;
+         }
 
-       return view('events.finalgrading', compact('lastrecord','cumtotal','noofrounds','remaining_rounds','name','date','figure','bowused','curentgrading','age','arrow','gradefor','scores','category','eventcategory','archer','event'));
+       return view('events.finalgrading', compact('lastrecord','cumtotal','currentRound','noofrounds','remaining_rounds','name','date','figure','bowused','curentgrading','age','arrow','gradefor','scores','category','eventcategory','archer','event'));
     }
 
 
@@ -227,7 +241,12 @@ class GradingController extends Controller
 
          }
 
-         
+         $eventscore = Eventscore::where('event_id', $request->event )->where('archer_id', $request->archer)->update([
+        
+          'status' => 1
+        ]);
+  
+      
 
         if($request->gradefor){
 
@@ -404,9 +423,61 @@ class GradingController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function archerDetails(Request $request)
     {
-        //
+       // dd($request->all());
+      
+      //  dd($categories);
+     // $eventyacho = Eventscore::where('id', $id)->first();
+      $archer = Archer::where('id', $request->archer )->first();
+   
+      $scores = MinScores::all();
+      $event =  Event::where('id',  $request->event)->first();
+      $categories = Eventcategory::where('id', $request->cat )->first();  
+     
+       $name = $archer->name;
+       $date = $event->doe;
+       $bowused = $request->bowUsed;
+       $curentgrading = $archer->currentGradingDominant;
+       $age = $archer->ageCategory;
+       $arrow = $request->arrowUsed;
+       $gradefor = $request->gf; 
+       $eventcategory = $categories->name; 
+       $archer = $request->archer;
+       $event = $request->event;
+
+      // dd($gradefor);
+        if($gradefor != '0'){
+          $figure = MinScores::where('level' ,$gradefor)->pluck($age)->first();
+        }else{
+           $figure = null;
+        }
+
+     
+      $scores  = Eventcategoryscore::where('eventcategory_id', $request->cat )->pluck('score');
+       $category = Eventcategory::where('id', $request->cat )->first();
+
+      $lastrecord = Scorecard::where('event_id', $event)->where('archer_id', $archer)->latest()->first();
+     $cumtotal =  $lastrecord->cumtotal ?? 0;
+      $noofrounds = $lastrecord->round ?? 1;
+      $remaining_rounds =  $category->rounds - $noofrounds;
+     // dd($noofrounds, $category->rounds );
+     if($lastrecord != null){
+      if($noofrounds < $category->rounds){
+
+        $currentRound = $noofrounds + 1;
+       }else{
+        $currentRound = $category->rounds;
+       }
+    }else{
+      
+      $currentRound =  1;
+    }
+     
+       return view('events.finalgrading', compact('lastrecord','currentRound','cumtotal','noofrounds','remaining_rounds','name','date','figure','bowused','curentgrading','age','arrow','gradefor','scores','category','eventcategory','archer','event'));
+
+
+    
     }
 
     /**
