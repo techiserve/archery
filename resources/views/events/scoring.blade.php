@@ -47,7 +47,7 @@
                       <span class='hidden-sm hidden-sm hidden-md'>  Capture Scores</span>
                    </a>&nbsp;
 
-                   <a  href="/archer/edit/{{$archer->id}}" class='btn btn-primary btn-sm' style='color: white;'>
+                   <a  href="/archer/edit/{{$archer->archer_id}}" class='btn btn-primary btn-sm' style='color: white;'>
                       <span class='fa fa-pencil'></span>
                       <span class='hidden-sm hidden-sm hidden-md'> Archer Info</span>
                    </a>&nbsp;
@@ -62,7 +62,7 @@
                             </button>
 
 
-                            <a  href="/archer/edit/{{$archer->id}}" class='btn btn-primary btn-sm' style='color: white;'>
+                            <a  href="/archer/edit/{{$archer->archer_id}}" class='btn btn-primary btn-sm' style='color: white;'>
                       <span class='fa fa-pencil'></span>
                       <span class='hidden-sm hidden-sm hidden-md'> Archer Info</span>
                    </a>&nbsp;
