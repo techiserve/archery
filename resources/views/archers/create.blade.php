@@ -132,30 +132,37 @@
                       <select class="form-select" id="exampleFormControlSelect1" name="cp" aria-label="Default select example">
                            <option value="SC1">SC1</option>   
                            <option value="SC2">SC2</option>
-                           <option value="SC3">SC3</option>  
-                           <option value="SJ1">SJ1</option>   
-                           <option value="SJ2">SJ2</option>
-                           <option value="SJ3">SJ3</option>  
-                           <option value="SA1">SA1</option>   
-                           <option value="SA2">SA2</option>
-                           <option value="SA3">SA3</option> 
-
+                           <option value="SC3">SC3</option> 
+                           
                            <option value="AC1">AC1</option>   
                            <option value="AC2">AC2</option>
                            <option value="AC3">AC3</option>  
-                           <option value="AJ1">AJ1</option>   
-                           <option value="AJ2">AJ2</option>
-                           <option value="AJ3">AJ3</option>  
-                           <option value="AA1">AA1</option>   
-                           <option value="AA2">AA2</option>
-                           <option value="AA3">AA3</option> 
 
                            <option value="MC1">MC1</option>   
                            <option value="MC2">MC2</option>
                            <option value="MC3">MC3</option>  
+
+                           <option value="SJ1">SJ1</option>   
+                           <option value="SJ2">SJ2</option>
+                           <option value="SJ3">SJ3</option>  
+
+                           
+                           <option value="AJ1">AJ1</option>   
+                           <option value="AJ2">AJ2</option>
+                           <option value="AJ3">AJ3</option>  
+
                            <option value="MJ1">MJ1</option>   
                            <option value="MJ2">MJ2</option>
-                           <option value="MJ3">MJ3</option>  
+                           <option value="MJ3">MJ3</option> 
+
+                           <option value="SA1">SA1</option>   
+                           <option value="SA2">SA2</option>
+                           <option value="SA3">SA3</option> 
+
+                           <option value="AA1">AA1</option>   
+                           <option value="AA2">AA2</option>
+                           <option value="AA3">AA3</option> 
+                      
                            <option value="MA1">MA1</option>   
                            <option value="MA2">MA2</option>
                            <option value="MA3">MA3</option> 

@@ -92,21 +92,7 @@
               <input type="text" name="bowUsed" class="form-control" placeholder="Enter Bow Used" />
             </div>
           </div>
-          @if($cat == 1)
-          <div class="row g-6">
-            <div class="col mb-0">
-              <label class="form-label">Arrow Used</label>
-             
-              @foreach($scores as $score) 
-                      <option value="{{$score->level}}">{{$score->level}} </option>  
-                         @endforeach  
-                     </select> 
-           
-            </div>
-          </div>
-          @else
-          <input type="hidden" name="gf" value="0">
-          @endif
+        
         </div>
 
         <!-- Send IDs or values properly -->

@@ -16,7 +16,7 @@ use App\Models\Round5;
 use App\Models\Round6;
 use App\Models\Round7;
 use App\Models\Round8;
-use App\Models\Round9;
+use App\Models\GradingCard;
 use App\Models\Eventscore;
 use App\Models\Scorecard;
 use Illuminate\Support\Facades\Auth;
@@ -108,6 +108,7 @@ class GradingController extends Controller
          $archergrading = Archergrading::where('archer_id', $eventyacho->archer_id)->where('event', $eventyacho->event_id)->first();
 
          if($archergrading){
+          //dd($categories);
           $currentprof = $archer->currentProficiency;
           $name = $archergrading->name;
           $date = $archergrading->date;
@@ -119,9 +120,10 @@ class GradingController extends Controller
           $eventcategory = $categories->id; 
           $archer = $archergrading->archer_id;
           $event = $archergrading->event;
+
+        //  dd($eventcategory);
         
- 
-          $figure = MinScores::where('level' ,$gradefor)->pluck($age)->first();
+          $figure =  GradingCard::where('level', $gradefor)->pluck('score');  
           $scores  = Eventcategoryscore::where('eventcategory_id', $eventcategory)->pluck('score');
           $category = Eventcategory::where('id', $eventcategory)->first();
  
@@ -142,7 +144,7 @@ class GradingController extends Controller
           $currentRound =  1;
         }
          
-         
+        $eventcategory = $categories->name; 
  
          return view('events.finalgrading', compact('lastrecord','currentprof','cumtotal','currentRound','noofrounds','remaining_rounds','name','date','figure','bowused','curentgrading','age','arrow','gradefor','scores','category','eventcategory','archer','event'));
 
@@ -169,7 +171,7 @@ class GradingController extends Controller
 
         // dd($eventcategory);
 
-         $figure = MinScores::where('level' ,$gradefor)->pluck($age)->first();
+         $figure =  GradingCard::where('level', $gradefor)->pluck('score');  
          $scores  = Eventcategoryscore::where('eventcategory_id', $request->eventcategory_id)->pluck('score');
          $category = Eventcategory::where('id', $request->eventcategory_id)->first();
 
@@ -194,7 +196,7 @@ class GradingController extends Controller
     {
        // dd($request->all());
         $scores = $request->input('scores');
-       // dd($scores);
+       // dd($request->round,$request->eventcategory);
 
          $user = Auth::user()->id;
 
@@ -247,9 +249,10 @@ class GradingController extends Controller
           'status' => 1
         ]);
   
-      
+           $eventCat = Eventcategory::where('name', $request->eventcategory)->orwhere('id',$request->eventcategory)->first();
+          // dd($request->gradefor);
 
-        if($request->gradefor){
+        if($request->gradefor &&  $eventCat->rounds == $request->round){
 
          if($request->total >= $request->figure){
 
@@ -436,25 +439,39 @@ class GradingController extends Controller
       $event =  Event::where('id',  $request->event)->first();
       $categories = Eventcategory::where('id', $request->cat )->first();  
      
+
+     // dd($archer,$categories);
+      if($categories->name == 'Grading A'){
+
+        $currentgrading = GradingCard::where('level', $archer->currentGradingDominant)->first();     
+        $nextgrading = null;
+        if ($currentgrading) {
+            $nextgrading = GradingCard::where('id', '>', $currentgrading->id)->orderBy('id')->first();
+        }
+
+          $figure = $nextgrading->score;
+          $gradefor = $nextgrading->level;
+        }else{
+           $figure = null;
+           $gradefor = null;
+        }
+
+
        $name = $archer->name;
        $date = $event->doe;
        $bowused = $request->bowUsed;
        $curentgrading = $archer->currentGradingDominant;
        $age = $archer->ageCategory;
        $arrow = $request->arrowUsed;
-       $gradefor = $request->gf; 
+       //$gradefor = $request->gf; 
        $eventcategory = $categories->name; 
        $archer = $request->archer;
        $event = $request->event;
       
+       
 
       // dd($gradefor);
-        if($gradefor != '0'){
-          $figure = MinScores::where('level' ,$gradefor)->pluck($age)->first();
-        }else{
-           $figure = null;
-        }
-
+ 
      
       $scores  = Eventcategoryscore::where('eventcategory_id', $request->cat )->pluck('score');
        $category = Eventcategory::where('id', $request->cat )->first();

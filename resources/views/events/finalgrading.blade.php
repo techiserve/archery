@@ -48,10 +48,15 @@
                     <label class="form-label">Current Proficiency</label>
                     <input type="text" name="currentprof" value="{{ $currentprof }}" class="form-control" />
                 </div>
-                @if( $gradefor == 'Grading A')
+                @if( $eventcategory == 'Grading A')
                 <div class="col-md-4">
                     <label class="form-label">Grading for</label>
                     <input type="text" name="gradefor" value="{{ $gradefor }}" class="form-control" readonly/>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Required Score</label>
+                    <input type="text" name="" value="{{ $figure }}" class="form-control" readonly/>
                 </div>
                 @endif
               
@@ -118,7 +123,7 @@ let currentTime = `${hours}:${minutes}`;
                 <td>Arrow ${j}</td>
                 <td>
                     <select class='input-field arrow-score' name='scores[${selectedRound}][${j}]' data-round="${selectedRound}" required>
-                        <option value="M">M</option>
+                        <option value="0">M</option>
                         ${possibleScores.map(score => `<option value='${score}'>${score}</option>`).join('')}
                     </select>
                 </td>
