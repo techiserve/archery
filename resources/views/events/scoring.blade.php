@@ -38,7 +38,7 @@
                         <td>{{ $pple->surname }}</td>
                         <td>{{ $pple->dob }}</td>
                         <td>{{ $pple->ageCategory }}</td>
-                        <td>{{ $pple->currentGrading }}</td>
+                        <td>{{ $archer->totalScore }}</td>
                         <td>  
                           
             @if($archer->status == '1')

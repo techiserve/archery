@@ -84,11 +84,12 @@ class GradingController extends Controller
            return back()->with('error', 'This event has been Ended!');
          }
 
-        $archers = Eventscore::where('event_id', $id)->get();
+        $archers = Eventscore::where('event_id', $id)->orderBy('totalScore', 'desc')->get();
         $pples = archer::all();
         $cat = $event->cat;
         $scores = MinScores::all();
-  
+       
+
 
        return view('events.scoring', compact('archers','pples','cat','scores'));
     }
@@ -123,7 +124,8 @@ class GradingController extends Controller
 
         //  dd($eventcategory);
         
-          $figure =  GradingCard::where('level', $gradefor)->pluck('score');  
+          $figure =  GradingCard::where('level', $gradefor)->first();
+          $figure = $figure->score;  
           $scores  = Eventcategoryscore::where('eventcategory_id', $eventcategory)->pluck('score');
           $category = Eventcategory::where('id', $eventcategory)->first();
  
@@ -145,6 +147,7 @@ class GradingController extends Controller
         }
          
         $eventcategory = $categories->name; 
+        //dd($figure);
  
          return view('events.finalgrading', compact('lastrecord','currentprof','cumtotal','currentRound','noofrounds','remaining_rounds','name','date','figure','bowused','curentgrading','age','arrow','gradefor','scores','category','eventcategory','archer','event'));
 
@@ -194,7 +197,7 @@ class GradingController extends Controller
 
     public function finalgradingdetail(Request $request)
     {
-       // dd($request->all());
+      //  dd($request->all());
         $scores = $request->input('scores');
        // dd($request->round,$request->eventcategory);
 
@@ -246,7 +249,8 @@ class GradingController extends Controller
 
          $eventscore = Eventscore::where('event_id', $request->event )->where('archer_id', $request->archer)->update([
         
-          'status' => 1
+          'status' => 1,
+          'totalScore' => intval($request->total)
         ]);
   
            $eventCat = Eventcategory::where('name', $request->eventcategory)->orwhere('id',$request->eventcategory)->first();
@@ -267,7 +271,7 @@ class GradingController extends Controller
          }else{
 
         //  dd('not done');
-            return redirect()->route('events.showEvent', ['id' => $request->event])->with('error', 'Archer failed to be upgraded!');
+            return redirect()->route('events.showEvent', ['id' => $request->event])->with('error', 'Archer failed to score enough points be upgraded!');
       
          }
 
