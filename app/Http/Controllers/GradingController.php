@@ -199,9 +199,12 @@ class GradingController extends Controller
     {
       //  dd($request->all());
         $scores = $request->input('scores');
-       // dd($request->round,$request->eventcategory);
 
          $user = Auth::user()->id;
+
+        $checkUser = Archergrading::where('archer_id',$request->archer)->where('event',$request->event)->first();
+
+        if(!$checkUser){
 
          $grading = new Archergrading();
          $grading->event = $request->event;
@@ -223,6 +226,12 @@ class GradingController extends Controller
          $grading->scoredBy = $request->user;
          $grading->createdBy = $request->user;   
          $grading->save(); 
+
+        }else{
+
+          $grading = $checkUser;
+
+        }
 
 
          foreach($scores[$request->round] as $score){
@@ -262,7 +271,7 @@ class GradingController extends Controller
 
           $updatearcher = Archer::where('id', $request->archer)->update([
          
-            'currentGrading' => $request->gradefor,
+            'currentGradingDominant' => $request->gradefor,
 
           ]);
              
