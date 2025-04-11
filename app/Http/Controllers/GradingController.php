@@ -125,7 +125,12 @@ class GradingController extends Controller
         //  dd($eventcategory);
         
           $figure =  GradingCard::where('level', $gradefor)->first();
+          if($figure){
           $figure = $figure->score;  
+          }else{
+            $figure = null;  
+          }
+
           $scores  = Eventcategoryscore::where('eventcategory_id', $eventcategory)->pluck('score');
           $category = Eventcategory::where('id', $eventcategory)->first();
  
