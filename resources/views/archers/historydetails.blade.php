@@ -55,6 +55,78 @@
               </div>
                         
 </div>
+@php
+    // Get the maximum number of arrows in any round
+    $maxArrows = $scorecards->map(function ($round) {
+        return count($round);
+    })->max();
+
+    $roundTotals = [];
+    $cumTotals = [];
+    $times = [];
+    $totalScore = 0;
+
+    foreach ($scorecards as $round => $entries) {
+        $first = $entries->first();
+        $roundTotals[$round] = $first->roundtotal ?? 0;
+        $cumTotals[$round] = $first->cumtotal ?? 0;
+        $times[$round] = $first->time ?? '-';
+        $totalScore = $first->total ?? 0;
+    }
+@endphp
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Arrow</th>
+            @foreach($scorecards as $round => $entries)
+                <th>Round {{ $round }}</th>
+            @endforeach
+        </tr>
+    </thead>
+    <tbody>
+        {{-- Arrows --}}
+        @for($i = 0; $i < $maxArrows; $i++)
+            <tr>
+                <td>Arrow {{ $i + 1 }}</td>
+                @foreach($scorecards as $round => $entries)
+                    <td>{{ $entries[$i]->arrow ?? '-' }}</td>
+                @endforeach
+            </tr>
+        @endfor
+
+        {{-- Round Total --}}
+        <tr>
+            <td><strong>Round Total</strong></td>
+            @foreach($roundTotals as $round => $val)
+                <td><strong>{{ $val }}</strong></td>
+            @endforeach
+        </tr>
+
+        {{-- Cum Total --}}
+        <tr>
+            <td><strong>Cum Total</strong></td>
+            @foreach($cumTotals as $round => $val)
+                <td><strong>{{ $val }}</strong></td>
+            @endforeach
+        </tr>
+
+        {{-- Time --}}
+        <tr>
+            <td><strong>Time</strong></td>
+            @foreach($times as $round => $val)
+                <td>{{ $val }}</td>
+            @endforeach
+        </tr>
+
+        {{-- Total Score (one cell only) --}}
+        <tr>
+            <td colspan="{{ count($scorecards) + 1 }}">
+                <strong>Total Score: {{ $totalScore }}</strong>
+            </td>
+        </tr>
+    </tbody>
+</table>
 
 
 

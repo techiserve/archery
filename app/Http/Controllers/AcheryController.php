@@ -15,6 +15,7 @@ use App\Models\Round7;
 use App\Models\Round8;
 use App\Models\Round9;
 use App\Models\Eventscore;
+use DB;
 use App\Models\Archergrading;
 use Illuminate\Support\Facades\Auth;
 
@@ -90,18 +91,16 @@ class AcheryController extends Controller
 
        $grading = Archergrading::where('id', $id)->first();
        $Round1 = Round1::where('archergrading_id', $id)->first();
-       $Round2 = Round2::where('archergrading_id', $id)->first();
-       $Round3 = Round3::where('archergrading_id', $id)->first();
-       $Round4 = Round4::where('archergrading_id', $id)->first();
-       $Round5 = Round5::where('archergrading_id', $id)->first();
-       $Round6 = Round6::where('archergrading_id', $id)->first();
-       $Round7 = Round7::where('archergrading_id', $id)->first();
-       $Round8 = Round8::where('archergrading_id', $id)->first();
-       $Round9 = Round9::where('archergrading_id', $id)->first();
+       $scorecards = DB::table('scorecards')
+                    ->where('archergrading_id', $id)
+                    ->orderBy('round')
+                    //->orderBy('arrow')
+                    ->get()
+                    ->groupBy('round');
+   //dd( $scorecards );
 
-       //dd($grading);
 
-       return view('archers.historydetails', compact('grading','Round1','Round2','Round3','Round4','Round5','Round6','Round7','Round8','Round9'));
+       return view('archers.historydetails', compact('grading','Round1','scorecards'));
 
     }
 
