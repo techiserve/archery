@@ -162,13 +162,13 @@
                     <div data-i18n="Content navbar">View Scores</div>
                   </a>
                 </li>
-                <!-- <li class="menu-item">
-                  <a href="/grading/metadata" class="menu-link">
+                <li class="menu-item">
+                  <a href="/register" class="menu-link">
                     <div data-i18n="Content nav + Sidebar">Meta Data</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                     -->
+                     
               </ul>
             </li>
 

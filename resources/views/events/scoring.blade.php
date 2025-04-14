@@ -61,20 +61,18 @@
                               Capture Details
                             </button>
 
-
                             <a  href="/archer/edit/{{$archer->archer_id}}" class='btn btn-primary btn-sm' style='color: white;'>
                       <span class='fa fa-pencil'></span>
                       <span class='hidden-sm hidden-sm hidden-md'> Archer Info</span>
                    </a>&nbsp;
+
+                   
                  
              @endif
-             <button
-                              type="button"
-                              class="btn btn-info btn-sm"
-                              data-bs-toggle="modal"
-                              data-bs-target="#modalCente{{ $archer->id }}">
-                              Capture Bow & Arrow
-                            </button>
+             <a  href="/archer/certificate/{{$archer->archer_id}}" class='btn btn-info btn-sm' style='color: white;'>
+                      <span class='fa fa-pencil'></span>
+                      <span class='hidden-sm hidden-sm hidden-md'> Download Certificate</span>
+                   </a>&nbsp;
 
    
 <!-- Modal -->
