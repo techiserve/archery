@@ -15,6 +15,7 @@ use App\Models\Round4;
 use App\Models\Round5;
 use App\Models\Round6;
 use App\Models\Round7;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Round8;
 use App\Models\GradingCard;
 use App\Models\Eventscore;
@@ -520,8 +521,106 @@ class GradingController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function certificate(string $id)
     {
-        //
+      //  dd($id);
+        $eventscore = Eventscore::where('id',$id)->first();
+        $archer = Archergrading::where('archer_id',$eventscore->archer_id)->where('event',$eventscore->event_id)->first();
+        //dd($archer);
+
+        $data = [
+          'archer' => (object)[
+              'name'     => $archer->name ?? 'Unknown',
+              'event'    => $archer->gradingfor ?? 'Unknown Event',
+              'score'    => $eventscore->totalScore ?? '0',
+              'position' => $archer->id ?? 'N/A',
+          ]
+      ];
+  
+      $pdf = Pdf::loadView('pdf.certificate', $data)->setPaper('a4', 'landscape');
+  
+      return $pdf->download('archer_scorecard.pdf');
     }
+
+
+    public function editeventCategory($id) {
+    
+      $post = Eventcategory::findOrFail($id);
+      $post->delete();
+
+      return redirect()->back()->with('success', 'Category deleted successfully.');
+
+
+    }
+
+       
+
+    public function editevent($id) {
+    
+    // dd($id);
+
+     $event = Event::where('id', $id)->first();
+     $archers = Eventscore::where('event_id', $id)->get();
+     $allarchers = Archer::all();
+     $cat = Eventcategory::where('id', $event->cat)->first();
+     $cats = Eventcategory::all();
+     //dd($event,$archers, $allarchers);
+
+     return view('events.editEvent', compact('event','archers','allarchers','cat','cats'));
+
+
+
+    }
+
+
+
+    public function update(Request $request, string $id)
+    {
+
+
+      $event = Event::findOrFail($id);
+      $event->update([
+          'name' => $request->name,
+          'doe' => $request->doe,
+          'cat' => $request->cat,
+      ]);
+            
+      $archers = $request->selected_archers;
+      // dd($archers);
+      foreach($archers as $arch){
+
+        $archers = Eventscore::where('event_id', $id)->where('archer_id', $arch)->first();
+       // dd($archers);
+
+        if(!$archers){
+          
+          $addArcher = Eventscore::create([
+
+            'event_id' => $id,
+            'archer_id' => $arch
+          ]);
+
+        }
+
+      }
+
+      return redirect()->back()->with('success', 'Event updated successfully.');
+
+    }
+
+
+
+    public function deletearcher($archer_id, $event_id){
+
+  
+      $archers = Eventscore::where('event_id', $event_id)->where('archer_id', $archer_id)->delete();
+
+      return redirect()->back()->with('success', 'Archer removed successfully.');
+
+    }
+
+
+
+
+
 }

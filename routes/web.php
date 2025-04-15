@@ -37,6 +37,7 @@ Route::post('/archers/store', [AcheryController::class, 'store'])->name('achers.
 Route::get('/archers/index', [AcheryController::class, 'index'])->name('achers.index');
 Route::get('/viewmore/{id}', [AcheryController::class, 'viewmore'])->name('viewmore');
 Route::get('/archer/edit/{id}', [AcheryController::class, 'edit'])->name('archer.edit');
+Route::get('/archer/certificate/{id}', [GradingController::class, 'certificate'])->name('archer.certificate');
 Route::put('/archer/update/{id}', [AcheryController::class, 'update'])->name('archer.update');
 Route::get('/historydetails/{id}', [AcheryController::class, 'historydetails'])->name('historydetails');
 
@@ -44,6 +45,7 @@ Route::get('/grading/scores', [GradingController::class, 'scores'])->name('gradi
 Route::post('/grading/store', [GradingController::class, 'store'])->name('grading.store');
 
 //events
+Route::put('/event/update/{id}', [GradingController::class, 'update'])->name('event.updateEvent');
 Route::get('/events/createCategory', [GradingController::class, 'createCategory'])->name('events.createCategory');
 Route::get('/events/indexeventCategory', [GradingController::class, 'indexeventCategory'])->name('events.indexeventCategory');
 Route::get('/events/indexevent', [GradingController::class, 'indexevent'])->name('events.indexevent');
@@ -54,6 +56,9 @@ Route::get('/events/create', [GradingController::class, 'createEvent'])->name('e
 Route::get('/events/manage', [GradingController::class, 'manage'])->name('events.manage');
 Route::get('/events/scoring', [GradingController::class, 'scoring'])->name('events.scoring');
 Route::get('/events/showEvent/{id}', [GradingController::class, 'showEvent'])->name('events.showEvent');
+Route::get('/editeventCategory/{id}', [GradingController::class, 'editeventCategory'])->name('editeventCategory');
+Route::get('/editevent/{id}', [GradingController::class, 'editevent'])->name('editevent');
+Route::get('/deletearcher/{archer_id}/{event_id}', [GradingController::class, 'deletearcher'])->name('deletearcher');
 Route::get('/gradearcher/{id}', [GradingController::class, 'gradearcher'])->name('gradearcher');
 Route::get('/endevent/{id}', [GradingController::class, 'endevent'])->name('endevent');
 Route::post('/event/storeCategory', [GradingController::class, 'storeCategory'])->name('event.storeCategory');

@@ -29,9 +29,9 @@
                         <td>{{ $archer->arrows }}</td>
                     
                         <td>
-                        <a  href="/editeventCategory/{{$archer->id}}" class='btn btn-success btn-sm' style='color: white;'>
+                        <a  href="/editeventCategory/{{$archer->id}}" class='btn btn-danger btn-sm' style='color: white;'>
                       <span class='fa fa-pencil'></span>
-                      <span class='hidden-sm hidden-sm hidden-md'>Edit Category</span>
+                      <span class='hidden-sm hidden-sm hidden-md'>Delete Category</span>
                    </a>&nbsp;
                    </td>
                     @endforeach
