@@ -60,7 +60,7 @@
       buttons: ['copy', 'csv', 'excel', 'print'],
       language: {
         search: "_INPUT_",
-        searchPlaceholder: "Search archers..."
+        searchPlaceholder: "Search..."
       }
     });
   });

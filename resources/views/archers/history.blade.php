@@ -69,10 +69,10 @@
       responsive: true,
       pageLength: 10,
       dom: 'Bfrtip',
-      buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+      buttons: ['copy', 'csv', 'excel', 'print'],
       language: {
         search: "_INPUT_",
-        searchPlaceholder: "Search archers..."
+        searchPlaceholder: "Search..."
       }
     });
   });

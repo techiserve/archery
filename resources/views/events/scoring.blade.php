@@ -181,11 +181,12 @@
     $('#archers-table').DataTable({
       responsive: true,
       pageLength: 10,
+      ordering: false,
       dom: 'Bfrtip',
       buttons: ['copy', 'csv', 'excel', 'print'],
       language: {
         search: "_INPUT_",
-        searchPlaceholder: "Search archers..."
+        searchPlaceholder: "Search ..."
       }
     });
   });
