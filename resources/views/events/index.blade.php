@@ -7,8 +7,9 @@
             
     <div class="card">
         <div class="card-datatable text-nowrap">
+        <h5 class="card-header">All Archers</h5>
         <div class="table-responsive">
-            <table class="datatables-basic table table-bordered table-responsive">
+            <table id="archers-table" class="table table-bordered">
                 <thead>
                     <tr>
                         <th></th>
@@ -51,3 +52,17 @@
 
               <!--/ DataTable with Buttons -->  
 @endsection
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    $('#archers-table').DataTable({
+      responsive: true,
+      pageLength: 10,
+      dom: 'Bfrtip',
+      buttons: ['copy', 'csv', 'excel', 'print'],
+      language: {
+        search: "_INPUT_",
+        searchPlaceholder: "Search archers..."
+      }
+    });
+  });
+</script>

@@ -1,5 +1,22 @@
 @extends('template.default')
+<style>
+  .form-check {
+    padding: 10px;
+    border: 1px solid #d9dee3;
+    border-radius: 0.375rem;
+    background-color: #f8f9fa;
+  }
 
+  .form-check-input:checked {
+    background-color: #696cff;
+    border-color: #696cff;
+  }
+
+  .form-check-label {
+    margin-left: 10px;
+    font-weight: 500;
+  }
+</style>
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
 <div class="card mb-6">
@@ -56,71 +73,72 @@
                     <div class="col-md-6">
                       <label class="form-label" for="multicol-first-name">Current Grading Dominant</label>
                       <select class="form-select" id="cgdSelect" name="cgd" aria-label="Default select example">
-                           <option value="SC1">SC1</option>   
-                           <option value="SC2">SC2</option>
-                           <option value="SC3">SC3</option>  
-                           <option value="SJ1">SJ1</option>   
-                           <option value="SJ2">SJ2</option>
-                           <option value="SJ3">SJ3</option>  
-                           <option value="SA1">SA1</option>   
-                           <option value="SA2">SA2</option>
-                           <option value="SA3">SA3</option> 
+    <option value="CS1">CS1</option>   
+    <option value="CS2">CS2</option>
+    <option value="CS3">CS3</option>  
+    <option value="JS1">JS1</option>   
+    <option value="JS2">JS2</option>
+    <option value="JS3">JS3</option>  
+    <option value="AS1">AS1</option>   
+    <option value="AS2">AS2</option>
+    <option value="AS3">AS3</option> 
 
-                           <option value="AC1">AC1</option>   
-                           <option value="AC2">AC2</option>
-                           <option value="AC3">AC3</option>  
-                           <option value="AJ1">AJ1</option>   
-                           <option value="AJ2">AJ2</option>
-                           <option value="AJ3">AJ3</option>  
-                           <option value="AA1">AA1</option>   
-                           <option value="AA2">AA2</option>
-                           <option value="AA3">AA3</option> 
+    <option value="CA1">CA1</option>   
+    <option value="CA2">CA2</option>
+    <option value="CA3">CA3</option>  
+    <option value="JA1">JA1</option>   
+    <option value="JA2">JA2</option>
+    <option value="JA3">JA3</option>  
+    <option value="AA1">AA1</option>   
+    <option value="AA2">AA2</option>
+    <option value="AA3">AA3</option> 
 
-                           <option value="MC1">MC1</option>   
-                           <option value="MC2">MC2</option>
-                           <option value="MC3">MC3</option>  
-                           <option value="MJ1">MJ1</option>   
-                           <option value="MJ2">MJ2</option>
-                           <option value="MJ3">MJ3</option>  
-                           <option value="MA1">MA1</option>   
-                           <option value="MA2">MA2</option>
-                           <option value="MA3">MA3</option> 
-                     </select>
+    <option value="CM1">CM1</option>   
+    <option value="CM2">CM2</option>
+    <option value="CM3">CM3</option>  
+    <option value="JM1">JM1</option>   
+    <option value="JM2">JM2</option>
+    <option value="JM3">JM3</option>  
+    <option value="AM1">AM1</option>   
+    <option value="AM2">AM2</option>
+    <option value="AM3">AM3</option> 
+</select>
                     </div>
                    
                     <div class="col-md-6">
                       <label class="form-label" for="multicol-first-name">Current Grading Weak</label>
                       <select class="form-select" id="cgwSelect" name="cgw" aria-label="Default select example">
-                           <option value="SC1">SC1</option>   
-                           <option value="SC2">SC2</option>
-                           <option value="SC3">SC3</option>  
-                           <option value="SJ1">SJ1</option>   
-                           <option value="SJ2">SJ2</option>
-                           <option value="SJ3">SJ3</option>  
-                           <option value="SA1">SA1</option>   
-                           <option value="SA2">SA2</option>
-                           <option value="SA3">SA3</option> 
+    <option value="CS1">CS1</option>   
+    <option value="CS2">CS2</option>
+    <option value="CS3">CS3</option>  
+    <option value="JS1">JS1</option>   
+    <option value="JS2">JS2</option>
+    <option value="JS3">JS3</option>  
+    <option value="AS1">AS1</option>   
+    <option value="AS2">AS2</option>
+    <option value="AS3">AS3</option> 
 
-                           <option value="AC1">AC1</option>   
-                           <option value="AC2">AC2</option>
-                           <option value="AC3">AC3</option>  
-                           <option value="AJ1">AJ1</option>   
-                           <option value="AJ2">AJ2</option>
-                           <option value="AJ3">AJ3</option>  
-                           <option value="AA1">AA1</option>   
-                           <option value="AA2">AA2</option>
-                           <option value="AA3">AA3</option> 
+    <option value="CA1">CA1</option>   
+    <option value="CA2">CA2</option>
+    <option value="CA3">CA3</option>  
+    <option value="JA1">JA1</option>   
+    <option value="JA2">JA2</option>
+    <option value="JA3">JA3</option>  
+    <option value="AA1">AA1</option>   
+    <option value="AA2">AA2</option>
+    <option value="AA3">AA3</option> 
 
-                           <option value="MC1">MC1</option>   
-                           <option value="MC2">MC2</option>
-                           <option value="MC3">MC3</option>  
-                           <option value="MJ1">MJ1</option>   
-                           <option value="MJ2">MJ2</option>
-                           <option value="MJ3">MJ3</option>  
-                           <option value="MA1">MA1</option>   
-                           <option value="MA2">MA2</option>
-                           <option value="MA3">MA3</option> 
-                     </select>
+    <option value="CM1">CM1</option>   
+    <option value="CM2">CM2</option>
+    <option value="CM3">CM3</option>  
+    <option value="JM1">JM1</option>   
+    <option value="JM2">JM2</option>
+    <option value="JM3">JM3</option>  
+    <option value="AM1">AM1</option>   
+    <option value="AM2">AM2</option>
+    <option value="AM3">AM3</option> 
+</select>
+
                     </div>
                     </div>  
                     </br>
@@ -130,43 +148,42 @@
                       <label class="form-label" for="multicol-first-name">Current Proficiency</label>
               
                       <select class="form-select" id="exampleFormControlSelect1" name="cp" aria-label="Default select example">
-                           <option value="SC1">SC1</option>   
-                           <option value="SC2">SC2</option>
-                           <option value="SC3">SC3</option> 
-                           
-                           <option value="AC1">AC1</option>   
-                           <option value="AC2">AC2</option>
-                           <option value="AC3">AC3</option>  
+    <option value="CS1">CS1</option>   
+    <option value="CS2">CS2</option>
+    <option value="CS3">CS3</option> 
+    
+    <option value="CA1">CA1</option>   
+    <option value="CA2">CA2</option>
+    <option value="CA3">CA3</option>  
 
-                           <option value="MC1">MC1</option>   
-                           <option value="MC2">MC2</option>
-                           <option value="MC3">MC3</option>  
+    <option value="CM1">CM1</option>   
+    <option value="CM2">CM2</option>
+    <option value="CM3">CM3</option>  
 
-                           <option value="SJ1">SJ1</option>   
-                           <option value="SJ2">SJ2</option>
-                           <option value="SJ3">SJ3</option>  
+    <option value="JS1">JS1</option>   
+    <option value="JS2">JS2</option>
+    <option value="JS3">JS3</option>  
 
-                           
-                           <option value="AJ1">AJ1</option>   
-                           <option value="AJ2">AJ2</option>
-                           <option value="AJ3">AJ3</option>  
+    <option value="JA1">JA1</option>   
+    <option value="JA2">JA2</option>
+    <option value="JA3">JA3</option>  
 
-                           <option value="MJ1">MJ1</option>   
-                           <option value="MJ2">MJ2</option>
-                           <option value="MJ3">MJ3</option> 
+    <option value="JM1">JM1</option>   
+    <option value="JM2">JM2</option>
+    <option value="JM3">JM3</option> 
 
-                           <option value="SA1">SA1</option>   
-                           <option value="SA2">SA2</option>
-                           <option value="SA3">SA3</option> 
+    <option value="AS1">AS1</option>   
+    <option value="AS2">AS2</option>
+    <option value="AS3">AS3</option> 
 
-                           <option value="AA1">AA1</option>   
-                           <option value="AA2">AA2</option>
-                           <option value="AA3">AA3</option> 
-                      
-                           <option value="MA1">MA1</option>   
-                           <option value="MA2">MA2</option>
-                           <option value="MA3">MA3</option> 
-                     </select> 
+    <option value="AA1">AA1</option>   
+    <option value="AA2">AA2</option>
+    <option value="AA3">AA3</option> 
+
+    <option value="AM1">AM1</option>   
+    <option value="AM2">AM2</option>
+    <option value="AM3">AM3</option> 
+</select>
            
                     </div>
                    
@@ -206,6 +223,17 @@
                     </div>
 
                   </div>
+
+ <div class="row g-6 mt-4">
+  <div class="col-md-12">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" name="clubMember">
+      <label class="form-check-label" for="newsletter">
+        Is this Archer a club member?
+      </label>
+    </div>
+  </div>
+</div>
 
                   
                   <div class="pt-6">
@@ -267,11 +295,10 @@
         ageGroupInput.value = proficiency;
 
         const optionsByCategory = {
-    "Cub": ["SC1", "SC2", "SC3", "AC1", "AC2", "AC3","MC1",  "MC2", "MC3"],
-    "Junior": ["SJ1", "SJ2", "SJ3","AJ1",  "AJ2", "AJ3","MJ1",  "MJ2", "MJ3"],
-    "Adult": ["SA1", "SA2", "SA3", "AA1", "AA2", "AA3", "MA1", "MA2", "MA3"]
+    "Cub": ["CS1", "CS2", "CS3", "CA1", "CA2", "CA3", "CM1", "CM2", "CM3"],
+    "Junior": ["JS1", "JS2", "JS3", "JA1", "JA2", "JA3", "JM1", "JM2", "JM3"],
+    "Adult": ["AS1", "AS2", "AS3", "AA1", "AA2", "AA3", "AM1", "AM2", "AM3"]
 };
-
         // Helper to populate dropdown options
         function populateOptions(selectElement, category) {
             selectElement.innerHTML = "";

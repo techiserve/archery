@@ -4,55 +4,56 @@
 <div class="container-xxl flex-grow-1 container-p-y">
 <div class="card mb-6">
              
-            
-          
-                  <!-- <div class="pt-6">
-                    <button type="submit" class="btn btn-primary me-3">Submit</button>
-                    <button type="reset" class="btn btn-label-secondary">Cancel</button>
-                  </div> -->
-                <!-- </form> -->
- 
-    <!-- DataTable with Checkboxes -->
     <div class="card">
         <div class="card-datatable text-nowrap">
+        <h5 class="card-header">Event: {{ $event->name }} | Category: {{$catname}} | Date: {{$event->doe}}</h5>
         <div class="table-responsive">
-            <table class="datatables-basic table table-bordered table-responsive">
+            <table id="archers-table" class="table table-bordered">
                 <thead>
                     <tr>
                      
                         <th>Name</th>
                         <th>Surname</th>
-                        <th>Dob</th>
-                        <th>Category</th>
+                        <th>Grading</th>
+                        <th>Age Category</th>
+                        <th>Latest Round</th>
                         <th>Score</th>
-                        <th>Action</th>
+                        <th>Current P/R</th>
+                        <th>Required P/R</th>
+                        <th class="text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($archers as $archer)  
                     <tr>
                     @foreach($pples as $pple)
-                  @if($archer->archer_id == $pple->id)            
+                   @if($archer->archer_id == $pple->id)            
                       
                         <td>{{ $pple->name }}</td>
                         <td>{{ $pple->surname }}</td>
-                        <td>{{ $pple->dob }}</td>
+                        <td>{{ $pple->currentGradingDominant }}</td>
                         <td>{{ $pple->ageCategory }}</td>
+                        <td>{{ $archer->timed }}</td>
                         <td>{{ $archer->totalScore }}</td>
-                        <td>  
+                        <td>{{ round($archer->thumbring)  }}</td>
+                        <td>{{ round($archer->arrowinhand) }}</td>
+                        <td class="text-center">  
                           
-            @if($archer->status == '1')
-                        <a  href="/gradearcher/{{$archer->id}}" class='btn btn-success btn-sm' style='color: white;'>
+                  @if($archer->status == '1')
+                  @if($event->status != '1')
+                      <a  href="/gradearcher/{{$archer->id}}" class='btn btn-success btn-sm' style='color: white;'>
                       <span class='fa fa-pencil'></span>
                       <span class='hidden-sm hidden-sm hidden-md'>  Capture Scores</span>
                    </a>&nbsp;
+                   @endif
 
                    <a  href="/archer/edit/{{$archer->archer_id}}" class='btn btn-primary btn-sm' style='color: white;'>
                       <span class='fa fa-pencil'></span>
                       <span class='hidden-sm hidden-sm hidden-md'> Archer Info</span>
                    </a>&nbsp;
                           
-              @else
+                   @else
+                   @if($event->status != '1')
                              <button
                               type="button"
                               class="btn btn-success btn-sm"
@@ -60,6 +61,7 @@
                               data-bs-target="#modalCenter{{ $archer->id }}">
                               Capture Details
                             </button>
+                            @endif
 
                       <a  href="/archer/edit/{{$archer->archer_id}}" class='btn btn-primary btn-sm' style='color: white;'>
                       <span class='fa fa-pencil'></span>
@@ -69,10 +71,10 @@
                    
                  
              @endif
-             <a  href="/archer/certificate/{{$archer->id}}" class='btn btn-info btn-sm' style='color: white;'>
+             <!-- <a  href="/archer/certificate/{{$archer->id}}" class='btn btn-info btn-sm' style='color: white;'>
                       <span class='fa fa-pencil'></span>
                       <span class='hidden-sm hidden-sm hidden-md'> Download Certificate</span>
-                   </a>&nbsp;
+                   </a>&nbsp; -->
 
    
 <!-- Modal -->
@@ -174,3 +176,17 @@
             
 
 @endsection
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    $('#archers-table').DataTable({
+      responsive: true,
+      pageLength: 10,
+      dom: 'Bfrtip',
+      buttons: ['copy', 'csv', 'excel', 'print'],
+      language: {
+        search: "_INPUT_",
+        searchPlaceholder: "Search archers..."
+      }
+    });
+  });
+</script>

@@ -19,60 +19,29 @@
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
 <div class="card mb-6">
-    <h5 class="card-header">Score Card</h5>
+    <h5 class="card-header">Capture Scores</h5>
     <form class="card-body" method="POST" action="/grading/confirmscores">
         @csrf
-        <h6>Event Details</h6>
+
             <div class="row g-12">
                 <div class="col-md-4">
                     <label class="form-label">Name</label>
                     <input type="text" name="name" value="{{ $name }}" class="form-control" />
                 </div>
-                <div class="col-md-4">
-                    <label class="form-label">Date</label>
-                    <input type="text" name="date" value="{{ $date }}" class="form-control" />
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Event Category</label>
-                    <input type="text" name="eventcategory" value="{{ $eventcategory }}" class="form-control" />
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Age Category</label>
-                    <input type="text" name="age" value="{{ $age }}" class="form-control" />
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Current Grading</label>
-                    <input type="text" name="curentgrading" value="{{ $curentgrading }}" class="form-control" />
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Current Proficiency</label>
-                    <input type="text" name="currentprof" value="{{ $currentprof }}" class="form-control" />
-                </div>
-                @if( $eventcategory == 'Grading A')
-                <div class="col-md-4">
-                    <label class="form-label">Grading for</label>
-                    <input type="text" name="gradefor" value="{{ $gradefor }}" class="form-control" readonly/>
-                </div>
-
-                <div class="col-md-4">
-                    <label class="form-label">Required Score</label>
-                    <input type="text" name="" value="{{ $figure }}" class="form-control" readonly/>
-                </div>
-                @endif
-              
-                <div class="col-md-4">
-                    <label class="form-label">Arrow Used</label>
-                    <input type="text" name="arrow" value="{{ $arrow }}" class="form-control" />
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Bow Used</label>
-                    <input type="text" name="bowused" value="{{ $bowused }}" class="form-control" />
-                </div>
-                
+                     
+                <input type="hidden" name="bowused" value="{{ $bowused }}" class="form-control" />
+                <input type="hidden" name="arrow" value="{{ $arrow }}" class="form-control" />
+                <input type="hidden" name="" value="{{ $figure }}" class="form-control" />
+                <input type="hidden" name="gradefor" value="{{ $gradefor }}" class="form-control" />
+                <input type="hidden" name="currentprof" value="{{ $currentprof }}" class="form-control" />
+                <input type="hidden" name="curentgrading" value="{{ $curentgrading }}" class="form-control" />
+                <input type="hidden" name="age" value="{{ $age }}" class="form-control" />
+                <input type="hidden" name="eventcategory" value="{{ $eventcategory }}" class="form-control" />
+                <input type="hidden" name="date" value="{{ $date }}" class="form-control" />
                 <input type="hidden" name="event" value="{{ $event }}">
                 <input type="hidden" name="archer" value="{{ $archer }}">
                 <input type="hidden" name="figure" value="{{ $figure }}">
-            </div>
+            </div></br>
         <div class="card">
             <h2>Scoring Table</h2>
             <select id="round-select" class="input-field" name="round" onchange="generateTable()">
@@ -81,8 +50,11 @@
               
             </select>
             <div id="scoring-card" class="table-container"></div>
+    
         </div>
+        @if($remaining_rounds != 0)
         <button type="submit" class="btn btn-primary mt-3">Confirm Scores</button>
+        @endif
     </form>
 </div>
 </div>
@@ -96,6 +68,9 @@
     let latestCumTotal = @json($cumtotal ?? 0);
     let numberOfRounds = @json($noofrounds ?? 1);
     let requiredTotal = @json($figure ?? 0);
+    let curPR = @json($currentPR ?? 0);
+    let requiredPr = @json($requiredPR ?? 0);
+  //  console.log(curPR);
     let remainingRounds = @json($remaining_rounds ?? ($category->rounds - 1));
     let eventCategory = @json($eventcategory ?? '');
     let now = new Date();
@@ -130,21 +105,22 @@ let currentTime = `${hours}:${minutes}`;
             </tr>`;
         }
 
+
         html += `<tr><td><strong>Round Total</strong></td>
                     <td><input type='number' class='input-field' id='round_total' name='round_total' readonly /></td></tr>`;
-        html += `<tr><td><strong>Cum Total</strong></td>
-                    <td><input type='number' class='input-field' id='cum_total' name='cum_total' readonly /></td></tr>`;
+        html += `<tr><td><strong></strong></td>
+                    <td><input type='hidden' class='input-field' id='cum_total' name='cum_total' readonly /></td></tr>`;
         html += `<tr><td><strong>Time</strong></td>
-                    <td><input type='time' class='input-field' name='time' value='${currentTime}' required /></td></tr>`;
+                    <td><input type='text' class='input-field' name='time'  required /></td></tr>`;
         html += `<tr><td><strong>Total</strong></td>
                     <td><input type='number' class='input-field' id='total' name='total' readonly /></td></tr>`;
         html += `<tr><td><strong>Current P/R</strong></td>
-                    <td><input type='number' class='input-field' id='current_pr' name='current_pr' readonly /></td></tr>`;
+                    <td><input type='number' class='input-field'  name='current_pr'  value='${curPR}'  readonly /></td></tr>`;
 
         // Only show Required P/R if event category is 'Grading A'
         if (eventCategory === 'Grading A') {
             html += `<tr><td><strong>Required P/R</strong></td>
-                        <td><input type='number' class='input-field' id='required_pr' name='required_pr' readonly /></td></tr>`;
+                        <td><input type='number' class='input-field'  name='required_pr'  value='${requiredPr}' readonly /></td></tr>`;
         }
 
         html += `</tbody></table>`;
@@ -168,15 +144,8 @@ let currentTime = `${hours}:${minutes}`;
         let cumTotal = total + latestCumTotal;
         document.getElementById("cum_total").value = cumTotal;
         document.getElementById("total").value = cumTotal;
-        let currentPR = cumTotal / numberOfRounds;
-        document.getElementById("current_pr").value = currentPR.toFixed(2);
 
-        // Only update required_pr if the field exists
-        let requiredPrInput = document.getElementById("required_pr");
-        if (requiredPrInput) {
-            let requiredPR = (requiredTotal - cumTotal) / (remainingRounds || 1);
-            requiredPrInput.value = requiredPR.toFixed(2);
-        }
+       
     }
 
     document.querySelector("form").addEventListener("submit", function() {

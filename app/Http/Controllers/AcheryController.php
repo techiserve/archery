@@ -47,10 +47,27 @@ class AcheryController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user()->id;
-      //  dd($request->all());
+       // dd($request->all());
+
+
+       $prefix = strtolower(substr($request->name, 0, 3) . substr($request->surname, 0, 3));
+
+        // Count how many users already have an identifier that starts with this prefix
+        $count = Archer::whereRaw("LOWER(LEFT(name, 3)) = ?", [strtolower(substr($request->name, 0, 3))])
+            ->whereRaw("LOWER(LEFT(surname, 3)) = ?", [strtolower(substr($request->surname, 0, 3))])
+            ->count();
+
+        // Increment the count to generate the new suffix (01, 02, 03...)
+        $suffix = str_pad($count + 1, 2, '0', STR_PAD_LEFT);
+
+        // Final ID: e.g., johdoe01
+        $archerId = $prefix . $suffix;
+
+       // dd($archerId);
 
         $archer = new Archer();
         $archer->name = $request->name;
+        $archer->generatedId =  $archerId;
         $archer->surname = $request->surname;
         $archer->dob = $request->dob;
         $archer->ageCategory = $request->ag;
@@ -61,7 +78,8 @@ class AcheryController extends Controller
         $archer->currentProficiency = $request->cp;
         $archer->agegroupProficiency = $request->agp;
         $archer->hand = $request->dh;
-        $archer->createdBy = $user;    
+        $archer->createdBy = $user;  
+        $archer->clubMember = $request->clubMember;  
         $archer->save();
       
         if($archer){
@@ -136,6 +154,7 @@ class AcheryController extends Controller
          'currentProficiency' => $request->cp,
          'agegroupProficiency' => $request->agp,
          'hand' => $request->dh,
+         'clubMember' => $request->clubMember, 
          'updatedBy' => $user,  
     ]); 
 

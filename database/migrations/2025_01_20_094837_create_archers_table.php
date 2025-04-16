@@ -16,11 +16,13 @@ return new class extends Migration
             $table->string('surname')->nullable();
             $table->string('name')->nullable();
             $table->string('dob')->nullable();
+            $table->string('generatedId')->nullable();
             $table->string('ageCategory')->nullable();
             $table->string('currentGradingDominant')->nullable();
             $table->string('currentGradingWeak')->nullable();
             $table->string('currentProficiency')->nullable();
             $table->string('agegroupProficiency')->nullable();
+            $table->string('clubMember')->nullable();
             $table->string('email')->nullable();
             $table->string('hand')->nullable();
             $table->string('createdBy')->nullable();

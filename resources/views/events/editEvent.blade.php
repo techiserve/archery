@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
 <div class="card mb-6">
-                <h5 class="card-header">Create Event</h5>
+                <h5 class="card-header">Update Event</h5>
                 <form class="card-body"  method="POST" action="{{ route('event.updateEvent', ['id' => $event->id]) }}">
                 @csrf
                 @method('PUT')
@@ -55,6 +55,7 @@
 
     <!-- DataTable with Checkboxes -->
     <div class="card">
+    <h5 class="card-header">Selected Archers</h5>
     <div class="table-responsive">
         <div class="card-datatable text-nowrap">
             <table class="datatables-basic table table-bordered table-responsive">

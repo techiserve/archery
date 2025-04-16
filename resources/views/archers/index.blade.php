@@ -15,16 +15,17 @@
     <!-- DataTable with Checkboxes -->
     <div class="card">
         <div class="card-datatable text-nowrap">
+        <h5 class="card-header">All Archers</h5>
         <div class="table-responsive">
-            <table class="datatables-basic table table-bordered table-responsive">
+            <table id="archers-table" class="table table-bordered">
                 <thead>
                     <tr>
                      
                         <th>Name</th>
                         <th>Surname</th>
+                        <th>Id</th>
                         <th>Dob</th>
-                         <th>Age Group</th>
-                        <th>Category</th>
+                        <th>Age Category</th>
                         <th>Grading</th>
                         <th>Action</th>
                     </tr>
@@ -35,6 +36,7 @@
    
                         <td>{{ $pple->name }}</td>
                         <td>{{ $pple->surname }}</td>
+                        <td>{{ $pple->generatedId }}</td>
                         <td>{{ $pple->dob }}</td>
                         <td>{{ $pple->ageCategory }}</td>
                         <td>{{ $pple->currentGradingDominant }}</td>
@@ -61,3 +63,17 @@
                         
 
 @endsection
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    $('#archers-table').DataTable({
+      responsive: true,
+      pageLength: 10,
+      dom: 'Bfrtip',
+      buttons: ['copy', 'csv', 'excel', 'print'],
+      language: {
+        search: "_INPUT_",
+        searchPlaceholder: "Search archers..."
+      }
+    });
+  });
+</script>

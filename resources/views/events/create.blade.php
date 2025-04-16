@@ -63,7 +63,6 @@
                         <th><input type="checkbox" id="select-all"></th>
                         <th>Name</th>
                         <th>Surname</th>
-                        <th>Dob</th>
                         <th>Category</th>
                         <th>Grading</th>
                     </tr>
@@ -76,9 +75,8 @@
                         </td> 
                         <td>{{ $archer->name }}</td>
                         <td>{{ $archer->surname }}</td>
-                        <td>{{ $archer->dob }}</td>
                         <td>{{ $archer->ageCategory }}</td>
-                        <td>{{ $archer->currentGrading }}</td>
+                        <td>{{ $archer->currentGradingDominant }}</td>
                     </tr>
                     @endforeach
                 </tbody>

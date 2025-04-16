@@ -16,6 +16,7 @@
     <!-- DataTable with Checkboxes -->
     <div class="card">
         <div class="card-datatable text-nowrap">
+        <h5 class="card-header">All Archers</h5>
         <div class="table-responsive">
             <table class="datatables-basic table table-bordered table-responsive">
                 <thead>

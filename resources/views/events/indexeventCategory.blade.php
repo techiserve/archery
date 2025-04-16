@@ -7,32 +7,33 @@
             
     <div class="card">
         <div class="card-datatable text-nowrap">
+        <h5 class="card-header">All Categories</h5>
         <div class="table-responsive">
-            <table class="datatables-basic table table-bordered table-responsive">
+            <table id="archers-table" class="table table-bordered">
                 <thead>
                     <tr>
                         <th></th>
                         <th>Name</th>
                         <th>Rounds</th>
                         <th>Arrows</th>
-                  
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($categories as $archer)  
-                    <tr  onclick="window.location='{{ route('events.showEvent', $archer->id) }}'" style="cursor:pointer;">
+                    <tr>
                         <td>
                         </td> 
                         <td>{{ $archer->name }}</td>
                         <td>{{ $archer->rounds }}</td>
-                        <td>{{ $archer->arrows }}</td>
-                    
+                        <td>{{ $archer->arrows }}</td> 
                         <td>
+                    @if($archer->name  != 'Grading')
                         <a  href="/editeventCategory/{{$archer->id}}" class='btn btn-danger btn-sm' style='color: white;'>
                       <span class='fa fa-pencil'></span>
                       <span class='hidden-sm hidden-sm hidden-md'>Delete Category</span>
                    </a>&nbsp;
+                   @endif
                    </td>
                     @endforeach
                 </tbody>
@@ -50,3 +51,17 @@
 
               <!--/ DataTable with Buttons -->  
 @endsection
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    $('#archers-table').DataTable({
+      responsive: true,
+      pageLength: 10,
+      dom: 'Bfrtip',
+      buttons: ['copy', 'csv', 'excel', 'print'],
+      language: {
+        search: "_INPUT_",
+        searchPlaceholder: "Search archers..."
+      }
+    });
+  });
+</script>

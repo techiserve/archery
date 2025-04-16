@@ -27,7 +27,11 @@
                           aria-describedby="multicol-email2" />
                         <span class="input-group-text" id="multicol-email2"></span>
                       </div>
+
+                      
                     </div>
+
+
                     <div class="col-md-6">
                       <div class="form-password-toggle">
                         <label class="form-label" for="multicol-password">Date of Birth</label>
@@ -209,6 +213,15 @@
                            <option value="Right">Right</option>  
                      </select>
                     </div>
+
+                  </div>
+                    <br/>
+                  <div class="row g-6">
+                    <div class="col-md-6">
+                    <input type="checkbox" name="clubMember" id="clubMember" value="on" {{ $archer->clubMember ? 'checked' : '' }}>
+                    <label for="clubMember">Club Member</label>
+                    </div>
+      
 
                   </div>
 

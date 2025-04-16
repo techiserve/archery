@@ -16,15 +16,15 @@
     <!-- DataTable with Checkboxes -->
     <div class="card">
         <div class="card-datatable text-nowrap">
+        <h5 class="card-header">Events</h5>
         <div class="table-responsive">
-            <table class="datatables-basic table table-bordered table-responsive">
+            <table id="archers-table" class="table table-bordered">
                 <thead>
                     <tr  >
                         <th></th>
                         <th>Name</th>
                         <th>Category</th>
-                        <th>Date of Event</th>
-                           
+                        <th>Date of Event</th>  
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
@@ -55,12 +55,12 @@
                       <span class='fa fa-pencil'></span>
                       <span class='hidden-sm hidden-sm hidden-md'>End Event</span>
                       </a>&nbsp;
-                   
-                      <a  href="/events/showEvent/{{$archer->id}}"  class='btn btn-success btn-sm' style='color: white;'>
+                     @endif
+
+                     <a  href="/events/showEvent/{{$archer->id}}"  class='btn btn-success btn-sm' style='color: white;'>
                       <span class='fa fa-pencil'></span>
                       <span class='hidden-sm hidden-sm hidden-md'>Score Archers</span>
                      </a>&nbsp;
-                     @endif
                    </td>
                     </tr>
                     @endforeach
@@ -79,3 +79,17 @@
 
               <!--/ DataTable with Buttons -->  
 @endsection
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    $('#archers-table').DataTable({
+      responsive: true,
+      pageLength: 10,
+      dom: 'Bfrtip',
+      buttons: ['copy', 'csv', 'excel', 'print'],
+      language: {
+        search: "_INPUT_",
+        searchPlaceholder: "Search archers..."
+      }
+    });
+  });
+</script>

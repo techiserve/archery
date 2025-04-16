@@ -14,9 +14,11 @@
  
     <!-- DataTable with Checkboxes -->
     <div class="card">
+        
         <div class="card-datatable text-nowrap">
+        <h5 class="card-header">Archer History</h5>
         <div class="table-responsive">
-            <table class="datatables-basic table table-bordered table-responsive">
+            <table id="history-table" class="table table-bordered">
                 <thead>
                     <tr>
                      
@@ -61,3 +63,17 @@
                         
 
 @endsection
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    $('#history-table').DataTable({
+      responsive: true,
+      pageLength: 10,
+      dom: 'Bfrtip',
+      buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+      language: {
+        search: "_INPUT_",
+        searchPlaceholder: "Search archers..."
+      }
+    });
+  });
+</script>

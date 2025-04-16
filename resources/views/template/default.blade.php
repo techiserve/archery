@@ -56,6 +56,10 @@
     <link rel="stylesheet" href="{!! asset('assets/vendor/libs/jquery-timepicker/jquery-timepicker.css') !!}" />
     <link rel="stylesheet" href="{!! asset('assets/vendor/libs/pickr/pickr-themes.css') !!}" />
 
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css') }}">
 
     <!-- endbuild -->
     <link rel="stylesheet"   href="{!! asset('assets/vendor/fonts/flag-icons.css') !!}"/>
@@ -163,6 +167,11 @@
     <script src="{!! asset('assets/vendor/libs/@form-validation/auto-focus.js') !!}"></script>
 
 
+<!-- jQuery & DataTables JS -->
+<script src="{{ asset('assets/vendor/libs/jquery/jquery.js') }}"></script>
+<script src="{{ asset('assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js') }}"></script>
+<script src="{{ asset('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.js') }}"></script>
+<script src="{{ asset('assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.js') }}"></script>
 
 
     <script src="{!! asset('assets/vendor/libs/bootstrap-daterangepicker/bootstrap-daterangepicker.js') !!}"></script>

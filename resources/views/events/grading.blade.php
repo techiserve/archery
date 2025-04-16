@@ -32,7 +32,7 @@
                     </div>
 
                     <div class="col-md-4">
-                      @if($categories->name == 'Grading A')
+                      @if($categories->name == 'Grading')
                     <label class="form-label" for="multicol-email">Grading for </label>
                     <select class="form-select" id="exampleFormControlSelect1" name="gf" aria-label="Default select example">  
                         @foreach($scores as $score) 
