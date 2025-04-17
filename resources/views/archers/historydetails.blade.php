@@ -74,6 +74,7 @@
         $totalScore = $first->total ?? 0;
     }
 @endphp
+<a href="{{ route('grading.download', $grading->id) }}" class="btn btn-primary mb-3">Download PDF</a>
 
 <table class="table table-bordered">
     <thead>

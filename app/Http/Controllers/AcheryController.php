@@ -14,6 +14,7 @@ use App\Models\Round6;
 use App\Models\Round7;
 use App\Models\Round8;
 use App\Models\Round9;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Eventscore;
 use DB;
 use App\Models\Archergrading;
@@ -171,8 +172,45 @@ class AcheryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function downloadGrading(string $id)
     {
-        //
+      $grading = Archergrading::where('id', $id)->first();
+    $Round1 = Round1::where('archergrading_id', $id)->first();
+    $scorecards = DB::table('scorecards')
+        ->where('archergrading_id', $id)
+        ->orderBy('round')
+        ->get()
+        ->groupBy('round');
+
+    // Same pre-processing logic from Blade
+    $maxArrows = $scorecards->map(function ($round) {
+        return count($round);
+    })->max();
+
+    $roundTotals = [];
+    $cumTotals = [];
+    $times = [];
+    $totalScore = 0;
+
+    foreach ($scorecards as $round => $entries) {
+        $first = collect($entries)->first();
+        $roundTotals[$round] = $first->roundtotal ?? 0;
+        $cumTotals[$round] = $first->cumtotal ?? 0;
+        $times[$round] = $first->time ?? '-';
+        $totalScore = $first->total ?? 0;
+    }
+
+    $pdf = Pdf::loadView('pdf.scorecard', compact(
+        'grading',
+        'Round1',
+        'scorecards',
+        'maxArrows',
+        'roundTotals',
+        'cumTotals',
+        'times',
+        'totalScore'
+    ))->setPaper('a4', 'landscape');
+
+    return $pdf->download('scorecard-history.pdf'); 
     }
 }

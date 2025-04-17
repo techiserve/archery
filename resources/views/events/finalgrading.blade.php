@@ -118,7 +118,7 @@ let currentTime = `${hours}:${minutes}`;
                     <td><input type='number' class='input-field'  name='current_pr'  value='${curPR}'  readonly /></td></tr>`;
 
         // Only show Required P/R if event category is 'Grading A'
-        if (eventCategory === 'Grading A') {
+        if (eventCategory === 'Grading') {
             html += `<tr><td><strong>Required P/R</strong></td>
                         <td><input type='number' class='input-field'  name='required_pr'  value='${requiredPr}' readonly /></td></tr>`;
         }

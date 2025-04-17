@@ -56,6 +56,7 @@ Route::get('/events/create', [GradingController::class, 'createEvent'])->name('e
 Route::get('/events/manage', [GradingController::class, 'manage'])->name('events.manage');
 Route::get('/events/scoring', [GradingController::class, 'scoring'])->name('events.scoring');
 Route::get('/events/showEvent/{id}', [GradingController::class, 'showEvent'])->name('events.showEvent');
+Route::get('/grading/download/{id}', [AcheryController::class, 'downloadGrading'])->name('grading.download');
 Route::get('/editeventCategory/{id}', [GradingController::class, 'editeventCategory'])->name('editeventCategory');
 Route::get('/editevent/{id}', [GradingController::class, 'editevent'])->name('editevent');
 Route::get('/deletearcher/{archer_id}/{event_id}', [GradingController::class, 'deletearcher'])->name('deletearcher');
