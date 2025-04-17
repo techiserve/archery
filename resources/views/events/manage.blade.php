@@ -66,7 +66,7 @@
 
                      <a  href="/events/showEvent/{{$archer->id}}"  class='btn btn-success btn-sm' style='color: white;'>
                       <span class='fa fa-pencil'></span>
-                      <span class='hidden-sm hidden-sm hidden-md'>Score Archers</span>
+                      <span class='hidden-sm hidden-sm hidden-md'>Score</span>
                      </a>&nbsp;
                    </td>
                     </tr>

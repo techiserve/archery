@@ -11,7 +11,7 @@
             <table id="archers-table" class="table table-bordered">
                 <thead>
                     <tr >
-                     
+                        <th>.</th>
                         <th>Name</th>
                         <th>Surname</th>
                         <th>Score</th>
@@ -24,15 +24,19 @@
                     </tr>
                 </thead>
                 <tbody>
+                  
   @foreach ($archers as $archer)  
     @php $pple = $pples->firstWhere('id', $archer->archer_id); @endphp
     @if($pple)
-      @if ($archer->status == 1)
-      <tr onclick="window.location='{{ route('gradearcher', $archer->id) }}'" style="cursor:pointer;">
+  <tr>
+        <td></td>
+
+        @if ($archer->status == 1)
+        <td onclick="window.location='{{ route('gradearcher', $archer->id) }}'" style="cursor:pointer;">{{ $pple->name }}</td>
       @else
-      <tr onclick="handleRowClick(event, '{{ $archer->id }}')" style="cursor:pointer;">
+      <td onclick="handleRowClick(event, '{{ $archer->id }}')" style="cursor:pointer;">{{ $pple->name }}</td>
       @endif
-        <td>{{ $pple->name }}</td>
+     
         <td>{{ $pple->surname }}</td>
         <td>{{ $archer->totalScore }}</td>
         <td>{{ $pple->ageCategory }}</td>
