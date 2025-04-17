@@ -111,7 +111,7 @@ let currentTime = `${hours}:${minutes}`;
         html += `<tr><td><strong></strong></td>
                     <td><input type='hidden' class='input-field' id='cum_total' name='cum_total' readonly /></td></tr>`;
         html += `<tr><td><strong>Time</strong></td>
-                    <td><input type='text' class='input-field' name='time'  required /></td></tr>`;
+                    <td><input type='text' class='input-field' name='time'   /></td></tr>`;
         html += `<tr><td><strong>Total</strong></td>
                     <td><input type='number' class='input-field' id='total' name='total' readonly /></td></tr>`;
         html += `<tr><td><strong>Current P/R</strong></td>
