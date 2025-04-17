@@ -38,6 +38,25 @@
             text-align: center;
         }
     </style>
+
+<style>
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+
+    .info-col {
+        flex: 0 0 32%;
+    }
+
+    .info-col label {
+        font-weight: bold;
+        display: inline-block;
+        min-width: 100px;
+    }
+</style>
+
 </head>
 <body>
 <!-- <div class="header-title">Score Card History</div> -->
@@ -46,32 +65,27 @@
     </div>
 
   
-    <div class="info" style="display: flex; flex-wrap: wrap; gap: 10px;">
-    <div style="flex: 0 0 48%;">
-        <p><label>Name:</label> {{ $grading->name }}</p>
-    </div>
-    <div style="flex: 0 0 48%;">
-        <p><label>Date:</label> {{ $grading->date }}</p>
+    
+<div class="info">
+    <div class="info-row">
+        <div class="info-col"><label>Name:</label> {{ $grading->name }}</div>
+        <div class="info-col"><label>Date:</label> {{ $grading->date }}</div>
+        <div class="info-col"><label>Bow Used:</label> {{ $grading->bowUsed }}</div>
     </div>
     
-    <div style="flex: 0 0 48%;">
-        <p><label>Bow Used:</label> {{ $grading->bowUsed }}</p>
-    </div>
-    <div style="flex: 0 0 48%;">
-        <p><label>Current Grading:</label> {{ $grading->currentGrading }}</p>
-    </div>
-    
-    <div style="flex: 0 0 48%;">
-        <p><label>Grading For:</label> {{ $grading->gradingfor }}</p>
-    </div>
-    <div style="flex: 0 0 48%;">
-        <p><label>Age Category:</label> {{ $grading->ageCategory }}</p>
+    <div class="info-row">
+        <div class="info-col"><label>Current Grading:</label> {{ $grading->currentGrading }}</div>
+        <div class="info-col"><label>Grading For:</label> {{ $grading->gradingfor }}</div>
+        <div class="info-col"><label>Age Category:</label> {{ $grading->ageCategory }}</div>
     </div>
     
-    <div style="flex: 0 0 48%;">
-        <p><label>Arrows Used:</label> {{ $grading->arrowsUsed }}</p>
+    <div class="info-row">
+        <div class="info-col"><label>Arrows Used:</label> {{ $grading->arrowsUsed }}</div>
+        <div class="info-col"></div>
+        <div class="info-col"></div>
     </div>
 </div>
+
     <table>
         <thead>
             <tr>
