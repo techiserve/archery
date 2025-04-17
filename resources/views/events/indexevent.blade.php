@@ -7,9 +7,9 @@
             
     <div class="card">
         <div class="card-datatable text-nowrap">
-        <h5 class="card-header">Manage Events</h5>
+        <h5 class="card-header">Manage Events.</h5>
         <div class="table-responsive">
-            <table id="archers-table" class="table table-bordered">
+            <table id="manage-table" class="table table-bordered">
                 <thead>
                     <tr>
                         <th></th>
@@ -66,7 +66,7 @@
 @endsection
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    $('#archers-table').DataTable({
+    $('#manage-table').DataTable({
       responsive: true,
       pageLength: 10,
       dom: 'Bfrtip',
