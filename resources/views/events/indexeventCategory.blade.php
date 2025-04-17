@@ -12,7 +12,7 @@
             <table id="archers-table" class="table table-bordered">
                 <thead>
                     <tr>
-                        <th></th>
+                   
                         <th>Name</th>
                         <th>Rounds</th>
                         <th>Arrows</th>
@@ -22,8 +22,7 @@
                 <tbody>
                     @foreach ($categories as $archer)  
                     <tr>
-                        <td>
-                        </td> 
+                       
                         <td>{{ $archer->name }}</td>
                         <td>{{ $archer->rounds }}</td>
                         <td>{{ $archer->arrows }}</td> 

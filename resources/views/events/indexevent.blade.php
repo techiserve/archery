@@ -12,7 +12,7 @@
             <table id="manage-table" class="table table-bordered">
                 <thead>
                     <tr>
-                        <th></th>
+                    
                         <th>Name</th>
                         <th>Category</th>
                         <th>Date of Event</th>
@@ -24,9 +24,7 @@
                 <tbody>
                     @foreach ($events as $archer)  
                     <tr>
-                        <td>
-                        
-                        </td> 
+                     
                         <td>{{ $archer->name }}</td>
                         @foreach($categories as $category)
                         @if($archer->cat == $category->id)

@@ -21,7 +21,7 @@
             <table class="datatables-basic table table-bordered table-responsive">
                 <thead>
                     <tr  >
-                        <th></th>
+                      
                         <th>Name</th>
                         <th>Category</th>
                         <th>Date of Event</th>
@@ -32,9 +32,7 @@
                 <tbody>
                     @foreach ($archers as $archer)  
                     <tr  onclick="window.location='{{ route('events.showEvent', $archer->id) }}'" style="cursor:pointer;">
-                        <td>
-                        
-                        </td> 
+                     
                         <td>{{ $archer->name }}</td>
                         <td>{{ $archer->cat }}</td>
                         <td>{{ $archer->doe }}</td>

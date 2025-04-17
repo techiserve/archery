@@ -106,10 +106,7 @@
     </div>
   </div>
    
-  
-
             
-
 @endsection
 <script>
   function handleRowClick(event, archerId) {
