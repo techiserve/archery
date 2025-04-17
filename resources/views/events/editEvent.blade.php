@@ -81,7 +81,7 @@
                         <td>{{ $archer->surname }}</td>
                         <td>{{ $archer->dob }}</td>
                         <td>{{ $archer->ageCategory }}</td>
-                        <td>{{ $archer->currentGrading }}</td>
+                        <td>{{ $archer->currentGradingDominant }}</td>
                         
                         <td>
                         @foreach($archers as $arch)
