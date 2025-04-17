@@ -1,5 +1,10 @@
 @extends('template.default')
-
+<style>
+  /* Add space between control icon and first column */
+  table.dataTable.dtr-inline.collapsed>tbody>tr>td:first-child:before {
+    margin-right: 20px !important;
+  }
+</style>
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
 <div class="card mb-6">
@@ -22,8 +27,10 @@
                 <thead>
                     <tr  >
                      
+                        <th>.</th>
                         <th>Name</th>
                         <th>Category</th>
+                     
                         <th>Date of Event</th>  
                         <th>Status</th>
                         <th>Action</th>
@@ -31,9 +38,11 @@
                 </thead>
                 <tbody>
                     @foreach ($archers as $archer)  
-                    <tr  onclick="window.location='{{ route('events.showEvent', $archer->id) }}'" style="cursor:pointer;">
+                    <tr>
                        
-                        <td>{{ $archer->name }}</td>
+                        <td></td>
+                        <td  onclick="window.location='{{ route('events.showEvent', $archer->id) }}'" style="cursor:pointer;" >{{ $archer->name }}</td>
+
                         @foreach($categories as $category)
                         @if($archer->cat == $category->id)
                         <td>{{ $category->name }}</td>
@@ -80,14 +89,23 @@
 <script>
   document.addEventListener("DOMContentLoaded", function() {
     $('#archers-table').DataTable({
-      responsive: true,
+      responsive: {
+        details: {
+          type: 'inline'
+        }
+      },
       pageLength: 10,
       dom: 'Bfrtip',
       buttons: ['copy', 'csv', 'excel', 'print'],
       language: {
         search: "_INPUT_",
         searchPlaceholder: "Search..."
-      }
+      },
+      columnDefs: [
+        { responsivePriority: 1, targets: 0 }, // Category - Always visible
+        { responsivePriority: 2, targets: 1 }, // Name - Always visible
+        { responsivePriority: 10001, targets: [2, 3, 4] } // Hide these in mobile first
+      ]
     });
   });
 </script>

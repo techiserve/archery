@@ -14,10 +14,10 @@
                      
                         <th>Name</th>
                         <th>Surname</th>
-                        <th>Grading</th>
+                        <th>Score</th>
                         <th>Age Category</th>
                         <th>Latest Round</th>
-                        <th>Score</th>
+                        <th>Grading</th>
                         <th>Current P/R</th>
                         <th>Required P/R</th>
                         <th class="text-center">Action</th>
@@ -34,10 +34,10 @@
       @endif
         <td>{{ $pple->name }}</td>
         <td>{{ $pple->surname }}</td>
-        <td>{{ $pple->currentGradingDominant }}</td>
+        <td>{{ $archer->totalScore }}</td>
         <td>{{ $pple->ageCategory }}</td>
         <td>{{ $archer->timed }}</td>
-        <td>{{ $archer->totalScore }}</td>
+        <td>{{ $pple->currentGradingDominant }}</td>
         <td>{{ round($archer->thumbring)  }}</td>
         <td>{{ round($archer->arrowinhand) }}</td>
         <td class="text-center">  
