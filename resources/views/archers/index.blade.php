@@ -20,7 +20,7 @@
             <table id="archers-table" class="table table-bordered">
                 <thead>
                     <tr>
-                     
+                      <th></th>
                         <th>Name</th>
                         <th>Surname</th>
                         <th>Id</th>
@@ -33,7 +33,7 @@
                 <tbody>
                     @foreach ($all as $pple )  
                     <tr>
-   
+                         <td></td>
                         <td>{{ $pple->name }}</td>
                         <td>{{ $pple->surname }}</td>
                         <td>{{ $pple->generatedId }}</td>
