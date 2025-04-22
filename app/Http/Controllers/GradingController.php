@@ -68,7 +68,7 @@ class GradingController extends Controller
 
     public function manage()
     {
-        $archers = Event::all();
+        $archers = Event::orderBy('id', 'desc')->get();
         $categories = Eventcategory::all();
 
        return view('events.manage', compact('archers','categories'));
@@ -80,7 +80,11 @@ class GradingController extends Controller
     {
          $event = Event::where('id',$id)->first();
 
-        $archers = Eventscore::where('event_id', $id)->orderBy('totalScore', 'desc')->get();
+        //$archers = Eventscore::where('event_id', $id)->orderBy('totalScore', 'desc')->get();
+        $archers = Eventscore::where('event_id', $id)
+    ->orderBy('totalScore', 'desc')
+    ->orderBy('bowUsed', 'desc') // Secondary sort
+    ->get();
         $pples = archer::all();
         $cat = $event->cat;
         $category = Eventcategory::where('id', $cat )->first();
@@ -252,11 +256,21 @@ class GradingController extends Controller
           $grading = $checkUser;
 
         }
+ 
+        if($request->event != '1'){
+      //  dd( $request->event);
+        $cat = Event::where('id', $request->event)->first();
+        $highestvalue = Eventcategoryscore::where('eventcategory_id',$cat->cat)->get()->max('score');
+        $eventscore = Eventscore::where('event_id', $request->event )->where('archer_id', $request->archer)->first();
+        $count = $eventscore->bowUsed ? $eventscore->bowUsed : 0;
+      //  dd($highestvalue);
 
-
+        }
+  
+      //  $count = 0;
          foreach($scores[$request->round] as $score){
-          
-          $score = Scorecard::create([
+            //dd($score);
+          $scorec = Scorecard::create([
             
             'event_id' => $request->event,
             'archer_id' => $request->archer,
@@ -272,6 +286,13 @@ class GradingController extends Controller
             'createdBy' => $request->user,
 
           ]);
+            
+  
+          if($request->event != '1' && $highestvalue == $score){
+                 
+            $count++;
+
+          } 
 
 
          }
@@ -281,6 +302,7 @@ class GradingController extends Controller
           'status' => 1,
           'totalScore' => intval($request->total),
           'timed' => $request->round,
+          'bowUsed' => $count,
           'thumbring' =>  $currentPR,
           'arrowinhand' => $requiredPR
 

@@ -95,6 +95,7 @@
         }
       },
       pageLength: 10,
+      ordering: false,
       dom: 'Bfrtip',
       buttons: ['copy', 'csv', 'excel', 'print'],
       language: {
