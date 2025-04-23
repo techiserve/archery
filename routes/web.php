@@ -23,8 +23,13 @@ Route::middleware('auth')->group(function () {
 Route::get('/users/parameters', [UserController::class, 'parameters'])->name('users.parameters');
 Route::get('/users/index', [UserController::class, 'index'])->name('users.index');
 Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
-Route::post('/users/store', [UserController::class, 'store'])->name('users.store');
+//Route::post('/users/store', [UserController::class, 'store'])->name('users.store');
+Route::get('/users', [UserController::class, 'index'])->name('users.index');
+Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
+Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 Route::get('/users/show', [UserController::class, 'show'])->name('users.show');
+Route::post('/users', [UserController::class, 'store'])->name('users.store');
 Route::get('/users/fetchData', [UserController::class, 'fetchData'])->name('users.fetchData');
 Route::post('/users/userRole', [UserController::class, 'userRole'])->name('users.userRole');
 Route::get('/users/{id}/delete', [UserController::class, 'userdelete'])->name('user.delete');
@@ -52,6 +57,8 @@ Route::get('/events/indexevent', [GradingController::class, 'indexevent'])->name
 Route::post('/event/storeCategory', [GradingController::class, 'storeCategory'])->name('event.storeCategory');
 Route::post('/event/eventStore', [GradingController::class, 'eventStore'])->name('event.eventStore');
 Route::post('/event/archerDetails', [GradingController::class, 'archerDetails'])->name('event.archerDetails');
+Route::post('/event/editScore', [GradingController::class, 'editScore'])->name('event.editScore');
+Route::post('/grading/updateScore', [GradingController::class, 'updateScore'])->name('event.updateScore');
 Route::get('/events/create', [GradingController::class, 'createEvent'])->name('events.create');
 Route::get('/events/manage', [GradingController::class, 'manage'])->name('events.manage');
 Route::get('/events/scoring', [GradingController::class, 'scoring'])->name('events.scoring');

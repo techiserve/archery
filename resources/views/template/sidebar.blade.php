@@ -177,7 +177,7 @@
 
 
                         <!-- Layouts -->
-                        <!-- <li class="menu-item">
+                        <li class="menu-item">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon icon-base bx bx-user"></i>
                 <div data-i18n="Layouts">Users</div>
@@ -185,23 +185,19 @@
 
               <ul class="menu-sub">
                 <li class="menu-item">
-                  <a href="layouts-collapsed-menu.html" class="menu-link">
+                  <a href="/users/create" class="menu-link">
                     <div data-i18n="Collapsed menu">Create Users</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="layouts-content-navbar.html" class="menu-link">
+                  <a href="/users/index" class="menu-link">
                     <div data-i18n="Content navbar">Manage Users</div>
                   </a>
                 </li>
-                <li class="menu-item">
-                  <a href="layouts-content-navbar-with-sidebar.html" class="menu-link">
-                    <div data-i18n="Content nav + Sidebar">Parameters</div>
-                  </a>
-                </li>
+          
                
               </ul>
-            </li> -->
+            </li>
 
 
 

@@ -82,9 +82,10 @@ class GradingController extends Controller
 
         //$archers = Eventscore::where('event_id', $id)->orderBy('totalScore', 'desc')->get();
         $archers = Eventscore::where('event_id', $id)
-    ->orderBy('totalScore', 'desc')
-    ->orderBy('bowUsed', 'desc') // Secondary sort
-    ->get();
+                  ->orderBy('totalScore', 'desc')
+                  ->orderBy('bowUsed', 'desc') // Secondary sort
+                  ->get();
+   
         $pples = archer::all();
         $cat = $event->cat;
         $category = Eventcategory::where('id', $cat )->first();
@@ -93,7 +94,7 @@ class GradingController extends Controller
        
 
 
-       return view('events.scoring', compact('archers','pples','cat','scores','event','catname'));
+       return view('events.scoring', compact('archers','pples','cat','scores','event','category','catname'));
     }
 
 
@@ -266,8 +267,10 @@ class GradingController extends Controller
       //  dd($highestvalue);
 
         }
+
+
   
-      //  $count = 0;
+        // $count = 0;
          foreach($scores[$request->round] as $score){
             //dd($score);
           $scorec = Scorecard::create([
@@ -336,6 +339,139 @@ class GradingController extends Controller
            
  
        return view('events.finalgrading', compact('name'));
+
+    }
+
+
+
+    public function updateScore(Request $request){
+
+      // dd($request->all());
+       $name = $request->name;
+       $round = $request->round;
+       $cat = $request->cat;
+       $archer = $request->archer;
+       $event = $request->event;
+       $round_total = $request->round_total;
+       $time = $request->time;
+       $total = $request->total;
+       $currentPR = $request->current_pr;
+       $archerDetail = Archer::where('id', $archer)->first();
+
+       $eventCat = Eventcategory::where('id', $cat)->first();
+       if( $eventCat->id == 1){
+ 
+        $remaining_rounds = ($eventCat->rounds - $request->round) == 0 ? 1 : ($eventCat->rounds - $request->round);
+      $requiredPR = ($request->figure - $request->total)/$remaining_rounds;
+    
+    }else{
+
+      $requiredPR = 0;
+    }
+
+
+
+
+       $highestvalue = Eventcategoryscore::where('eventcategory_id',$cat)->get()->max('score');
+       $eventscore = Eventscore::where('event_id', $request->event )->where('archer_id', $request->archer)->first();
+       $count = $eventscore->bowUsed ? $eventscore->bowUsed : 0;
+
+ 
+
+       $scores = $request->input('scores');
+
+   
+     $getData = Scorecard::where('event_id', $request->event)
+     ->where('archer_id', $request->archer)
+     ->where('round', '!=', $request->round)
+     ->get()
+     ->unique('round')
+     ->values();
+
+     $totall = $getData->sum('roundtotal') + $round_total;
+
+    // dd($getData->sum('roundtotal'),$totall);
+
+      foreach ($scores[$request->round] as $arrowId => $scoreValue) {
+      
+      $scorec = Scorecard::where('id', $arrowId)->update([  
+  
+        'currentPR' => $currentPR,
+        'requiredPR' => $requiredPR,
+        'arrow' =>  $scoreValue,
+        'roundtotal' => $round_total,
+        'cumtotal' => $request->cum_total,
+        'total' => $totall,
+        'time' => $request->time,
+
+      ]);
+        
+
+      if($request->event != '1' && $highestvalue == $round_total){
+             
+        $count++;
+
+      }
+
+
+     }
+  
+
+     if($cat == '1'){
+
+      $currentgrading = GradingCard::where('level', $archerDetail->currentGradingDominant)->first();     
+      $nextgrading = null;
+      if ($currentgrading) {
+          $nextgrading = GradingCard::where('id', '>', $currentgrading->id)->orderBy('id')->first();
+      }
+
+        $figure = $nextgrading->score ?? null;
+        $gradefor = $nextgrading->level ?? null;
+      }else{
+         $figure = null;
+         $gradefor = null;
+      }
+
+
+
+      $eventscore = Eventscore::where('event_id', $request->event )->where('archer_id', $request->archer)->update([
+        
+        'status' => 1,
+        'totalScore' => intval($totall),
+        //'timed' => $request->round,
+        'bowUsed' => $count,
+        'thumbring' =>  $currentPR,
+        'arrowinhand' => $requiredPR
+
+      ]);
+
+   $update = Scorecard::where('event_id', $request->event)->where('archer_id',$request->archer)->update([  'total' => $totall ]);
+
+      if($cat == '1' ){
+
+        if($totall >= $request->figure){
+
+         $updatearcher = Archer::where('id', $request->archer)->update([
+        
+           'currentGradingDominant' => $request->gradefor,
+
+         ]);
+            
+            return redirect()->route('events.showEvent', ['id' => $request->event])->with('success', 'Archer passed and has been upgraded!');
+
+        }else{
+
+           return redirect()->route('events.showEvent', ['id' => $request->event])->with('error', 'Archer score updated!');
+     
+        }
+
+       }else{
+
+         return redirect()->route('events.showEvent', ['id' => $request->event])->with('success', 'Archer scores updated!');
+
+       }
+          
+
 
     }
 
@@ -660,6 +796,36 @@ class GradingController extends Controller
       return redirect()->back()->with('success', 'Archer removed successfully.');
 
     }
+
+
+    public function editScore(Request $request){
+
+      $getData = Scorecard::where('event_id',$request->event)->where('archer_id',$request->archer)->where('round',$request->round)->get();
+    //  dd($getData);
+
+      $roundScores = [];
+      foreach ($getData as $record) {
+    $roundScores[$record->arrow] = $record->score;
+    }
+
+      $round = $request->round;
+      $cat = $request->cat;
+      $category = Eventcategory::where('id', $cat)->first();
+      $possibleScores = Eventcategoryscore::where('eventcategory_id', $cat)->get();
+      $archer = $request->archer;
+      $event = $request->event;
+
+      $name = Archer::where('id', $archer)->first();
+      $name = $name->name;
+
+  
+      return view('events.editScore', compact('getData','archer','round','category','possibleScores','cat','event','name','roundScores'));
+
+    }
+
+
+
+
 
 
 
