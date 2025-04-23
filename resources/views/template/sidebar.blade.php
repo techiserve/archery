@@ -70,6 +70,9 @@
                 <div data-i18n="Page 1">Dashboard</div>
               </a>
             </li>
+            
+            @auth
+            @if (auth()->user()->role === 'admin')
                         <!-- Layouts -->
                         <li class="menu-item">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -97,6 +100,13 @@
               </ul>
             </li>
 
+            @endif
+            @endauth
+
+
+
+            @auth
+  @if (auth()->user()->role === 'admin' || auth()->user()->role === 'scorer')
 
                           <!-- Layouts -->
                           <li class="menu-item">
@@ -139,6 +149,7 @@
             </li>
 
 
+    
                         <!-- Layouts -->
                         <li class="menu-item">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -171,11 +182,16 @@
                       -->
               </ul>
             </li>
+            @endif
+            @endauth
+
 
 
  
 
 
+            @auth
+            @if (auth()->user()->role === 'admin')
                         <!-- Layouts -->
                         <li class="menu-item">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -198,6 +214,9 @@
                
               </ul>
             </li>
+            
+            @endif
+            @endauth
 
 
 

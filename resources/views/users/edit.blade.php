@@ -22,7 +22,7 @@
             <label for="role" class="form-label">Role</label>
             <select class="form-control" id="role" name="role" required>
                 <option value="admin" {{ $user->role === 'admin' ? 'selected' : '' }}>Admin</option>
-                <option value="user" {{ $user->role === 'scorer' ? 'selected' : '' }}>Scorer</option>
+                <option value="scorer" {{ $user->role === 'scorer' ? 'selected' : '' }}>Scorer</option>
             </select>
         </div>
 
