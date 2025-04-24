@@ -801,8 +801,13 @@ class GradingController extends Controller
     public function editScore(Request $request){
 
       $getData = Scorecard::where('event_id',$request->event)->where('archer_id',$request->archer)->where('round',$request->round)->get();
-    //  dd($getData);
+    // dd($getData->Count());
 
+    if($getData->Count() == 0 ){
+      return redirect()->back()->with('error', 'Selected Round is yet to be caputured!');   
+    }
+
+ 
       $roundScores = [];
       foreach ($getData as $record) {
     $roundScores[$record->arrow] = $record->score;
