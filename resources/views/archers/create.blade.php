@@ -20,7 +20,7 @@
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
 <div class="card mb-6">
-                <h5 class="card-header">Create Archer</h5>
+                <h5 class="card-header">Create Archer.</h5>
                 <form class="card-body"  method="POST" action="/archers/store">
                 @csrf
                   <h6>1. Archer Details</h6>
