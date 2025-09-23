@@ -96,9 +96,15 @@ class GradingController extends Controller
                 $gradepacho = 'CS2'; 
             }elseif($archer->currentGradingDominant == 'SC3'){
                 $gradepacho = 'CS3';
+             }elseif($archer->currentGradingDominant == 'AC1'){
+                $gradepacho = 'CA1';
             }else{
                $gradepacho =  $archer->currentGradingDominant;
             }
+           
+            dd($archer);
+
+
           $gradeId = Gradingcard::where('level', '=', $gradepacho)->first();
 
            if($archer->currentGradingDominant == 'CNG'){
