@@ -101,7 +101,7 @@ class GradingController extends Controller
             // }else{
             //    $gradepacho =  $archer->currentGradingDominant;
             // }
-           
+            $gradepacho =  $archer->currentGradingDominant;
         
 
 
