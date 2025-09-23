@@ -90,22 +90,23 @@ class GradingController extends Controller
 
           $pples->each(function ($archer) {
          //   dd($archer->currentGradingDominant);
-            if($archer->currentGradingDominant == 'SC1'){
-                $gradepacho = 'CS1';
-            }elseif($archer->currentGradingDominant == 'SC2'){
-                $gradepacho = 'CS2'; 
-            }elseif($archer->currentGradingDominant == 'SC3'){
-                $gradepacho = 'CS3';
-             }elseif($archer->currentGradingDominant == 'AC1'){
-                $gradepacho = 'CA1';
-            }else{
-               $gradepacho =  $archer->currentGradingDominant;
-            }
+            // if($archer->currentGradingDominant == 'SC1'){
+            //     $gradepacho = 'CS1';
+            // }elseif($archer->currentGradingDominant == 'SC2'){
+            //     $gradepacho = 'CS2'; 
+            // }elseif($archer->currentGradingDominant == 'SC3'){
+            //     $gradepacho = 'CS3';
+            //  }elseif($archer->currentGradingDominant == 'AC1'){
+            //     $gradepacho = 'CA1';
+            // }else{
+            //    $gradepacho =  $archer->currentGradingDominant;
+            // }
            
-            dd($archer);
+        
 
 
           $gradeId = Gradingcard::where('level', '=', $gradepacho)->first();
+              dd($gradeId);
 
            if($archer->currentGradingDominant == 'CNG'){
             $x = 0;
