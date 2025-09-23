@@ -106,7 +106,7 @@ class GradingController extends Controller
 
 
           $gradeId = Gradingcard::where('level', '=', $gradepacho)->first();
-              dd($gradeId);
+           //   dd($gradeId);
 
            if($archer->currentGradingDominant == 'CNG'){
             $x = 0;
