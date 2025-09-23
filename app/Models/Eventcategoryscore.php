@@ -10,6 +10,7 @@ class Eventcategoryscore extends Model
 
         'eventcategory_id',
         'score',
+         'isX',
         'createdBy',
         'updatedBy',
         'status'

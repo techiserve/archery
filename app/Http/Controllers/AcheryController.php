@@ -70,7 +70,11 @@ class AcheryController extends Controller
         $archer->name = $request->name;
         $archer->generatedId =  $archerId;
         $archer->surname = $request->surname;
+        $archer->institute = $request->institute;
         $archer->dob = $request->dob;
+        $archer->gender = $request->gender;
+        $archer->nId = $request->nId;
+        $archer->knownAs = $request->knownAs;
         $archer->ageCategory = $request->ag;
         $archer->currentGradingWeak = $request->cgw;
         $archer->currentGradingDominant = $request->cgd;

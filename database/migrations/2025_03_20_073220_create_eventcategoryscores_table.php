@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('eventcategory_id')->nullable();
             $table->string('score')->nullable();
+            $table->integer('isX')->nullable();
             $table->string('createdBy')->nullable();
             $table->string('updatedBy')->nullable();
             $table->string('status')->nullable();

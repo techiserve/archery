@@ -17,6 +17,7 @@ class Scorecard extends Model
         'roundtotal',
         'cumtotal',
         'total',
+        'isX',
         'currentPR',
         'requiredPR',
         'time',

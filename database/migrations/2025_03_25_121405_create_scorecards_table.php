@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('roundtotal')->nullable();
             $table->integer('cumtotal')->nullable();
             $table->integer('currentPR')->nullable();
+            $table->integer('isX')->nullable();
             $table->integer('requiredPR')->nullable();
             $table->integer('total')->nullable();
             $table->string('time')->nullable();

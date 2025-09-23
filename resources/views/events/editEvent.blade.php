@@ -56,9 +56,9 @@
     <!-- DataTable with Checkboxes -->
     <div class="card">
     <h5 class="card-header">Selected Archers</h5>
-    <div class="table-responsive">
         <div class="card-datatable text-nowrap">
-            <table class="datatables-basic table table-bordered table-responsive">
+          <div class="table-responsive">
+            <table id="manage-table" class="table table-bordered">
                 <thead>
                     <tr>
                         <th><input type="checkbox" id="select-all"></th>
@@ -113,4 +113,18 @@
 </script>
 
               <!--/ DataTable with Buttons -->  
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    $('#manage-table').DataTable({
+      responsive: true,
+      pageLength: 40,
+      dom: 'Bfrtip',
+      buttons: ['copy', 'csv', 'excel', 'print'],
+      language: {
+        search: "_INPUT_",
+        searchPlaceholder: "Search..."
+      }
+    });
+  });
+</script>
 @endsection

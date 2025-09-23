@@ -13,6 +13,7 @@ class Eventcategory extends Model
         'desc',
         'rounds',
         'arrows',
+       
         'score3',
         'createdBy',
         'updatedBy',

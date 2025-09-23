@@ -68,6 +68,11 @@ Route::get('/editeventCategory/{id}', [GradingController::class, 'editeventCateg
 Route::get('/editevent/{id}', [GradingController::class, 'editevent'])->name('editevent');
 Route::get('/deletearcher/{archer_id}/{event_id}', [GradingController::class, 'deletearcher'])->name('deletearcher');
 Route::get('/gradearcher/{id}', [GradingController::class, 'gradearcher'])->name('gradearcher');
+
+Route::get('/events/{id}/rawscores', [GradingController::class, 'rawscores'])->name('reports.rawscores');
+Route::get('/events/{id}/scoresummary', [GradingController::class, 'scoresummary'])->name('reports.scoresummary');
+Route::get('/events/{id}/supersummary', [GradingController::class, 'supersummary'])->name('reports.supersummary');
+
 Route::get('/endevent/{id}', [GradingController::class, 'endevent'])->name('endevent');
 Route::post('/event/storeCategory', [GradingController::class, 'storeCategory'])->name('event.storeCategory');
 

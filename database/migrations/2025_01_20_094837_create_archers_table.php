@@ -17,6 +17,10 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('dob')->nullable();
             $table->string('generatedId')->nullable();
+            $table->string('nId')->nullable();
+            $table->string('gender')->nullable();
+            $table->string('knownAs')->nullable();
+            $table->string('institute')->nullable();
             $table->string('ageCategory')->nullable();
             $table->string('currentGradingDominant')->nullable();
             $table->string('currentGradingWeak')->nullable();

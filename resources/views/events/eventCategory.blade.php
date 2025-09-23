@@ -36,7 +36,17 @@
                         <!-- Default score input field -->
                         <div class="input-group mb-2 score-input">
                             <input type="number" name="score[]" class="form-control" placeholder="0-10" />
-                            <button type="button" class="btn btn-success add-score">+</button>
+                            <button type="button" class="btn btn-success add-score ms-2">+</button>
+                        </div>
+                    </div>
+
+                    <!-- Single global checkbox BELOW the scores -->
+                    <div class="mt-3">
+                        <!-- ensures a value is sent even when unchecked -->
+                        <input type="hidden" name="include_x" value="0">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="includeX" name="include_x" value="1">
+                            <label class="form-check-label" for="includeX">Include X</label>
                         </div>
                     </div>
                 </div>
@@ -44,24 +54,24 @@
 
             <div class="pt-6">
                 <button type="submit" class="btn btn-primary me-3">Submit</button>
-                <button type="reset" class="btn btn-label-secondary">Cancel</button>
             </div>
         </form>
     </div>
 </div>
 @endsection
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const scoreContainer = document.getElementById("score-container");
 
-        // Function to add a new score input field
+        // Function to add a new score input field (no checkbox here)
         function addScoreField() {
             const div = document.createElement("div");
             div.classList.add("input-group", "mb-2", "score-input");
 
             div.innerHTML = `
                 <input type="number" name="score[]" class="form-control" placeholder="0-100" />
-                <button type="button" class="btn btn-danger remove-score">-</button>
+                <button type="button" class="btn btn-danger remove-score ms-2">-</button>
             `;
 
             scoreContainer.appendChild(div);
