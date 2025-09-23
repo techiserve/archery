@@ -115,7 +115,13 @@ class GradingController extends Controller
           }elseif($archer->currentGradingDominant == 'ANG'){
             $x = 18;
           }else{
-            $x = $gradeId->id;
+            
+            if(!$gradeId) {
+                $x = 0; // or handle the case where no matching record is found
+            } else {
+                $x = $gradeId->id;
+            }
+        
           }
 
           $archer->gradingfor = Gradingcard::where('id', '>', $x)

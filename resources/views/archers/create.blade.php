@@ -237,7 +237,7 @@
 
         <div class="col-md-6">
           <label class="form-label" for="gender">Gender</label>
-          <select class="form-select" id="gender" name="gender" aria-label="Default select example">
+          <select class="form-select" name="gender" aria-label="Default select example">
             <option value="Male">Male</option>
             <option value="Female">Female</option>
           </select>
