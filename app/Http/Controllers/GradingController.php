@@ -21,6 +21,8 @@ use App\Models\GradingCard;
 use App\Models\Eventscore;
 use App\Models\Scorecard;
 use Illuminate\Support\Facades\Auth;
+use App\Exports\EventScoresSummaryExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 use Illuminate\Http\Request;
 
@@ -150,7 +152,6 @@ class GradingController extends Controller
          $scores = MinScores::all();
          $event =  Event::where('id',  $eventyacho->event_id)->first();
          $categories = Eventcategory::where('id', $event->cat )->first();  
-       //  dd($categories);
 
          $archergrading = Archergrading::where('archer_id', $eventyacho->archer_id)->where('event', $eventyacho->event_id)->first();
 
@@ -921,7 +922,13 @@ class GradingController extends Controller
 
        public function supersummary(string $id){
 
-      return view('events.editScore', compact('getData','archer','round','category','possibleScores','cat','event','name','roundScores'));
+
+       // dd($id);
+     //  $eventScore = Eventscore::where('event_id',$id)->get();
+      // dd( $eventScore);
+
+     $fileName = "event_scores_summary_{$id}.xlsx";
+    return Excel::download(new EventScoresSummaryExport($id), $fileName);
 
     }
 
