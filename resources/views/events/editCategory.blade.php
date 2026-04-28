@@ -57,6 +57,7 @@
                 <div class="col-md-12">
                     <label class="form-label">Scores</label>
 
+                    
 
                     <div id="score-container">
                         @forelse($scores as $score)
