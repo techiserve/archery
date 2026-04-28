@@ -66,7 +66,7 @@
   document.addEventListener("DOMContentLoaded", function() {
     $('#manage-table').DataTable({
       responsive: true,
-      pageLength: 10,
+      pageLength: 40,
       dom: 'Bfrtip',
       buttons: ['copy', 'csv', 'excel', 'print'],
       language: {

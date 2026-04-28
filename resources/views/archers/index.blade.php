@@ -21,7 +21,7 @@
                 <thead>
                     <tr>
                       <th></th>
-                        <th>Name</th>
+                        <th>Name(s)</th>
                         <th>Surname</th>
                         <th>Id</th>
                         <th>Dob</th>
@@ -67,7 +67,7 @@
   document.addEventListener("DOMContentLoaded", function() {
     $('#archers-table').DataTable({
       responsive: true,
-      pageLength: 10,
+      pageLength: 40,
       dom: 'Bfrtip',
       buttons: ['copy', 'csv', 'excel', 'print'],
       language: {

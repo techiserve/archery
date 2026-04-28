@@ -87,23 +87,75 @@
 @endsection
 
 <script>
-  // Use delegation so it survives DataTables redraws
-  document.addEventListener('change', function(e) {
-    if (e.target && e.target.id === 'select-all') {
-      document.querySelectorAll('input[name="selected_archers[]"]').forEach(cb => cb.checked = e.target.checked);
-    }
-  });
-</script>
+document.addEventListener("DOMContentLoaded", function() {
+    let selectedArchers = new Set();
 
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    $('#manage-table').DataTable({
-      responsive: true,
-      pageLength: 40,
-      dom: 'Bfrtip',
-      buttons: ['copy', 'csv', 'excel', 'print'],
-      language: { search: "_INPUT_", searchPlaceholder: "Search..." },
-      columnDefs: [{ targets: 0, orderable: false }]
+    const table = $('#manage-table').DataTable({
+        responsive: true,
+        pageLength: 40,
+        dom: 'Bfrtip',
+        buttons: ['copy', 'csv', 'excel', 'print'],
+        language: {
+            search: "_INPUT_",
+            searchPlaceholder: "Search..."
+        },
+        columnDefs: [
+            { targets: 0, orderable: false }
+        ]
     });
-  });
+
+    // Track checkbox changes across all pages/searches
+    $('#manage-table').on('change', 'input[name="selected_archers[]"]', function() {
+        const archerId = this.value;
+
+        if (this.checked) {
+            selectedArchers.add(archerId);
+        } else {
+            selectedArchers.delete(archerId);
+        }
+    });
+
+    // Restore checked state after pagination/search redraw
+    table.on('draw', function() {
+        $('#manage-table input[name="selected_archers[]"]').each(function() {
+            this.checked = selectedArchers.has(this.value);
+        });
+    });
+
+    // Select all visible rows on current page/search result
+    $('#select-all').on('change', function() {
+        const checked = this.checked;
+
+        table.rows({ search: 'applied' }).every(function() {
+            const row = this.node();
+            const checkbox = $(row).find('input[name="selected_archers[]"]');
+
+            if (checkbox.length) {
+                checkbox.prop('checked', checked);
+
+                if (checked) {
+                    selectedArchers.add(checkbox.val());
+                } else {
+                    selectedArchers.delete(checkbox.val());
+                }
+            }
+        });
+
+        table.draw(false);
+    });
+
+    // Before submit, append hidden inputs for ALL selected archers
+    $('form').on('submit', function() {
+        // Remove existing checkbox names so only hidden selected values submit
+        $('input[name="selected_archers[]"]').removeAttr('name');
+
+        selectedArchers.forEach(function(archerId) {
+            $('<input>')
+                .attr('type', 'hidden')
+                .attr('name', 'selected_archers[]')
+                .val(archerId)
+                .appendTo('form');
+        });
+    });
+});
 </script>

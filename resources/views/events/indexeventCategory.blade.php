@@ -20,21 +20,26 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($categories as $archer)  
-                    <tr>
-                       
-                        <td>{{ $archer->name }}</td>
-                        <td>{{ $archer->rounds }}</td>
-                        <td>{{ $archer->arrows }}</td> 
-                        <td>
-                    @if($archer->name  != 'Grading')
-                        <a  href="/editeventCategory/{{$archer->id}}" class='btn btn-danger btn-sm' style='color: white;'>
-                      <span class='fa fa-pencil'></span>
-                      <span class='hidden-sm hidden-sm hidden-md'>Delete Category</span>
-                   </a>&nbsp;
-                   @endif
-                   </td>
-                    @endforeach
+           @foreach ($categories as $archer)  
+            <tr>
+                <td>{{ $archer->name }}</td>
+                <td>{{ $archer->rounds }}</td>
+                <td>{{ $archer->arrows }}</td> 
+                <td>
+                    <a href="/editeventCategory2/{{ $archer->id }}" class="btn btn-primary btn-sm" style="color: white;">
+                        <span class="fa fa-cog"></span>
+                        Settings
+                    </a>
+
+                    @if($archer->name != 'Grading')
+                        <a href="/deleteeventCategory/{{ $archer->id }}" class="btn btn-danger btn-sm" style="color: white;">
+                            <span class="fa fa-trash"></span>
+                            Delete Category
+                        </a>
+                    @endif
+                </td>
+            </tr>
+            @endforeach
                 </tbody>
             </table>
             </div>

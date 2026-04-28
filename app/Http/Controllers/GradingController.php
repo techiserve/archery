@@ -22,6 +22,7 @@ use App\Models\Eventscore;
 use App\Models\Scorecard;
 use Illuminate\Support\Facades\Auth;
 use App\Exports\EventScoresSummaryExport;
+use App\Exports\EventSummaryExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 use Illuminate\Http\Request;
@@ -571,6 +572,55 @@ class GradingController extends Controller
          
     }
 
+
+
+           public function editEventCategory2($id)
+        {
+            $category = Eventcategory::findOrFail($id);
+
+            $scores = Eventcategoryscore::where('eventcategory_id', $id)
+                ->orderBy('id', 'asc')
+                ->get();
+
+            return view('events.editCategory', compact('category', 'scores'));
+        }
+
+
+
+      public function updateEventCategory(Request $request, $id)
+      {
+          $category = Eventcategory::findOrFail($id);
+
+          $category->name = $request->name;
+          $category->desc = $request->desc;
+          $category->rounds = $request->rounds;
+          $category->arrows = $request->arrows;
+          $category->save();
+
+          $scores = $request->input('score', []);
+
+          Eventcategoryscore::where('eventcategory_id', $id)->delete();
+
+          foreach ($scores as $index => $score) {
+              if ($score === null || $score === '') {
+                  continue;
+              }
+
+              $eventScore = new Eventcategoryscore();
+              $eventScore->eventcategory_id = $category->id;
+              $eventScore->score = $score;
+
+              $eventScore->isX = 0;
+
+              if ($index === array_key_last($scores)) {
+                  $eventScore->isX = $request->input('include_x', 0);
+              }
+
+              $eventScore->save();
+          }
+
+          return redirect()->back()->with('success', 'Event Category updated successfully!');
+      }
     /**
      * Store a newly created resource in storage.
      */
@@ -829,40 +879,33 @@ class GradingController extends Controller
 
 
 
-    public function update(Request $request, string $id)
-    {
+public function update(Request $request, string $id)
+{
+    $event = Event::findOrFail($id);
 
+    $event->update([
+        'name' => $request->name,
+        'doe'  => $request->doe,
+        'cat'  => $request->cat,
+    ]);
 
-      $event = Event::findOrFail($id);
-      $event->update([
-          'name' => $request->name,
-          'doe' => $request->doe,
-          'cat' => $request->cat,
-      ]);
-            
-      $archers = $request->selected_archers;
-      // dd($archers);
-      foreach($archers as $arch){
+    $selectedArchers = $request->input('selected_archers', []);
+  // dd($selectedArchers);
+    // Remove archers that were unchecked
+    Eventscore::where('event_id', $id)
+        ->whereNotIn('archer_id', $selectedArchers)
+        ->delete();
 
-        $archers = Eventscore::where('event_id', $id)->where('archer_id', $arch)->first();
-       // dd($archers);
-
-        if(!$archers){
-          
-          $addArcher = Eventscore::create([
-
-            'event_id' => $id,
-            'archer_id' => $arch
-          ]);
-
-        }
-
-      }
-
-      return redirect()->back()->with('success', 'Event updated successfully.');
-
+    // Add newly checked archers
+    foreach ($selectedArchers as $archerId) {
+        Eventscore::firstOrCreate([
+            'event_id'  => $id,
+            'archer_id' => $archerId,
+        ]);
     }
 
+    return redirect()->back()->with('success', 'Event updated successfully.');
+}
 
 
     public function deletearcher($archer_id, $event_id){
@@ -915,9 +958,8 @@ class GradingController extends Controller
 
        public function scoresummary(string $id){
 
-      return view('events.editScore', compact('getData','archer','round','category','possibleScores','cat','event','name','roundScores'));
-
-    }
+        return Excel::download(new EventSummaryExport($id), "event_summary_{$id}.xlsx");
+     }
 
 
        public function supersummary(string $id){

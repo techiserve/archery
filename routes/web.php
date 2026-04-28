@@ -75,7 +75,9 @@ Route::get('/events/{id}/supersummary', [GradingController::class, 'supersummary
 
 Route::get('/endevent/{id}', [GradingController::class, 'endevent'])->name('endevent');
 Route::post('/event/storeCategory', [GradingController::class, 'storeCategory'])->name('event.storeCategory');
+Route::get('/editeventCategory2/{id}', [GradingController::class, 'editEventCategory2'])->name('event.editCategory2');
 
+Route::put('/updateeventCategory/{id}', [GradingController::class, 'updateEventCategory'])->name('event.updateCategory');
 
 Route::post('/grading/details', [GradingController::class, 'gradingdetail'])->name('grading.details');
 Route::post('/grading/confirmscores', [GradingController::class, 'finalgradingdetail'])->name('grading.confirmscores');
