@@ -154,8 +154,8 @@
         </div>
 
         <div class="col-md-6">
-          <label class="form-label" for="cgw">Current Grading Weak</label>
-          <select class="form-select" id="cgw" name="cgw" aria-label="Current Grading Weak">
+          <label class="form-label" for="cgw">Current Grading Non Dominant</label>
+          <select class="form-select" id="cgw" name="cgw" aria-label="Current Grading Non Dominant">
             <option value="{{ $archer->currentGradingWeak }}">{{ $archer->currentGradingWeak }}</option>
             <!-- Cub -->
             <option value="CNG">CNG</option>
@@ -196,6 +196,19 @@
             <option value="AM1">AM1</option><option value="AM2">AM2</option><option value="AM3">AM3</option>
           </select>
         </div>
+
+
+            <div class="col-md-6">
+          <label class="form-label" for="institute">Institute</label>
+          <input
+            type="text"
+            id="institute"
+            name="institute"
+            class="form-control"
+            value="{{ $archer->institute }}"
+            />
+        </div>
+
       </div>
 
       <div class="row g-6 mt-4">

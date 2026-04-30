@@ -27,12 +27,28 @@ class AcheryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $all = Archer::all();
+public function index(Request $request)
+{
+    $institutes = Archer::whereNotNull('institute')
+        ->where('institute', '!=', '')
+        ->distinct()
+        ->orderBy('institute')
+        ->pluck('institute');
 
-        return view('archers.index', compact('all'));
+    $query = Archer::query();
+
+    if ($request->filled('institute')) {
+        $query->where('institute', $request->institute);
     }
+
+    if ($request->filled('ageCategory')) {
+        $query->where('ageCategory', $request->ageCategory);
+    }
+
+    $all = $query->get();
+
+    return view('archers.index', compact('all', 'institutes'));
+}
 
     /**
      * Show the form for creating a new resource.
@@ -159,6 +175,7 @@ class AcheryController extends Controller
          'currentProficiency' => $request->cp,
          'agegroupProficiency' => $request->agp,
          'hand' => $request->dh,
+         'institute' => $request->institute,
          'clubMember' => $request->clubMember, 
          'updatedBy' => $user,  
     ]); 

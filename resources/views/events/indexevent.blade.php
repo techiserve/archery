@@ -63,16 +63,17 @@
               <!--/ DataTable with Buttons -->  
 @endsection
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function() {
     $('#manage-table').DataTable({
-      responsive: true,
-      pageLength: 40,
-      dom: 'Bfrtip',
-      buttons: ['copy', 'csv', 'excel', 'print'],
-      language: {
-        search: "_INPUT_",
-        searchPlaceholder: "Search..."
-      }
+        responsive: true,
+        pageLength: 40,
+        order: [[2, 'desc']],
+        dom: 'Bfrtip',
+        buttons: ['copy', 'csv', 'excel', 'print'],
+        language: {
+            search: "_INPUT_",
+            searchPlaceholder: "Search..."
+        }
     });
-  });
+});
 </script>

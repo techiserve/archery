@@ -118,8 +118,8 @@
         </div>
 
         <div class="col-md-6">
-          <label class="form-label" for="cgwSelect">Current Grading Weak</label>
-          <select class="form-select" id="cgwSelect" name="cgw" aria-label="Default select example">
+          <label class="form-label" for="cgwSelect">Current Grading Non Dominant</label>
+          <select class="form-select" id="cgwSelect" name="cgw" aria-label="Current Grading Non Dominant">
             <option value="CS1">CS1</option>
             <option value="CS2">CS2</option>
             <option value="CS3">CS3</option>

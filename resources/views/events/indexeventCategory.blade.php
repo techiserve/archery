@@ -31,7 +31,7 @@
                         Settings
                     </a>
 
-                    @if($archer->name != 'Grading')
+                    @if($archer->name != 'Grading' && $archer->name != 'Non Dominant Hand')
                         <a href="/deleteeventCategory/{{ $archer->id }}" class="btn btn-danger btn-sm" style="color: white;">
                             <span class="fa fa-trash"></span>
                             Delete Category
