@@ -70,7 +70,12 @@
                                 <td>{{ $pple->surname }}</td>
                                 <td>{{ $pple->generatedId }}</td>
                                 <td>{{ $pple->dob }}</td>
-                                <td>{{ $pple->ageCategory }}</td>
+                                @if($pple->ageCategory != null)
+                                 <td>{{ $pple->ageCategory }}</td>       
+                                @else
+                                  <td>No Age Category</td>       
+                                @endif
+                          
                                 <td>{{ $pple->currentGradingDominant }}</td>
                                 <td>
                                     <a href="/viewmore/{{ $pple->id }}" class="btn btn-success btn-sm" style="color: white;">

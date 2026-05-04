@@ -105,7 +105,12 @@
 
                   <td>{{ $pple->surname }}</td>
                   <td>{{ $archer->totalScore }}</td>
-                  <td>{{ $pple->ageCategory }}</td>
+                @if($pple->ageCategory != null)
+                                 <td>{{ $pple->ageCategory }}</td>       
+                                @else
+                                  <td>No Age Category</td>       
+                                @endif
+                          
                   <td>{{ $archer->timed }}</td>
                   <td>{{ $archer->updatedBy }}</td>
 

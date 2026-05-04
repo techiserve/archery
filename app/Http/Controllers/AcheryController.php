@@ -64,12 +64,9 @@ public function index(Request $request)
     public function store(Request $request)
     {
         $user = Auth::user()->id;
-       // dd($request->all());
-
-
+  
        $prefix = strtolower(substr($request->name, 0, 3) . substr($request->surname, 0, 3));
 
-        // Count how many users already have an identifier that starts with this prefix
         $count = Archer::whereRaw("LOWER(LEFT(name, 3)) = ?", [strtolower(substr($request->name, 0, 3))])
             ->whereRaw("LOWER(LEFT(surname, 3)) = ?", [strtolower(substr($request->surname, 0, 3))])
             ->count();

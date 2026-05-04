@@ -87,26 +87,17 @@
               <!--/ DataTable with Buttons -->  
 @endsection
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function() {
     $('#archers-table').DataTable({
-      responsive: {
-        details: {
-          type: 'inline'
+        responsive: true,
+        pageLength: 40,
+        order: [[2, 'desc']],
+        dom: 'Bfrtip',
+        buttons: ['copy', 'csv', 'excel', 'print'],
+        language: {
+            search: "_INPUT_",
+            searchPlaceholder: "Search..."
         }
-      },
-      pageLength: 10,
-      ordering: false,
-      dom: 'Bfrtip',
-      buttons: ['copy', 'csv', 'excel', 'print'],
-      language: {
-        search: "_INPUT_",
-        searchPlaceholder: "Search..."
-      },
-      columnDefs: [
-        { responsivePriority: 1, targets: 0 }, // Category - Always visible
-        { responsivePriority: 2, targets: 1 }, // Name - Always visible
-        { responsivePriority: 10001, targets: [2, 3, 4] } // Hide these in mobile first
-      ]
     });
-  });
+});
 </script>
