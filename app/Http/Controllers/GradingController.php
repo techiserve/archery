@@ -549,11 +549,13 @@ class GradingController extends Controller
 
       if($cat == '1'){
 
-        if($totall >= $request->figure){
+        if($totall >= $figure){
+
+        //  dd($totall,$figure,$gradefor);
 
          $updatearcher = Archer::where('id', $request->archer)->update([
         
-           'currentGradingDominant' => $request->gradefor,
+           'currentGradingDominant' => $gradefor,
 
          ]);
             
@@ -567,11 +569,11 @@ class GradingController extends Controller
 
        }elseif($cat == '11'){
         
-        if($totall >= $request->figure){
+        if($totall >= $figure){
 
           $updatearcher = Archer::where('id', $request->archer)->update([
          
-            'currentGradingWeak' => $request->gradefor,
+            'currentGradingWeak' => $gradefor,
 
           ]);
              
