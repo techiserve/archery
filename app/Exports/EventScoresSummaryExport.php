@@ -4,7 +4,7 @@ namespace App\Exports;
 
 use App\Models\Archer;
 use App\Models\Eventscore;
-use App\Models\Gradingcard;
+use App\Models\GradingCard;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;

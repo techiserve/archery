@@ -4,7 +4,7 @@ namespace App\Exports;
 
 use App\Models\Event;
 use App\Models\Eventcategory;
-use App\Models\Gradingcard;
+use App\Models\GradingCard;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
