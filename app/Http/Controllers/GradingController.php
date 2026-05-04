@@ -135,7 +135,8 @@ class GradingController extends Controller
         $pples->each(function ($archer) {
             $gradepacho = $archer->currentGradingDominant;
             $gradeId = Gradingcard::where('level', '=', $gradepacho)->first();
-
+             
+            dd($gradeId);
             if ($archer->currentGradingDominant == 'CNG') {
                 $x = 0;
             } elseif ($archer->currentGradingDominant == 'JNG') {
