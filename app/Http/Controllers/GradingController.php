@@ -22,6 +22,7 @@ use App\Models\Eventscore;
 use App\Models\Scorecard;
 use Illuminate\Support\Facades\Auth;
 use App\Exports\EventScoresSummaryExport;
+use App\Exports\EventRawScoresExport;
 use App\Exports\EventSummaryExport;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -1019,7 +1020,10 @@ public function update(Request $request, string $id)
 
      public function rawscores(string $id){
 
-      return view('events.editScore', compact('getData','archer','round','category','possibleScores','cat','event','name','roundScores'));
+         return Excel::download(
+        new EventRawScoresExport((int) $id),
+        "raw_scores_summary_{$id}.xlsx"
+    );
 
     }
 
