@@ -156,80 +156,6 @@
                     @endif
                   </td>
                 </tr>
-
-                <div class="modal fade" id="modalCenter{{ $archer->id }}" tabindex="-1" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered" role="document">
-                    <form class="card-body" method="POST" action="{{ route('event.archerDetails') }}">
-                      @csrf
-
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title">Capture Details</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                        </div>
-
-                        <div class="modal-body">
-                          <div class="row g-6">
-                            <div class="col mb-0">
-                              <label class="form-label">Arrow Used</label>
-                              <input type="text" name="arrowUsed" class="form-control" placeholder="Enter Arrow Used" />
-                            </div>
-
-                            <div class="col mb-0">
-                              <label class="form-label">Bow Used</label>
-                              <input type="text" name="bowUsed" class="form-control" placeholder="Enter Bow Used" />
-                            </div>
-                          </div>
-                        </div>
-
-                        <input type="hidden" name="cat" value="{{ $cat }}">
-                        <input type="hidden" name="archer" value="{{ $pple->id }}">
-                        <input type="hidden" name="event" value="{{ $archer->event_id }}">
-
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
-                          <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-
-                <div class="modal fade" id="modalEdit{{ $archer->id }}" tabindex="-1" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered" role="document">
-                    <form class="card-body" method="POST" action="{{ route('event.editScore') }}">
-                      @csrf
-
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title">Round to Edit</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                        </div>
-
-                        <div class="modal-body">
-                          <div class="row g-6">
-                            <div class="col mb-0">
-                              <select name="round" class="form-select">
-                                @foreach (range(1, $category->rounds) as $i)
-                                  <option value="{{ $i }}">Round {{ $i }}</option>
-                                @endforeach
-                              </select>
-                            </div>
-                          </div>
-                        </div>
-
-                        <input type="hidden" name="cat" value="{{ $cat }}">
-                        <input type="hidden" name="archer" value="{{ $pple->id }}">
-                        <input type="hidden" name="event" value="{{ $archer->event_id }}">
-
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
-                          <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                      </div>
-                    </form>
-                  </div>
-                </div>
               @endif
             @endforeach
           </tbody>
@@ -242,6 +168,89 @@
 </div>
 @endsection
 
+@push('modals')
+  @foreach ($archers as $archer)
+    @php $pple = $pples->firstWhere('id', $archer->archer_id); @endphp
+
+    @if($pple)
+      <div class="modal fade scoring-modal" id="modalCenter{{ $archer->id }}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down" role="document">
+          <div class="modal-content">
+            <form method="POST" action="{{ route('event.archerDetails') }}">
+              @csrf
+
+              <div class="modal-header">
+                <h5 class="modal-title">Capture Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+
+              <div class="modal-body">
+                <div class="row g-3">
+                  <div class="col-12 col-sm-6">
+                    <label class="form-label">Arrow Used</label>
+                    <input type="text" name="arrowUsed" class="form-control" placeholder="Enter Arrow Used" />
+                  </div>
+
+                  <div class="col-12 col-sm-6">
+                    <label class="form-label">Bow Used</label>
+                    <input type="text" name="bowUsed" class="form-control" placeholder="Enter Bow Used" />
+                  </div>
+                </div>
+              </div>
+
+              <input type="hidden" name="cat" value="{{ $cat }}">
+              <input type="hidden" name="archer" value="{{ $pple->id }}">
+              <input type="hidden" name="event" value="{{ $archer->event_id }}">
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade scoring-modal" id="modalEdit{{ $archer->id }}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down" role="document">
+          <div class="modal-content">
+            <form method="POST" action="{{ route('event.editScore') }}">
+              @csrf
+
+              <div class="modal-header">
+                <h5 class="modal-title">Round to Edit</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+
+              <div class="modal-body">
+                <div class="row g-3">
+                  <div class="col-12">
+                    <select name="round" class="form-select">
+                      @foreach (range(1, $category->rounds) as $i)
+                        <option value="{{ $i }}">Round {{ $i }}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <input type="hidden" name="cat" value="{{ $cat }}">
+              <input type="hidden" name="archer" value="{{ $pple->id }}">
+              <input type="hidden" name="event" value="{{ $archer->event_id }}">
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    @endif
+  @endforeach
+@endpush
+
+@push('scripts')
 <script>
 function handleRowClick(event, archerId) {
   const modalEl = document.getElementById(`modalCenter${archerId}`);
@@ -277,7 +286,9 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 </script>
+@endpush
 
+@push('styles')
 <style>
 .card {
   border-radius: 10px;
@@ -332,4 +343,18 @@ div.dt-buttons {
 .btn-sm {
   border-radius: 6px;
 }
+
+.scoring-modal {
+  --bs-modal-zindex: 1110;
+}
+
+body.modal-open .modal-backdrop {
+  --bs-backdrop-zindex: 1109;
+}
+
+body.modal-open .layout-overlay {
+  display: none !important;
+  pointer-events: none;
+}
 </style>
+@endpush

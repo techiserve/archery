@@ -97,6 +97,7 @@
         @endif
     });
 </script>
+    @stack('styles')
   </head>
 
   <body>
@@ -140,6 +141,8 @@
       <div class="drag-target"></div>
     </div>
     <!-- / Layout wrapper -->
+
+    @stack('modals')
 
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/theme.js  -->
@@ -193,5 +196,6 @@
     <script  src="{!! asset('assets/js/tables-datatables-basic.js') !!}"></script>
 
     <!-- Page JS -->
+    @stack('scripts')
   </body>
 </html>

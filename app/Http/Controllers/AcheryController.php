@@ -156,6 +156,8 @@ public function index(Request $request)
     public function update(Request $request, string $id)
     {
     
+    // fix nid and gender that are not being updated in the database
+
        $user = Auth::user()->id;
     
  
@@ -164,6 +166,9 @@ public function index(Request $request)
          'name' => $request->name,
          'surname' => $request->surname,
          'dob' => $request->dob,
+         'gender' => $request->gender,
+         'nId' => $request->nId,
+         'knownAs' => $request->knownAs,
          'ageCategory' => $request->ag,
          'currentGradingWeak' => $request->cgw,
          'currentGradingDominant' => $request->cgd,
