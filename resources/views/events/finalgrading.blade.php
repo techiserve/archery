@@ -25,7 +25,7 @@
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
 <div class="card mb-6">
-    <h5 class="card-header">Capture Scores</h5>
+    <h5 class="card-header">Capture Scores.</h5>
     <form class="card-body" method="POST" action="/grading/confirmscores">
         @csrf
 

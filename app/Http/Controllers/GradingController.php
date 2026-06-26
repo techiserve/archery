@@ -30,6 +30,37 @@ use Illuminate\Http\Request;
 
 class GradingController extends Controller
 {
+    private const FIRST_GRADING_LEVELS = [
+        'CNG' => 'CS1',
+        'JNG' => 'JS1',
+        'ANG' => 'AS1',
+    ];
+
+    private function nextGradingCard(?string $currentLevel): ?GradingCard
+    {
+        $currentLevel = strtoupper(trim((string) $currentLevel));
+
+        if ($currentLevel === '') {
+            return null;
+        }
+
+        if (array_key_exists($currentLevel, self::FIRST_GRADING_LEVELS)) {
+            return GradingCard::where('level', self::FIRST_GRADING_LEVELS[$currentLevel])
+                ->orderBy('id')
+                ->first();
+        }
+
+        $currentGrading = GradingCard::where('level', $currentLevel)->first();
+
+        if (!$currentGrading) {
+            return null;
+        }
+
+        return GradingCard::where('id', '>', $currentGrading->id)
+            ->orderBy('id')
+            ->first();
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -114,41 +145,11 @@ class GradingController extends Controller
 
     if ($cat == '11') {
         $pples->each(function ($archer) {
-            $gradepacho = $archer->currentGradingWeak;
-            $gradeId = Gradingcard::where('level', '=', $gradepacho)->first();
-
-            if ($archer->currentGradingWeak == 'CNG') {
-                $x = 0;
-            } elseif ($archer->currentGradingWeak == 'JNG') {
-                $x = 9;
-            } elseif ($archer->currentGradingWeak == 'ANG') {
-                $x = 18;
-            } else {
-                $x = $gradeId ? $gradeId->id : 0;
-            }
-
-            $archer->gradingfor = Gradingcard::where('id', '>', $x)
-                ->orderBy('id', 'asc')
-                ->value('level');
+            $archer->gradingfor = $this->nextGradingCard($archer->currentGradingWeak)?->level;
         });
     } else {
         $pples->each(function ($archer) {
-            $gradepacho = $archer->currentGradingDominant;
-            $gradeId = Gradingcard::where('level', '=', $gradepacho)->first();
-           // dd($gradeId);
-            if ($archer->currentGradingDominant == 'CNG') {
-                $x = 0;
-            } elseif ($archer->currentGradingDominant == 'JNG') {
-                $x = 9;
-            } elseif ($archer->currentGradingDominant == 'ANG') {
-                $x = 18;
-            } else {
-                $x = $gradeId ? $gradeId->id : 0;
-            }
-
-            $archer->gradingfor = Gradingcard::where('id', '>', $x)
-                ->orderBy('id', 'asc')
-                ->value('level');
+            $archer->gradingfor = $this->nextGradingCard($archer->currentGradingDominant)?->level;
         });
     }
 
@@ -505,22 +506,14 @@ class GradingController extends Controller
   
      if($cat == '1'){
 
-      $currentgrading = GradingCard::where('level', $archerDetail->currentGradingDominant)->first();     
-      $nextgrading = null;
-      if ($currentgrading) {
-          $nextgrading = GradingCard::where('id', '>', $currentgrading->id)->orderBy('id')->first();
-      }
+      $nextgrading = $this->nextGradingCard($archerDetail->currentGradingDominant);
 
         $figure = $nextgrading->score ?? null;
         $gradefor = $nextgrading->level ?? null;
 
       }elseif($cat == '11'){
 
-        $currentgrading = GradingCard::where('level', $archerDetail->currentGradingWeak)->first();     
-        $nextgrading = null;
-        if ($currentgrading) {
-            $nextgrading = GradingCard::where('id', '>', $currentgrading->id)->orderBy('id')->first();
-        }
+        $nextgrading = $this->nextGradingCard($archerDetail->currentGradingWeak);
 
           $figure = $nextgrading->score ?? null;
           $gradefor = $nextgrading->level ?? null;
@@ -549,7 +542,7 @@ class GradingController extends Controller
 
       if($cat == '1'){
 
-        if($totall >= $figure){
+        if($gradefor && $figure !== null && $totall >= $figure){
 
         //  dd($totall,$figure,$gradefor);
 
@@ -569,7 +562,7 @@ class GradingController extends Controller
 
        }elseif($cat == '11'){
         
-        if($totall >= $figure){
+        if($gradefor && $figure !== null && $totall >= $figure){
 
           $updatearcher = Archer::where('id', $request->archer)->update([
          
@@ -803,42 +796,14 @@ class GradingController extends Controller
      
       if($categories->name == 'Grading'){
 
-        $currentgrading = GradingCard::where('level', $archer->currentGradingDominant)->first();     
-        $nextgrading = null;
-        if ($currentgrading) {
-
-          if($archer->currentGradingDominant == 'CNG'){
-            $x = 0;
-          }elseif($archer->currentGradingDominant == 'JNG'){
-            $x = 9;
-          }elseif($archer->currentGradingDominant == 'ANG'){
-            $x = 18;
-          }else{
-            $x = $currentgrading->id;
-          }
-            $nextgrading = GradingCard::where('id', '>', $x)->orderBy('id')->first();
-        }
+        $nextgrading = $this->nextGradingCard($archer->currentGradingDominant);
 
           $figure = $nextgrading->score ?? null;
           $gradefor = $nextgrading->level ?? null;
 
         }elseif($categories->name == 'Non Dominant Hand'){
 
-          $currentgrading = GradingCard::where('level', $archer->currentGradingWeak)->first();     
-          $nextgrading = null;
-          if ($currentgrading) {
-
-            if($archer->currentGradingWeak == 'CNG'){
-              $x = 0;
-            }elseif($archer->currentGradingWeak == 'JNG'){
-              $x = 9;
-            }elseif($archer->currentGradingWeak == 'ANG'){
-              $x = 18;
-            }else{
-              $x = $currentgrading->id;
-            }
-              $nextgrading = GradingCard::where('id', '>', $x)->orderBy('id')->first();
-          }
+          $nextgrading = $this->nextGradingCard($archer->currentGradingWeak);
 
             $figure = $nextgrading->score ?? null;
             $gradefor = $nextgrading->level ?? null;
@@ -854,7 +819,9 @@ class GradingController extends Controller
        $name = $archer->name;
        $date = $event->doe;
        $bowused = $request->bowUsed;
-       $curentgrading = $archer->currentGradingDominant;
+       $curentgrading = $categories->name == 'Non Dominant Hand'
+          ? $archer->currentGradingWeak
+          : $archer->currentGradingDominant;
        $age = $archer->ageCategory;
        $arrow = $request->arrowUsed;
        //$gradefor = $request->gf; 
