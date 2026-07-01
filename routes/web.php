@@ -4,6 +4,9 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AcheryController;
 use App\Http\Controllers\GradingController;
+use App\Models\Archer;
+use App\Models\Event;
+use App\Models\Eventcategory;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -11,7 +14,25 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $openEventsQuery = Event::where(function ($query) {
+        $query->whereNull('status')
+            ->orWhere('status', '!=', '1');
+    });
+
+    $dashboardStats = [
+        'archers' => Archer::count(),
+        'openEvents' => (clone $openEventsQuery)->count(),
+        'eventCategories' => Eventcategory::count(),
+    ];
+
+    $latestOpenEvents = (clone $openEventsQuery)
+        ->latest('doe')
+        ->take(3)
+        ->get(['id', 'name', 'doe', 'cat']);
+
+    $eventCategories = Eventcategory::pluck('name', 'id');
+
+    return view('dashboard', compact('dashboardStats', 'latestOpenEvents', 'eventCategories'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {

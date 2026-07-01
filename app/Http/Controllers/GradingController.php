@@ -112,7 +112,7 @@ class GradingController extends Controller
 
 
    public function showEvent(Request $request, $id)
-{
+   {
     $event = Event::where('id', $id)->first();
 
     $institutes = Archer::whereNotNull('institute')
@@ -240,7 +240,6 @@ class GradingController extends Controller
        return view('events.grading', compact('archer','eventyacho','categories','scores','event'));
     }
 
-
     
     public function gradingdetail(Request $request)
     {
@@ -257,18 +256,18 @@ class GradingController extends Controller
          $event = $request->event;
 
         // dd($eventcategory);
-
          $figure =  GradingCard::where('level', $gradefor)->pluck('score');  
          $scores  = Eventcategoryscore::where('eventcategory_id', $request->eventcategory_id)->pluck('score');
          $category = Eventcategory::where('id', $request->eventcategory_id)->first();
 
-      //   dd($gradefor);    
+       //   dd($gradefor);    
         $lastrecord = Scorecard::where('event_id', $event)->where('archer_id', $archer)->latest()->first();
         $cumtotal =  $lastrecord->cumtotal ?? 0;
         $noofrounds = $lastrecord->round ?? 1;
         $currentPR =  $lastrecord->currentPR ?? 0;
         $requiredPR =  $lastrecord->requiredPR ?? 0;
         $remaining_rounds =  $category->rounds - $noofrounds;
+
         //dd($remaining_rounds);
         if($noofrounds < $category->rounds){
           $currentRound = $noofrounds + 1;
