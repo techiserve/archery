@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
+  @php $certificateEligibleScoreIds = $certificateEligibleScoreIds ?? collect(); @endphp
 
   <div class="card">
 
@@ -153,6 +154,13 @@
                       <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalEdit{{ $archer->id }}">
                         Edit Scores
                       </button>
+                    @endif
+
+                    @if($certificateEligibleScoreIds->contains((string) $archer->id))
+                      <a href="{{ route('archer.certificate', $archer->id) }}" class="btn btn-warning btn-sm">
+                        <span class="fa fa-download"></span>
+                        Certificate
+                      </a>
                     @endif
                   </td>
                 </tr>

@@ -15,12 +15,14 @@ use App\Models\Round4;
 use App\Models\Round5;
 use App\Models\Round6;
 use App\Models\Round7;
-use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Round8;
 use App\Models\GradingCard;
 use App\Models\Eventscore;
 use App\Models\Scorecard;
+use App\Services\CertificatePdfStamper;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 use App\Exports\EventScoresSummaryExport;
 use App\Exports\EventRawScoresExport;
 use App\Exports\EventSummaryExport;
@@ -59,6 +61,47 @@ class GradingController extends Controller
         return GradingCard::where('id', '>', $currentGrading->id)
             ->orderBy('id')
             ->first();
+    }
+
+    private function isCertificateEvent(?Eventcategory $category): bool
+    {
+        $name = Str::lower(trim((string) $category?->name));
+
+        return in_array($name, ['grading', 'non dominant hand'], true);
+    }
+
+    private function isUpgradedForCertificate(Eventscore $eventScore, ?Archergrading $grading, ?Eventcategory $category): bool
+    {
+        if (!$grading || (string) $eventScore->status !== '1') {
+            return false;
+        }
+
+        $gradingFor = trim((string) $grading->gradingfor);
+
+        if ($gradingFor === '' || $gradingFor === '0') {
+            return false;
+        }
+
+        $requiredRounds = (int) ($category?->rounds ?? 0);
+        $capturedRounds = (int) ($eventScore->timed ?? 0);
+
+        if ($requiredRounds > 0 && $capturedRounds > 0 && $capturedRounds < $requiredRounds) {
+            return false;
+        }
+
+        $requiredScore = is_numeric($grading->totalScore)
+            ? (float) $grading->totalScore
+            : null;
+
+        if (!$requiredScore) {
+            $requiredScore = GradingCard::where('level', $gradingFor)->value('score');
+        }
+
+        if (!$requiredScore || !is_numeric($eventScore->totalScore)) {
+            return false;
+        }
+
+        return (float) $eventScore->totalScore >= (float) $requiredScore;
     }
 
     /**
@@ -156,6 +199,24 @@ class GradingController extends Controller
     $category = Eventcategory::where('id', $cat)->first();
     $catname = $category->name;
     $scores = MinScores::all();
+    $certificateEligibleScoreIds = collect();
+
+    if ($this->isCertificateEvent($category) && $archers->isNotEmpty()) {
+        $gradingRecords = Archergrading::where('event', $id)
+            ->whereIn('archer_id', $archers->pluck('archer_id')->filter()->unique())
+            ->get()
+            ->keyBy(fn ($grading) => (string) $grading->archer_id);
+
+        $certificateEligibleScoreIds = $archers
+            ->filter(fn ($eventScore) => $this->isUpgradedForCertificate(
+                $eventScore,
+                $gradingRecords->get((string) $eventScore->archer_id),
+                $category
+            ))
+            ->pluck('id')
+            ->map(fn ($id) => (string) $id)
+            ->values();
+    }
 
     return view('events.scoring', compact(
         'archers',
@@ -165,7 +226,8 @@ class GradingController extends Controller
         'event',
         'category',
         'catname',
-        'institutes'
+        'institutes',
+        'certificateEligibleScoreIds'
     ));
 }
 
@@ -861,23 +923,50 @@ class GradingController extends Controller
      */
     public function certificate(string $id)
     {
-      //  dd($id);
-        $eventscore = Eventscore::where('id',$id)->first();
-        $archer = Archergrading::where('archer_id',$eventscore->archer_id)->where('event',$eventscore->event_id)->first();
-        //dd($archer);
+        $eventScore = Eventscore::findOrFail($id);
+        $event = Event::findOrFail($eventScore->event_id);
+        $category = Eventcategory::find($event->cat);
+
+        abort_unless($this->isCertificateEvent($category), 403, 'Certificates are only available for grading events.');
+
+        $grading = Archergrading::where('archer_id', $eventScore->archer_id)
+            ->where('event', $eventScore->event_id)
+            ->latest()
+            ->first();
+
+        abort_unless(
+            $this->isUpgradedForCertificate($eventScore, $grading, $category),
+            403,
+            'Certificate is only available after the archer has been upgraded.'
+        );
+
+        $archer = Archer::find($eventScore->archer_id);
+        $templatePath = resource_path('certificates/qf-archery-certificate-detailed-template.pdf');
+
+        abort_unless(file_exists($templatePath), 404, 'Certificate template PDF was not found.');
+
+        $fullName = trim((string) ($grading->name ?? ''));
+
+        if ($archer) {
+            $fullName = trim("{$archer->name} {$archer->surname}");
+        }
 
         $data = [
-          'archer' => (object)[
-              'name'     => $archer->name ?? 'Unknown',
-              'event'    => $archer->gradingfor ?? 'Unknown Event',
-              'score'    => $eventscore->totalScore ?? '0',
-              'position' => $archer->id ?? 'N/A',
-          ]
-      ];
-  
-      $pdf = Pdf::loadView('pdf.certificate', $data)->setPaper('a4', 'landscape');
-  
-      return $pdf->download('archer_scorecard.pdf');
+            'name' => $fullName !== '' ? $fullName : 'Unknown Archer',
+            'grading' => $grading->gradingfor,
+            'score' => $eventScore->totalScore,
+            'certificateDate' => $event->doe
+                ? Carbon::parse($event->doe)->format('d M Y')
+                : now()->format('d M Y'),
+        ];
+
+        $filename = 'grading-certificate-' . Str::slug($data['name'] . '-' . $data['grading']) . '.pdf';
+        $pdf = app(CertificatePdfStamper::class)->stamp($templatePath, $data);
+
+        return response($pdf, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ]);
     }
 
 
