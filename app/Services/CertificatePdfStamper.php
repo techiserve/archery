@@ -54,7 +54,7 @@ class CertificatePdfStamper
 
         $offsets[$scriptFontObjectId] = strlen($output);
         $output .= $scriptFontObjectId . " 0 obj\n"
-            . "<< /Type /Font /Subtype /Type1 /BaseFont /ZapfChancery-MediumItalic /Encoding /WinAnsiEncoding >>\n"
+            . "<< /Type /Font /Subtype /Type1 /BaseFont /Times-Italic /Encoding /WinAnsiEncoding >>\n"
             . "endobj\n";
 
         $xrefOffset = strlen($output);
@@ -151,7 +151,7 @@ class CertificatePdfStamper
         $nameFontSize = strlen($name) > 32 ? 16.4 : (strlen($name) > 24 ? 18.1 : 20.1);
         $smallFontSize = 14.7;
         $dateFontSize = 11.9;
-        $signatureFontSize = 16.0;
+        $signatureFontSize = 13.5;
 
         $commands = ["q\n"];
         $commands[] = $this->drawCenteredText($name, $nameFontSize, 421.0, $this->baselineFromTopMm(103.5, 7.1));
@@ -227,7 +227,7 @@ class CertificatePdfStamper
 
     private function estimatedSignatureTextWidth(string $text, float $fontSize): float
     {
-        return strlen($text) * $fontSize * 0.46;
+        return strlen($text) * $fontSize * 0.45;
     }
 
     private function points(float $millimetres): float
