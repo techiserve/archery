@@ -7,15 +7,15 @@
                     <script>
                       document.write(new Date().getFullYear());
                     </script>
-                    , made with ❤️ by
-                    <a href="https://themeselection.com" target="_blank" class="footer-link">ThemeSelection</a>
+                    , made  by
+                    <a href="https://techiserve.ai" target="_blank" class="footer-link">Techiserve.ai</a>
                   </div>
                   <div class="d-none d-lg-inline-block">
                     <a
                       href="https://demos.themeselection.com/sneat-bootstrap-html-admin-template/documentation/"
                       target="_blank"
                       class="footer-link me-4"
-                      >Documentation</a
+                      ></a
                     >
                   </div>
                 </div>
