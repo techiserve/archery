@@ -33,14 +33,11 @@
                 </thead>
                 <tbody>
                     @foreach ($all as $pple )  
+                    @php $event = $events->firstWhere('id', $pple->event); @endphp
                     <tr>
 
                         <td>{{ $pple->name }}</td>
-                        @foreach($events as $event)
-                        @if($pple->event == $event->id)
-                        <td>{{ $event->name }}</td>
-                        @endif
-                        @endforeach
+                        <td>{{ $event->name ?? 'Unknown Event' }}</td>
                         <td>{{ $pple->date }}</td>
                         <td>{{ $pple->ageCategory }}</td>
                         <td>{{ $pple->currentGrading }}</td>
