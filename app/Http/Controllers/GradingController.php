@@ -19,9 +19,13 @@ use App\Models\Round8;
 use App\Models\GradingCard;
 use App\Models\Eventscore;
 use App\Models\Scorecard;
+use App\Models\CertificateEmailBatch;
+use App\Jobs\SendCertificateEmailBatch;
 use App\Services\CertificatePdfStamper;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use App\Exports\EventScoresSummaryExport;
 use App\Exports\EventRawScoresExport;
@@ -63,14 +67,14 @@ class GradingController extends Controller
             ->first();
     }
 
-    private function isCertificateEvent(?Eventcategory $category): bool
+    public function isCertificateEvent(?Eventcategory $category): bool
     {
         $name = Str::lower(trim((string) $category?->name));
 
         return in_array($name, ['grading', 'non dominant hand'], true);
     }
 
-    private function isUpgradedForCertificate(Eventscore $eventScore, ?Archergrading $grading, ?Eventcategory $category): bool
+    public function isUpgradedForCertificate(Eventscore $eventScore, ?Archergrading $grading, ?Eventcategory $category): bool
     {
         if (!$grading || (string) $eventScore->status !== '1') {
             return false;
@@ -102,6 +106,100 @@ class GradingController extends Controller
         }
 
         return (float) $eventScore->totalScore >= (float) $requiredScore;
+    }
+
+    private function certificateEligibleScoreIdsForScores(Collection $eventScores, ?Eventcategory $category): Collection
+    {
+        if (!$this->isCertificateEvent($category) || $eventScores->isEmpty()) {
+            return collect();
+        }
+
+        $gradingRecords = Archergrading::where('event', $eventScores->first()->event_id)
+            ->whereIn('archer_id', $eventScores->pluck('archer_id')->filter()->unique())
+            ->get()
+            ->keyBy(fn ($grading) => (string) $grading->archer_id);
+
+        return $eventScores
+            ->filter(fn ($eventScore) => $this->isUpgradedForCertificate(
+                $eventScore,
+                $gradingRecords->get((string) $eventScore->archer_id),
+                $category
+            ))
+            ->pluck('id')
+            ->map(fn ($id) => (string) $id)
+            ->values();
+    }
+
+    public function buildCertificate(Eventscore $eventScore): array
+    {
+        $event = Event::findOrFail($eventScore->event_id);
+        $category = Eventcategory::find($event->cat);
+
+        abort_unless($this->isCertificateEvent($category), 403, 'Certificates are only available for grading events.');
+
+        $grading = Archergrading::where('archer_id', $eventScore->archer_id)
+            ->where('event', $eventScore->event_id)
+            ->latest()
+            ->first();
+
+        abort_unless(
+            $this->isUpgradedForCertificate($eventScore, $grading, $category),
+            403,
+            'Certificate is only available after the archer has been upgraded.'
+        );
+
+        $archer = Archer::find($eventScore->archer_id);
+        $templatePath = resource_path('certificates/qf-archery-certificate-detailed-template.pdf');
+
+        abort_unless(file_exists($templatePath), 404, 'Certificate template PDF was not found.');
+
+        $fullName = trim((string) ($grading->name ?? ''));
+
+        if ($archer) {
+            $fullName = trim("{$archer->name} {$archer->surname}");
+        }
+
+        $data = [
+            'name' => $fullName !== '' ? $fullName : 'Unknown Archer',
+            'grading' => $grading->gradingfor,
+            'score' => $eventScore->totalScore,
+            'certificateDate' => $event->doe
+                ? Carbon::parse($event->doe)->format('d M Y')
+                : now()->format('d M Y'),
+        ];
+
+        $filename = 'grading-certificate-' . Str::slug($data['name'] . '-' . $data['grading']) . '.pdf';
+
+        return [
+            'archer' => $archer,
+            'data' => $data,
+            'filename' => $filename,
+            'pdf' => app(CertificatePdfStamper::class)->stamp($templatePath, $data),
+        ];
+    }
+
+    private function batchPayload(?CertificateEmailBatch $batch): array
+    {
+        if (!$batch) {
+            return ['batch' => null];
+        }
+
+        $processed = (int) $batch->sent + (int) $batch->failed;
+        $total = max((int) $batch->total, 0);
+
+        return [
+            'batch' => [
+                'id' => $batch->id,
+                'event_id' => $batch->event_id,
+                'status' => $batch->status,
+                'total' => $total,
+                'sent' => (int) $batch->sent,
+                'failed' => (int) $batch->failed,
+                'processed' => $processed,
+                'percentage' => $total > 0 ? min(100, (int) floor(($processed / $total) * 100)) : 100,
+                'errors' => $batch->errors ?? [],
+            ],
+        ];
     }
 
     /**
@@ -199,24 +297,11 @@ class GradingController extends Controller
     $category = Eventcategory::where('id', $cat)->first();
     $catname = $category->name;
     $scores = MinScores::all();
-    $certificateEligibleScoreIds = collect();
-
-    if ($this->isCertificateEvent($category) && $archers->isNotEmpty()) {
-        $gradingRecords = Archergrading::where('event', $id)
-            ->whereIn('archer_id', $archers->pluck('archer_id')->filter()->unique())
-            ->get()
-            ->keyBy(fn ($grading) => (string) $grading->archer_id);
-
-        $certificateEligibleScoreIds = $archers
-            ->filter(fn ($eventScore) => $this->isUpgradedForCertificate(
-                $eventScore,
-                $gradingRecords->get((string) $eventScore->archer_id),
-                $category
-            ))
-            ->pluck('id')
-            ->map(fn ($id) => (string) $id)
-            ->values();
-    }
+    $certificateEligibleScoreIds = $this->certificateEligibleScoreIdsForScores($archers, $category);
+    $allCertificateEligibleScoreIds = $this->certificateEligibleScoreIdsForScores(
+        Eventscore::where('event_id', $id)->get(),
+        $category
+    );
 
     return view('events.scoring', compact(
         'archers',
@@ -227,7 +312,8 @@ class GradingController extends Controller
         'category',
         'catname',
         'institutes',
-        'certificateEligibleScoreIds'
+        'certificateEligibleScoreIds',
+        'allCertificateEligibleScoreIds'
     ));
 }
 
@@ -924,49 +1010,107 @@ class GradingController extends Controller
     public function certificate(string $id)
     {
         $eventScore = Eventscore::findOrFail($id);
-        $event = Event::findOrFail($eventScore->event_id);
+        $certificate = $this->buildCertificate($eventScore);
+
+        return response($certificate['pdf'], 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . $certificate['filename'] . '"',
+        ]);
+    }
+
+    public function emailCertificate(string $id)
+    {
+        $eventScore = Eventscore::findOrFail($id);
+        $certificate = $this->buildCertificate($eventScore);
+        $recipient = 'vincentmhokore@gmail.com';
+        $data = $certificate['data'];
+        $body = '<p>Good day,</p>'
+            . '<p>Please find attached the grading certificate for <strong>' . e($data['name']) . '</strong>.</p>'
+            . '<p>Grading: ' . e($data['grading']) . '<br>'
+            . 'Score: ' . e($data['score']) . '<br>'
+            . 'Date: ' . e($data['certificateDate']) . '</p>';
+
+        try {
+            Mail::html($body, function ($message) use ($recipient, $certificate, $data) {
+                $message->to($recipient)
+                    ->subject('Archery Grading Certificate - ' . $data['name'])
+                    ->attachData($certificate['pdf'], $certificate['filename'], [
+                        'mime' => 'application/pdf',
+                    ]);
+            });
+        } catch (\Throwable $exception) {
+            return redirect()
+                ->back()
+                ->with('error', 'Certificate email could not be sent: ' . $exception->getMessage());
+        }
+
+        return redirect()
+            ->back()
+            ->with('success', 'Certificate email sent to ' . $recipient . '.');
+    }
+
+    public function emailEventCertificates(string $id)
+    {
+        $event = Event::findOrFail($id);
         $category = Eventcategory::find($event->cat);
 
         abort_unless($this->isCertificateEvent($category), 403, 'Certificates are only available for grading events.');
 
-        $grading = Archergrading::where('archer_id', $eventScore->archer_id)
-            ->where('event', $eventScore->event_id)
+        $eventScores = Eventscore::where('event_id', $event->id)->get();
+        $eligibleScoreIds = $this->certificateEligibleScoreIdsForScores($eventScores, $category);
+
+        if ($eligibleScoreIds->isEmpty()) {
+            return response()->json([
+                'message' => 'There are no upgraded archers with certificates for this event.',
+            ], 422);
+        }
+
+        CertificateEmailBatch::where('user_id', Auth::id())
+            ->whereNull('dismissed_at')
+            ->whereIn('status', ['completed', 'failed'])
+            ->update(['dismissed_at' => now()]);
+
+        $batch = CertificateEmailBatch::create([
+            'user_id' => Auth::id(),
+            'event_id' => $event->id,
+            'status' => 'queued',
+            'total' => $eligibleScoreIds->count(),
+            'sent' => 0,
+            'failed' => 0,
+            'event_score_ids' => $eligibleScoreIds->values()->all(),
+            'errors' => [],
+        ]);
+
+        SendCertificateEmailBatch::dispatch($batch->id);
+
+        return response()->json($this->batchPayload($batch));
+    }
+
+    public function certificateEmailBatchStatus(CertificateEmailBatch $batch)
+    {
+        abort_unless((int) $batch->user_id === (int) Auth::id(), 403);
+
+        return response()->json($this->batchPayload($batch->fresh()));
+    }
+
+    public function currentCertificateEmailBatch()
+    {
+        $batch = CertificateEmailBatch::where('user_id', Auth::id())
+            ->whereNull('dismissed_at')
+            ->whereIn('status', ['queued', 'processing', 'completed', 'failed'])
             ->latest()
             ->first();
 
-        abort_unless(
-            $this->isUpgradedForCertificate($eventScore, $grading, $category),
-            403,
-            'Certificate is only available after the archer has been upgraded.'
-        );
+        return response()->json($this->batchPayload($batch));
+    }
 
-        $archer = Archer::find($eventScore->archer_id);
-        $templatePath = resource_path('certificates/qf-archery-certificate-detailed-template.pdf');
+    public function dismissCertificateEmailBatch(CertificateEmailBatch $batch)
+    {
+        abort_unless((int) $batch->user_id === (int) Auth::id(), 403);
 
-        abort_unless(file_exists($templatePath), 404, 'Certificate template PDF was not found.');
+        $batch->update(['dismissed_at' => now()]);
 
-        $fullName = trim((string) ($grading->name ?? ''));
-
-        if ($archer) {
-            $fullName = trim("{$archer->name} {$archer->surname}");
-        }
-
-        $data = [
-            'name' => $fullName !== '' ? $fullName : 'Unknown Archer',
-            'grading' => $grading->gradingfor,
-            'score' => $eventScore->totalScore,
-            'certificateDate' => $event->doe
-                ? Carbon::parse($event->doe)->format('d M Y')
-                : now()->format('d M Y'),
-        ];
-
-        $filename = 'grading-certificate-' . Str::slug($data['name'] . '-' . $data['grading']) . '.pdf';
-        $pdf = app(CertificatePdfStamper::class)->stamp($templatePath, $data);
-
-        return response($pdf, 200, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
-        ]);
+        return response()->json(['dismissed' => true]);
     }
 
 

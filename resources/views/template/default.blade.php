@@ -13,6 +13,7 @@
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
 
     <title>Achery</title>
 
@@ -196,6 +197,190 @@
     <script  src="{!! asset('assets/js/tables-datatables-basic.js') !!}"></script>
 
     <!-- Page JS -->
+    <script>
+      (function () {
+        let certificateEmailTimer = null;
+        const currentBatchUrl = "{{ route('certificate-email-batches.current') }}";
+        const statusUrlTemplate = "{{ route('certificate-email-batches.show', ['batch' => '__BATCH__']) }}";
+        const dismissUrlTemplate = "{{ route('certificate-email-batches.dismiss', ['batch' => '__BATCH__']) }}";
+
+        function csrfToken() {
+          return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+        }
+
+        function progressHtml(batch) {
+          const total = Number(batch.total || 0);
+          const sent = Number(batch.sent || 0);
+          const failed = Number(batch.failed || 0);
+          const processed = Number(batch.processed || sent + failed);
+          const percentage = Number(batch.percentage || 0);
+
+          return `
+            <style>
+              @keyframes certificateMailFly {
+                0% { transform: translateX(-18px) translateY(8px) scale(.84); opacity: 0; }
+                20% { opacity: 1; }
+                70% { opacity: 1; }
+                100% { transform: translateX(238px) translateY(-8px) scale(1.08); opacity: 0; }
+              }
+              @keyframes certificatePulse {
+                0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(14,165,233,.32); }
+                50% { transform: scale(1.04); box-shadow: 0 0 0 8px rgba(14,165,233,0); }
+              }
+              @keyframes certificateStripe {
+                from { background-position: 0 0; }
+                to { background-position: 36px 0; }
+              }
+            </style>
+            <div style="text-align:left; min-width:280px;">
+              <div style="position:relative; height:52px; margin-bottom:10px; border-radius:14px; background:linear-gradient(135deg,#eff6ff,#f0fdf4); overflow:hidden;">
+                <div style="position:absolute; left:14px; top:12px; width:32px; height:32px; border-radius:50%; background:#ffffff; color:#0ea5e9; display:flex; align-items:center; justify-content:center; animation:certificatePulse 1.5s ease-in-out infinite;">
+                  <i class="fa fa-envelope"></i>
+                </div>
+                <i class="fa fa-paper-plane" style="position:absolute; left:54px; top:17px; color:#16a34a; animation:certificateMailFly 1.65s linear infinite;"></i>
+                <i class="fa fa-paper-plane" style="position:absolute; left:54px; top:17px; color:#0ea5e9; animation:certificateMailFly 1.65s linear .45s infinite;"></i>
+                <i class="fa fa-paper-plane" style="position:absolute; left:54px; top:17px; color:#22c55e; animation:certificateMailFly 1.65s linear .9s infinite;"></i>
+                <div style="position:absolute; right:14px; top:13px; color:#25324b; font-weight:800;">Sending...</div>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <div>
+                  <div style="font-weight:700; color:#25324b;">Sending emails to archers</div>
+                  <div style="font-size:13px; color:#64748b;">Certificates processed: ${processed} of ${total}</div>
+                </div>
+                <div style="font-weight:800; color:#16a34a;">${percentage}%</div>
+              </div>
+              <div style="height:14px; background:#eef2f7; border-radius:999px; overflow:hidden; box-shadow:inset 0 1px 2px rgba(15,23,42,.08);">
+                <div style="width:${percentage}%; height:100%; background:linear-gradient(90deg,#0ea5e9,#22c55e), repeating-linear-gradient(45deg,rgba(255,255,255,.28) 0 8px,rgba(255,255,255,0) 8px 16px); background-size:auto,36px 36px; border-radius:999px; transition:width .35s ease; animation:certificateStripe 1s linear infinite;"></div>
+              </div>
+              <div style="display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;">
+                <span style="padding:6px 10px; border-radius:999px; background:#dcfce7; color:#166534; font-weight:700; animation:certificatePulse 1.8s ease-in-out infinite;">Sent: ${sent}</span>
+                <span style="padding:6px 10px; border-radius:999px; background:#fee2e2; color:#991b1b; font-weight:700;">Failed: ${failed}</span>
+                <span style="padding:6px 10px; border-radius:999px; background:#e0f2fe; color:#075985; font-weight:700;">Total: ${total}</span>
+              </div>
+            </div>
+          `;
+        }
+
+        function showProgress(batch) {
+          if (!Swal.isVisible()) {
+            Swal.fire({
+              title: 'Certificate emails',
+              html: progressHtml(batch),
+              icon: 'info',
+              showConfirmButton: false,
+              allowOutsideClick: false,
+              didOpen: () => Swal.showLoading()
+            });
+
+            return;
+          }
+
+          Swal.update({
+            title: 'Certificate emails',
+            html: progressHtml(batch),
+            icon: 'info',
+            showConfirmButton: false
+          });
+        }
+
+        async function dismissBatch(batchId) {
+          await fetch(dismissUrlTemplate.replace('__BATCH__', batchId), {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'X-CSRF-TOKEN': csrfToken()
+            }
+          });
+        }
+
+        async function showFinished(batch) {
+          clearInterval(certificateEmailTimer);
+          certificateEmailTimer = null;
+
+          try {
+            await dismissBatch(batch.id);
+          } catch (error) {
+            console.error('Certificate email batch could not be dismissed.', error);
+          }
+
+          const failed = Number(batch.failed || 0);
+          const sent = Number(batch.sent || 0);
+          const total = Number(batch.total || 0);
+
+          Swal.fire({
+            title: failed > 0 ? 'Certificates sent with notes' : 'All certificates sent',
+            html: `
+              <div style="text-align:center;">
+                <div style="font-size:34px; font-weight:800; color:${failed > 0 ? '#d97706' : '#16a34a'}; margin-bottom:8px;">
+                  ${sent} / ${total}
+                </div>
+                <div>${sent} certificate email${sent === 1 ? '' : 's'} sent successfully.</div>
+                ${failed > 0 ? `<div style="margin-top:8px; color:#b45309;">${failed} could not be sent. Check archer email addresses or mail delivery settings.</div>` : ''}
+              </div>
+            `,
+            icon: failed > 0 ? 'warning' : 'success',
+            confirmButtonText: 'Done'
+          });
+        }
+
+        async function pollCertificateEmailBatch(batchId) {
+          const response = await fetch(statusUrlTemplate.replace('__BATCH__', batchId), {
+            headers: { 'Accept': 'application/json' }
+          });
+          const payload = await response.json();
+          const batch = payload.batch;
+
+          if (!batch) {
+            clearInterval(certificateEmailTimer);
+            certificateEmailTimer = null;
+            return;
+          }
+
+          if (batch.status === 'completed' || batch.status === 'failed') {
+            await showFinished(batch);
+            return;
+          }
+
+          showProgress(batch);
+        }
+
+        window.startCertificateEmailTracker = function (batchId, batch) {
+          if (certificateEmailTimer) {
+            clearInterval(certificateEmailTimer);
+          }
+
+          if (batch) {
+            showProgress(batch);
+          }
+
+          pollCertificateEmailBatch(batchId);
+          certificateEmailTimer = setInterval(() => pollCertificateEmailBatch(batchId), 3000);
+        };
+
+        document.addEventListener('DOMContentLoaded', async function () {
+          try {
+            const response = await fetch(currentBatchUrl, {
+              headers: { 'Accept': 'application/json' }
+            });
+            const payload = await response.json();
+            const batch = payload.batch;
+
+            if (!batch) {
+              return;
+            }
+
+            if (batch.status === 'completed' || batch.status === 'failed') {
+              await showFinished(batch);
+              return;
+            }
+
+            window.startCertificateEmailTracker(batch.id, batch);
+          } catch (error) {
+            console.error('Certificate email tracker failed to start.', error);
+          }
+        });
+      })();
+    </script>
     @stack('scripts')
   </body>
 </html>

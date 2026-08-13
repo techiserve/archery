@@ -3,6 +3,21 @@
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
   @php $certificateEligibleScoreIds = $certificateEligibleScoreIds ?? collect(); @endphp
+  @php $allCertificateEligibleScoreIds = $allCertificateEligibleScoreIds ?? collect(); @endphp
+
+  @if(session('success'))
+    <div class="alert alert-success alert-dismissible" role="alert">
+      {{ session('success') }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  @endif
+
+  @if(session('error'))
+    <div class="alert alert-danger alert-dismissible" role="alert">
+      {{ session('error') }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  @endif
 
   <div class="card">
 
@@ -23,6 +38,18 @@
             Super summary
           </a>
         </div>
+
+        @if($allCertificateEligibleScoreIds->isNotEmpty())
+          <button
+            type="button"
+            id="send-all-certificates"
+            class="btn btn-success btn-sm ms-2"
+            data-url="{{ route('events.certificates.email-all', $event->id) }}"
+            data-total="{{ $allCertificateEligibleScoreIds->count() }}">
+            <span class="fa fa-envelope"></span>
+            Send All Certificates ({{ $allCertificateEligibleScoreIds->count() }})
+          </button>
+        @endif
       </div>
     </div>
 
@@ -161,6 +188,14 @@
                         <span class="fa fa-download"></span>
                         Certificate
                       </a>
+
+                      <form method="POST" action="{{ route('archer.certificate.email', $archer->id) }}" class="d-inline">
+                        @csrf
+                        <button type="submit" class="btn btn-secondary btn-sm">
+                          <span class="fa fa-envelope"></span>
+                          Send Email
+                        </button>
+                      </form>
                     @endif
                   </td>
                 </tr>
@@ -278,6 +313,88 @@ function handleRowClick(event, archerId) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+  const sendAllButton = document.getElementById('send-all-certificates');
+
+  if (sendAllButton) {
+    sendAllButton.addEventListener('click', async function () {
+      const total = Number(sendAllButton.dataset.total || 0);
+      const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+      sendAllButton.disabled = true;
+
+      Swal.fire({
+        title: 'Sending certificates',
+        html: `
+          <style>
+            @keyframes certificateStartFly {
+              0% { transform: translateX(-12px) translateY(7px) scale(.85); opacity: 0; }
+              20% { opacity: 1; }
+              75% { opacity: 1; }
+              100% { transform: translateX(210px) translateY(-7px) scale(1.06); opacity: 0; }
+            }
+            @keyframes certificateStartPulse {
+              0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(34,197,94,.32); }
+              50% { transform: scale(1.04); box-shadow: 0 0 0 8px rgba(34,197,94,0); }
+            }
+            @keyframes certificateStartStripe {
+              from { background-position: 0 0; }
+              to { background-position: 36px 0; }
+            }
+          </style>
+          <div style="text-align:left;">
+            <div style="position:relative; height:52px; margin-bottom:12px; border-radius:14px; background:linear-gradient(135deg,#eff6ff,#f0fdf4); overflow:hidden;">
+              <div style="position:absolute; left:14px; top:12px; width:32px; height:32px; border-radius:50%; background:#ffffff; color:#16a34a; display:flex; align-items:center; justify-content:center; animation:certificateStartPulse 1.4s ease-in-out infinite;">
+                <i class="fa fa-envelope"></i>
+              </div>
+              <i class="fa fa-paper-plane" style="position:absolute; left:54px; top:17px; color:#16a34a; animation:certificateStartFly 1.6s linear infinite;"></i>
+              <i class="fa fa-paper-plane" style="position:absolute; left:54px; top:17px; color:#0ea5e9; animation:certificateStartFly 1.6s linear .45s infinite;"></i>
+              <i class="fa fa-paper-plane" style="position:absolute; left:54px; top:17px; color:#22c55e; animation:certificateStartFly 1.6s linear .9s infinite;"></i>
+              <div style="position:absolute; right:14px; top:13px; color:#25324b; font-weight:800;">Starting...</div>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+              <span>Preparing certificate emails...</span>
+              <strong>0 / ${total}</strong>
+            </div>
+            <div style="height:12px; background:#eef2f7; border-radius:999px; overflow:hidden;">
+              <div style="width:35%; height:100%; background:linear-gradient(90deg,#0ea5e9,#22c55e), repeating-linear-gradient(45deg,rgba(255,255,255,.3) 0 8px,rgba(255,255,255,0) 8px 16px); background-size:auto,36px 36px; border-radius:999px; animation:certificateStartStripe 1s linear infinite;"></div>
+            </div>
+          </div>
+        `,
+        icon: 'info',
+        showConfirmButton: false,
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading()
+      });
+
+      try {
+        const response = await fetch(sendAllButton.dataset.url, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': token
+          }
+        });
+        const payload = await response.json();
+
+        if (!response.ok) {
+          throw new Error(payload.message || 'The certificate email batch could not be started.');
+        }
+
+        if (window.startCertificateEmailTracker) {
+          window.startCertificateEmailTracker(payload.batch.id, payload.batch);
+        }
+      } catch (error) {
+        Swal.fire({
+          title: 'Email batch not started',
+          text: error.message,
+          icon: 'error'
+        });
+      } finally {
+        sendAllButton.disabled = false;
+      }
+    });
+  }
+
   $('#archers-table').DataTable({
     responsive: true,
     pageLength: 10,

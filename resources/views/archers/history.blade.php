@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
+@php $certificateEventScoreIdsByGradingId = $certificateEventScoreIdsByGradingId ?? collect(); @endphp
 <div class="card mb-6">
              
             
@@ -34,6 +35,7 @@
                 <tbody>
                     @foreach ($all as $pple )  
                     @php $event = $events->firstWhere('id', $pple->event); @endphp
+                    @php $certificateEventScoreId = $certificateEventScoreIdsByGradingId->get((string) $pple->id); @endphp
                     <tr>
 
                         <td>{{ $pple->name }}</td>
@@ -42,10 +44,27 @@
                         <td>{{ $pple->ageCategory }}</td>
                         <td>{{ $pple->currentGrading }}</td>
                         <td>{{ $pple->gradingfor }}</td>
-                        <td>     <a  href="/historydetails/{{$pple->id}}" class='btn btn-success btn-sm' style='color: white;'>
-                      <span class='fa fa-pencil'></span>
-                      <span class='hidden-sm hidden-sm hidden-md'>View More</span>
-                   </a>&nbsp;</td>
+                        <td>
+                          <a href="/historydetails/{{$pple->id}}" class="btn btn-success btn-sm" style="color: white;">
+                            <span class="fa fa-pencil"></span>
+                            <span class="hidden-sm hidden-sm hidden-md">View More</span>
+                          </a>
+
+                          @if($certificateEventScoreId)
+                            <a href="{{ route('archer.certificate', $certificateEventScoreId) }}" class="btn btn-warning btn-sm">
+                              <span class="fa fa-download"></span>
+                              Certificate
+                            </a>
+
+                            <form method="POST" action="{{ route('archer.certificate.email', $certificateEventScoreId) }}" class="d-inline">
+                              @csrf
+                              <button type="submit" class="btn btn-secondary btn-sm">
+                                <span class="fa fa-envelope"></span>
+                                Send Email
+                              </button>
+                            </form>
+                          @endif
+                        </td>
                  
                     </tr>
                     @endforeach

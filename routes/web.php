@@ -64,6 +64,10 @@ Route::get('/archers/index', [AcheryController::class, 'index'])->name('achers.i
 Route::get('/viewmore/{id}', [AcheryController::class, 'viewmore'])->name('viewmore');
 Route::get('/archer/edit/{id}', [AcheryController::class, 'edit'])->name('archer.edit');
 Route::get('/archer/certificate/{id}', [GradingController::class, 'certificate'])->name('archer.certificate');
+Route::post('/archer/certificate/{id}/email', [GradingController::class, 'emailCertificate'])->name('archer.certificate.email');
+Route::get('/certificate-email-batches/current', [GradingController::class, 'currentCertificateEmailBatch'])->name('certificate-email-batches.current');
+Route::get('/certificate-email-batches/{batch}', [GradingController::class, 'certificateEmailBatchStatus'])->name('certificate-email-batches.show');
+Route::post('/certificate-email-batches/{batch}/dismiss', [GradingController::class, 'dismissCertificateEmailBatch'])->name('certificate-email-batches.dismiss');
 Route::put('/archer/update/{id}', [AcheryController::class, 'update'])->name('archer.update');
 Route::get('/historydetails/{id}', [AcheryController::class, 'historydetails'])->name('historydetails');
 
@@ -84,6 +88,7 @@ Route::get('/events/create', [GradingController::class, 'createEvent'])->name('e
 Route::get('/events/manage', [GradingController::class, 'manage'])->name('events.manage');
 Route::get('/events/scoring', [GradingController::class, 'scoring'])->name('events.scoring');
 Route::get('/events/showEvent/{id}', [GradingController::class, 'showEvent'])->name('events.showEvent');
+Route::post('/events/{id}/certificates/email-all', [GradingController::class, 'emailEventCertificates'])->name('events.certificates.email-all');
 Route::get('/grading/download/{id}', [AcheryController::class, 'downloadGrading'])->name('grading.download');
 Route::get('/editeventCategory/{id}', [GradingController::class, 'editeventCategory'])->name('editeventCategory');
 Route::get('/editevent/{id}', [GradingController::class, 'editevent'])->name('editevent');

@@ -115,8 +115,32 @@ public function index(Request $request)
     {
        $all = Archergrading::where('archer_id', $id)->get();
        $events = Event::all();
+       $eventIds = $all->pluck('event')->filter()->unique()->values();
+       $eventScores = Eventscore::where('archer_id', $id)
+          ->whereIn('event_id', $eventIds)
+          ->get()
+          ->keyBy(fn ($eventScore) => (string) $eventScore->event_id);
+       $categories = Eventcategory::whereIn('id', $events->whereIn('id', $eventIds)->pluck('cat')->filter()->unique())
+          ->get()
+          ->keyBy(fn ($category) => (string) $category->id);
+       $certificateEventScoreIdsByGradingId = collect();
+       $certificates = app(GradingController::class);
 
-       return view('archers.history', compact('all','events'));
+       foreach ($all as $grading) {
+          $event = $events->firstWhere('id', $grading->event);
+          $eventScore = $eventScores->get((string) $grading->event);
+          $category = $event ? $categories->get((string) $event->cat) : null;
+
+          if (
+             $eventScore
+             && $certificates->isCertificateEvent($category)
+             && $certificates->isUpgradedForCertificate($eventScore, $grading, $category)
+          ) {
+             $certificateEventScoreIdsByGradingId->put((string) $grading->id, $eventScore->id);
+          }
+       }
+
+       return view('archers.history', compact('all','events', 'certificateEventScoreIdsByGradingId'));
 
     }
 
