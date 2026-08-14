@@ -1022,8 +1022,15 @@ class GradingController extends Controller
     {
         $eventScore = Eventscore::findOrFail($id);
         $certificate = $this->buildCertificate($eventScore);
-        $recipient = 'vincentmhokore@gmail.com';
+        $recipient = trim((string) ($certificate['archer']?->email ?? ''));
         $data = $certificate['data'];
+
+        if (!filter_var($recipient, FILTER_VALIDATE_EMAIL)) {
+            return redirect()
+                ->back()
+                ->with('error', 'Certificate email could not be sent because this archer does not have a valid email address.');
+        }
+
         $body = '<p>Good day,</p>'
             . '<p>Please find attached the grading certificate for <strong>' . e($data['name']) . '</strong>.</p>'
             . '<p>Grading: ' . e($data['grading']) . '<br>'
