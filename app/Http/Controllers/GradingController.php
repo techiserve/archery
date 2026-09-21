@@ -21,6 +21,7 @@ use App\Models\Eventscore;
 use App\Models\Scorecard;
 use App\Models\CertificateEmailBatch;
 use App\Jobs\SendCertificateEmailBatch;
+use App\Services\CertificateEmailTracker;
 use App\Services\CertificatePdfStamper;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -1018,14 +1019,18 @@ class GradingController extends Controller
         ]);
     }
 
-    public function emailCertificate(string $id)
+    public function emailCertificate(string $id, CertificateEmailTracker $emailTracker)
     {
         $eventScore = Eventscore::findOrFail($id);
         $certificate = $this->buildCertificate($eventScore);
         $recipient = trim((string) ($certificate['archer']?->email ?? ''));
         $data = $certificate['data'];
 
+        $emailTracker->start($eventScore, $recipient);
+
         if (!filter_var($recipient, FILTER_VALIDATE_EMAIL)) {
+            $emailTracker->failed($eventScore, 'Missing or invalid email address.');
+
             return redirect()
                 ->back()
                 ->with('error', 'Certificate email could not be sent because this archer does not have a valid email address.');
@@ -1046,17 +1051,21 @@ class GradingController extends Controller
                     ]);
             });
         } catch (\Throwable $exception) {
+            $emailTracker->failed($eventScore, $exception->getMessage());
+
             return redirect()
                 ->back()
                 ->with('error', 'Certificate email could not be sent: ' . $exception->getMessage());
         }
+
+        $emailTracker->sent($eventScore);
 
         return redirect()
             ->back()
             ->with('success', 'Certificate email sent to ' . $recipient . '.');
     }
 
-    public function emailEventCertificates(string $id)
+    public function emailEventCertificates(string $id, CertificateEmailTracker $emailTracker)
     {
         $event = Event::findOrFail($id);
         $category = Eventcategory::find($event->cat);
@@ -1087,6 +1096,17 @@ class GradingController extends Controller
             'event_score_ids' => $eligibleScoreIds->values()->all(),
             'errors' => [],
         ]);
+
+        $eligibleScores = Eventscore::whereIn('id', $eligibleScoreIds)->get();
+        $recipientEmails = Archer::whereIn('id', $eligibleScores->pluck('archer_id')->filter()->unique())
+            ->pluck('email', 'id');
+
+        foreach ($eligibleScores as $eligibleScore) {
+            $emailTracker->queued(
+                $eligibleScore,
+                trim((string) $recipientEmails->get($eligibleScore->archer_id))
+            );
+        }
 
         SendCertificateEmailBatch::dispatch($batch->id);
 

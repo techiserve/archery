@@ -24,8 +24,20 @@ class Eventscore extends Model
         'totalScore',
         'createdBy',
         'updatedBy',
-        'status'
+        'status',
+        'certificate_email_status',
+        'certificate_email_address',
+        'certificate_email_attempts',
+        'certificate_email_last_attempted_at',
+        'certificate_email_sent_at',
+        'certificate_email_error',
        
+    ];
+
+    protected $casts = [
+        'certificate_email_attempts' => 'integer',
+        'certificate_email_last_attempted_at' => 'datetime',
+        'certificate_email_sent_at' => 'datetime',
     ];
 
 

@@ -3,6 +3,7 @@
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
 @php $certificateEventScoreIdsByGradingId = $certificateEventScoreIdsByGradingId ?? collect(); @endphp
+@php $certificateEventScoresByGradingId = $certificateEventScoresByGradingId ?? collect(); @endphp
 <div class="card mb-6">
              
             
@@ -36,6 +37,7 @@
                     @foreach ($all as $pple )  
                     @php $event = $events->firstWhere('id', $pple->event); @endphp
                     @php $certificateEventScoreId = $certificateEventScoreIdsByGradingId->get((string) $pple->id); @endphp
+                    @php $certificateEventScore = $certificateEventScoresByGradingId->get((string) $pple->id); @endphp
                     <tr>
 
                         <td>{{ $pple->name }}</td>
@@ -63,6 +65,8 @@
                                 Send Email
                               </button>
                             </form>
+
+                            <x-certificate-email-status :event-score="$certificateEventScore" />
                           @endif
                         </td>
                  

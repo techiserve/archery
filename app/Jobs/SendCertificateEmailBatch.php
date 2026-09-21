@@ -3,8 +3,10 @@
 namespace App\Jobs;
 
 use App\Http\Controllers\GradingController;
+use App\Models\Archer;
 use App\Models\CertificateEmailBatch;
 use App\Models\Eventscore;
+use App\Services\CertificateEmailTracker;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -26,7 +28,7 @@ class SendCertificateEmailBatch implements ShouldQueue
     {
     }
 
-    public function handle(GradingController $certificates): void
+    public function handle(GradingController $certificates, CertificateEmailTracker $emailTracker): void
     {
         $batch = CertificateEmailBatch::find($this->batchId);
 
@@ -40,7 +42,7 @@ class SendCertificateEmailBatch implements ShouldQueue
         ]);
 
         foreach ($batch->event_score_ids ?? [] as $eventScoreId) {
-            $this->sendOne($batch->fresh(), $certificates, (int) $eventScoreId);
+            $this->sendOne($batch->fresh(), $certificates, $emailTracker, (int) $eventScoreId);
         }
 
         $batch->fresh()->update([
@@ -49,13 +51,21 @@ class SendCertificateEmailBatch implements ShouldQueue
         ]);
     }
 
-    private function sendOne(CertificateEmailBatch $batch, GradingController $certificates, int $eventScoreId): void
+    private function sendOne(
+        CertificateEmailBatch $batch,
+        GradingController $certificates,
+        CertificateEmailTracker $emailTracker,
+        int $eventScoreId
+    ): void
     {
+        $eventScore = null;
+
         try {
             $eventScore = Eventscore::findOrFail($eventScoreId);
+            $recipient = trim((string) Archer::where('id', $eventScore->archer_id)->value('email'));
+            $emailTracker->start($eventScore, $recipient);
+
             $certificate = $certificates->buildCertificate($eventScore);
-            $archer = $certificate['archer'];
-            $recipient = trim((string) ($archer?->email ?? ''));
 
             if (!filter_var($recipient, FILTER_VALIDATE_EMAIL)) {
                 throw new \RuntimeException('Missing or invalid email address.');
@@ -76,8 +86,13 @@ class SendCertificateEmailBatch implements ShouldQueue
                     ]);
             });
 
+            $emailTracker->sent($eventScore);
             $batch->increment('sent');
         } catch (Throwable $exception) {
+            if ($eventScore) {
+                $emailTracker->failed($eventScore, $exception->getMessage());
+            }
+
             $this->recordFailure($batch, $eventScoreId, $exception->getMessage());
         }
     }

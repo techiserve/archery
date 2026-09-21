@@ -196,6 +196,8 @@
                           Send Email
                         </button>
                       </form>
+
+                      <x-certificate-email-status :event-score="$archer" />
                     @endif
                   </td>
                 </tr>

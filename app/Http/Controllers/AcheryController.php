@@ -124,6 +124,7 @@ public function index(Request $request)
           ->get()
           ->keyBy(fn ($category) => (string) $category->id);
        $certificateEventScoreIdsByGradingId = collect();
+       $certificateEventScoresByGradingId = collect();
        $certificates = app(GradingController::class);
 
        foreach ($all as $grading) {
@@ -137,10 +138,16 @@ public function index(Request $request)
              && $certificates->isUpgradedForCertificate($eventScore, $grading, $category)
           ) {
              $certificateEventScoreIdsByGradingId->put((string) $grading->id, $eventScore->id);
+             $certificateEventScoresByGradingId->put((string) $grading->id, $eventScore);
           }
        }
 
-       return view('archers.history', compact('all','events', 'certificateEventScoreIdsByGradingId'));
+       return view('archers.history', compact(
+          'all',
+          'events',
+          'certificateEventScoreIdsByGradingId',
+          'certificateEventScoresByGradingId'
+       ));
 
     }
 
