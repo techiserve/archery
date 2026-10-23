@@ -208,6 +208,10 @@
           return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
         }
 
+        function updateCertificateEmailRows(batch) {
+          document.dispatchEvent(new CustomEvent('certificate-email-batch-updated', { detail: batch }));
+        }
+
         function progressHtml(batch) {
           const total = Number(batch.total || 0);
           const sent = Number(batch.sent || 0);
@@ -336,6 +340,8 @@
             return;
           }
 
+          updateCertificateEmailRows(batch);
+
           if (batch.status === 'completed' || batch.status === 'failed') {
             await showFinished(batch);
             return;
@@ -350,6 +356,7 @@
           }
 
           if (batch) {
+            updateCertificateEmailRows(batch);
             showProgress(batch);
           }
 
@@ -368,6 +375,8 @@
             if (!batch) {
               return;
             }
+
+            updateCertificateEmailRows(batch);
 
             if (batch.status === 'completed' || batch.status === 'failed') {
               await showFinished(batch);

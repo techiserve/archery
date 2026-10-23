@@ -4,6 +4,7 @@
 <div class="container-xxl flex-grow-1 container-p-y">
   @php $certificateEligibleScoreIds = $certificateEligibleScoreIds ?? collect(); @endphp
   @php $allCertificateEligibleScoreIds = $allCertificateEligibleScoreIds ?? collect(); @endphp
+  @php $showCertificateEmailStatus = $showCertificateEmailStatus ?? false; @endphp
 
   @if(session('success'))
     <div class="alert alert-success alert-dismissible" role="alert">
@@ -109,6 +110,9 @@
               <th>Grading For</th>
               <th>Current P/R</th>
               <th>Required P/R</th>
+              @if($showCertificateEmailStatus)
+                <th class="all certificate-email-column">Certificate Email</th>
+              @endif
               <th class="text-center">Action</th>
             </tr>
           </thead>
@@ -151,6 +155,16 @@
                   <td>{{ $pple->gradingfor }}</td>
                   <td>{{ round($archer->thumbring) }}</td>
                   <td>{{ round($archer->arrowinhand) }}</td>
+
+                  @if($showCertificateEmailStatus)
+                    <td class="certificate-email-status-cell" data-event-score-id="{{ $archer->id }}">
+                      @if($certificateEligibleScoreIds->contains((string) $archer->id))
+                        <x-certificate-email-status :event-score="$archer" />
+                      @else
+                        <span class="text-muted" title="This archer has no eligible certificate">&mdash;</span>
+                      @endif
+                    </td>
+                  @endif
 
                   <td class="text-center">
                     @if($archer->status == '1')
@@ -196,8 +210,6 @@
                           Send Email
                         </button>
                       </form>
-
-                      <x-certificate-email-status :event-score="$archer" />
                     @endif
                   </td>
                 </tr>
@@ -397,10 +409,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  $('#archers-table').DataTable({
+  const scoresTable = $('#archers-table').DataTable({
     responsive: true,
     pageLength: 10,
     ordering: false,
+    columnDefs: [{ targets: 1, responsivePriority: 1 }],
     dom:
       "<'row px-3 mb-3 align-items-center'<'col-md-6'B><'col-md-6 d-flex justify-content-end'f>>" +
       "<'row'<'col-md-12'tr>>" +
@@ -410,6 +423,30 @@ document.addEventListener("DOMContentLoaded", function () {
       search: "",
       searchPlaceholder: "Search event archers..."
     }
+  });
+
+  document.addEventListener('certificate-email-batch-updated', function (event) {
+    const batch = event.detail;
+
+    if (Number(batch.event_id) !== Number(@json($event->id))) return;
+
+    const statuses = new Map((batch.email_statuses || []).map(status => [
+      String(status.event_score_id), status.html.trim()
+    ]));
+    let changed = false;
+
+    scoresTable.rows().every(function () {
+      const cell = this.node().querySelector('.certificate-email-status-cell');
+      if (!cell) return;
+
+      const html = statuses.get(cell.dataset.eventScoreId);
+      if (html === undefined || cell.innerHTML.trim() === html) return;
+
+      scoresTable.cell(cell).data(html);
+      changed = true;
+    });
+
+    if (changed) scoresTable.draw(false);
   });
 });
 </script>

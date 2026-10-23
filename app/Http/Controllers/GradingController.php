@@ -199,6 +199,15 @@ class GradingController extends Controller
                 'processed' => $processed,
                 'percentage' => $total > 0 ? min(100, (int) floor(($processed / $total) * 100)) : 100,
                 'errors' => $batch->errors ?? [],
+                'email_statuses' => Eventscore::where('event_id', $batch->event_id)
+                    ->whereIn('id', $batch->event_score_ids ?? [])
+                    ->get()
+                    ->map(fn ($eventScore) => [
+                        'event_score_id' => $eventScore->id,
+                        'html' => view('components.certificate-email-status', compact('eventScore'))->render(),
+                    ])
+                    ->values()
+                    ->all(),
             ],
         ];
     }
@@ -297,6 +306,7 @@ class GradingController extends Controller
 
     $category = Eventcategory::where('id', $cat)->first();
     $catname = $category->name;
+    $showCertificateEmailStatus = $this->isCertificateEvent($category);
     $scores = MinScores::all();
     $certificateEligibleScoreIds = $this->certificateEligibleScoreIdsForScores($archers, $category);
     $allCertificateEligibleScoreIds = $this->certificateEligibleScoreIdsForScores(
@@ -314,7 +324,8 @@ class GradingController extends Controller
         'catname',
         'institutes',
         'certificateEligibleScoreIds',
-        'allCertificateEligibleScoreIds'
+        'allCertificateEligibleScoreIds',
+        'showCertificateEmailStatus'
     ));
 }
 

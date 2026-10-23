@@ -9,28 +9,28 @@
 @if($status === 'sent')
   <span
     class="badge bg-label-success ms-1"
-    title="Sent{{ $recipient ? ' to ' . $recipient : '' }}{{ $sentAt ? ' on ' . $sentAt->format('d M Y H:i') : '' }}">
+    title="Accepted by the mail server{{ $recipient ? ' for ' . $recipient : '' }}{{ $sentAt ? ' on ' . $sentAt->format('d M Y H:i') : '' }}">
     <span class="fa fa-check-circle"></span>
     Email sent
   </span>
 @elseif($status === 'failed')
   <span class="badge bg-label-danger ms-1" title="{{ $eventScore->certificate_email_error }}">
     <span class="fa fa-exclamation-circle"></span>
-    Email failed
+    Failed to send
   </span>
 @elseif($status === 'queued')
-  <span class="badge bg-label-info ms-1">
+  <span class="badge bg-label-info ms-1" title="Queued for sending">
     <span class="fa fa-clock"></span>
-    Email queued
+    Not Sent (Queued)
   </span>
 @elseif($status === 'processing')
-  <span class="badge bg-label-info ms-1">
+  <span class="badge bg-label-info ms-1" title="Sending certificate email">
     <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-    Sending
+    Not Sent (Sending)
   </span>
 @else
   <span class="badge bg-label-secondary ms-1">
     <span class="fa fa-envelope-open"></span>
-    Not emailed
+    Not Sent
   </span>
 @endif
