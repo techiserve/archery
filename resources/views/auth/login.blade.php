@@ -149,7 +149,7 @@
             </form>
 
             <p class="text-center">
-            
+              <a href="{{ route('archer-registrations.create') }}">Register as an archer</a>
             </p>
           </div>
         </div>

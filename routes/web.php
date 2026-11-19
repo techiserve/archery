@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AcheryController;
 use App\Http\Controllers\GradingController;
+use App\Http\Controllers\ArcherRegistrationController;
 use App\Models\Archer;
 use App\Models\Event;
 use App\Models\Eventcategory;
@@ -11,6 +12,16 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return redirect()->route('login');
+});
+
+Route::get('/archer-registration', [ArcherRegistrationController::class, 'create'])->name('archer-registrations.create');
+Route::post('/archer-registration', [ArcherRegistrationController::class, 'store'])->middleware('throttle:6,1')->name('archer-registrations.store');
+Route::get('/archer-registration/complete', [ArcherRegistrationController::class, 'complete'])->name('archer-registrations.complete');
+
+Route::middleware(['auth', 'can:manage-archer-registrations'])->group(function () {
+    Route::get('/archer-registrations', [ArcherRegistrationController::class, 'index'])->name('archer-registrations.index');
+    Route::get('/archer-registrations/{registration}/edit', [ArcherRegistrationController::class, 'edit'])->name('archer-registrations.edit');
+    Route::put('/archer-registrations/{registration}', [ArcherRegistrationController::class, 'update'])->name('archer-registrations.update');
 });
 
 Route::get('/dashboard', function () {

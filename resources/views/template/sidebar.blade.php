@@ -91,6 +91,11 @@
                     <div data-i18n="Content navbar">Manage Archers</div>
                   </a>
                 </li>
+                <li class="menu-item">
+                  <a href="{{ route('archer-registrations.index') }}" class="menu-link">
+                    <div>Registrations</div>
+                  </a>
+                </li>
                 <!-- <li class="menu-item">
                   <a href="/archers/metadata" class="menu-link">
                     <div data-i18n="Content nav + Sidebar">Meta Data</div>

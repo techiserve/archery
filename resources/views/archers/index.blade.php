@@ -4,7 +4,14 @@
 <div class="container-xxl flex-grow-1 container-p-y">
 
     <div class="card">
-        <h5 class="card-header">All Archers</h5>
+        <div class="card-header d-flex flex-wrap align-items-center justify-content-between gap-2">
+            <h5 class="mb-0">All Archers</h5>
+            @can('manage-archer-registrations')
+                <a href="{{ route('archer-registrations.index') }}" class="btn btn-outline-primary btn-sm">
+                    <i class="icon-base bx bx-user-check me-2" aria-hidden="true"></i>Registrations
+                </a>
+            @endcan
+        </div>
 
         <div class="px-4 pb-3">
             <form method="GET" action="{{ url()->current() }}">
