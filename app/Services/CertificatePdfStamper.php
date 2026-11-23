@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Normalizer;
 use RuntimeException;
 
 class CertificatePdfStamper
@@ -28,10 +29,20 @@ class CertificatePdfStamper
 
         $streamObjectId = $size;
         $scriptFontObjectId = $streamObjectId + 1;
-        $newSize = $scriptFontObjectId + 1;
-        $stream = $this->buildOverlayStream($data);
+        $name = (string) ($data['name'] ?? '');
+        if (!mb_check_encoding($name, 'UTF-8')) {
+            throw new RuntimeException('The certificate name must be valid UTF-8.');
+        }
+        $data['name'] = Normalizer::normalize(str_replace(["\r", "\n"], ['', ' '], $name), Normalizer::FORM_C);
+        $unicodeFont = preg_match('/[^\x00-\x7F]/', $data['name']) ? new CertificateUnicodeFont($data['name']) : null;
+        $fontObjects = $unicodeFont?->objects($scriptFontObjectId + 1) ?? [];
+        $newSize = $scriptFontObjectId + 1 + count($fontObjects);
+        $stream = $this->buildOverlayStream($data, $unicodeFont);
         $updatedPage = $this->appendContentsReference($page['content'], $streamObjectId);
         $updatedPage = $this->appendFontResource($updatedPage, 'FScript', $scriptFontObjectId);
+        if ($unicodeFont !== null) {
+            $updatedPage = $this->appendFontResource($updatedPage, 'FUnicode', $scriptFontObjectId + 1);
+        }
 
         $output = $basePdf;
 
@@ -56,6 +67,11 @@ class CertificatePdfStamper
         $output .= $scriptFontObjectId . " 0 obj\n"
             . "<< /Type /Font /Subtype /Type1 /BaseFont /Times-Italic /Encoding /WinAnsiEncoding >>\n"
             . "endobj\n";
+
+        foreach ($fontObjects as $objectId => $content) {
+            $offsets[$objectId] = strlen($output);
+            $output .= $objectId . " 0 obj\n" . $content . "\nendobj\n";
+        }
 
         $xrefOffset = strlen($output);
         ksort($offsets);
@@ -141,20 +157,21 @@ class CertificatePdfStamper
         throw new RuntimeException('Certificate template page font resources were not found.');
     }
 
-    private function buildOverlayStream(array $data): string
+    private function buildOverlayStream(array $data, ?CertificateUnicodeFont $unicodeFont = null): string
     {
         $name = (string) ($data['name'] ?? '');
         $grading = (string) ($data['grading'] ?? '');
         $score = (string) ($data['score'] ?? '');
         $date = (string) ($data['certificateDate'] ?? '');
 
-        $nameFontSize = strlen($name) > 32 ? 16.4 : (strlen($name) > 24 ? 18.1 : 20.1);
+        $nameLength = mb_strlen($name, 'UTF-8');
+        $nameFontSize = $nameLength > 32 ? 16.4 : ($nameLength > 24 ? 18.1 : 20.1);
         $smallFontSize = 14.7;
         $dateFontSize = 11.9;
         $signatureFontSize = 13.5;
 
         $commands = ["q\n"];
-        $commands[] = $this->drawCenteredText($name, $nameFontSize, 421.0, $this->baselineFromTopMm(103.5, 7.1));
+        $commands[] = $this->drawCenteredText($name, $nameFontSize, 421.0, $this->baselineFromTopMm(103.5, 7.1), $unicodeFont);
         $commands[] = $this->drawInlineText($grading, $smallFontSize, $this->points(175), $this->baselineFromTopMm(132.7, 5.2), 56);
         $commands[] = $this->drawInlineText($score, $smallFontSize, $this->points(175), $this->baselineFromTopMm(143.3, 5.2), 48);
         $commands[] = $this->drawSignatureInlineText('A.Adamjee', $signatureFontSize, $this->points(20), $this->baselineFromTopMm(178.8, 4.2), 55, true);
@@ -165,10 +182,17 @@ class CertificatePdfStamper
         return implode('', $commands);
     }
 
-    private function drawCenteredText(string $text, float $fontSize, float $centerX, float $baselineY): string
+    private function drawCenteredText(string $text, float $fontSize, float $centerX, float $baselineY, ?CertificateUnicodeFont $unicodeFont = null): string
     {
-        $width = $this->estimatedTextWidth($text, $fontSize);
+        $width = $unicodeFont?->textWidth($fontSize) ?? $this->estimatedTextWidth($text, $fontSize);
         $x = $centerX - ($width / 2);
+
+        if ($unicodeFont !== null) {
+            return "0.024 0.114 0.239 rg\nBT\n"
+                . sprintf('/FUnicode %.3F Tf', $fontSize) . "\n"
+                . sprintf('1 0 0 1 %.3F %.3F Tm', $x, $baselineY) . "\n"
+                . $unicodeFont->encodedText() . " Tj\nET\n";
+        }
 
         return $this->textCommand($text, $fontSize, $x, $baselineY);
     }
@@ -222,12 +246,12 @@ class CertificatePdfStamper
 
     private function estimatedTextWidth(string $text, float $fontSize): float
     {
-        return strlen($text) * $fontSize * 0.54;
+        return mb_strlen($text, 'UTF-8') * $fontSize * 0.54;
     }
 
     private function estimatedSignatureTextWidth(string $text, float $fontSize): float
     {
-        return strlen($text) * $fontSize * 0.45;
+        return mb_strlen($text, 'UTF-8') * $fontSize * 0.45;
     }
 
     private function points(float $millimetres): float
