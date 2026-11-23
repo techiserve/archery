@@ -65,7 +65,7 @@
                         <tr><td><strong>Round Total</strong></td>
                             <td><input type='number' class='input-field' id='round_total' name='round_total' value='{{ $getData->first()->roundtotal ?? 0 }}' /></td></tr>
                         <tr><td><strong></strong></td>
-                            <td><input type='hidden' class='input-field' id='cum_total' name='cum_total' value='{{ $getData->first()->total - $getData->first()->roundtotal ?? 0 }}' /></td></tr>
+                            <td><input type='hidden' class='input-field' id='cum_total' name='cum_total' value='{{ $getData->first()->cumtotal ?? 0 }}' /></td></tr>
                         <tr><td><strong>Time</strong></td>
                             <td><input type='text' class='input-field' name='time' value='{{ $getData->first()->time ?? "" }}' /></td></tr>
                         <tr><td><strong>Total</strong></td>
@@ -83,15 +83,17 @@
         <button type="submit" class="btn btn-primary mt-3">Update Scores</button>
         <script>
            document.addEventListener('DOMContentLoaded', function () {
+        const previousCumulative = @json((int) $getData->first()->cumtotal - (int) $getData->first()->roundtotal);
+        const otherRoundsTotal = @json((int) $getData->first()->total - (int) $getData->first()->roundtotal);
         function updateTotals() {
             let total = 0;
             document.querySelectorAll('.arrow-score').forEach(select => {
                 total += parseInt(select.value) || 0;
             });
 
-            const cum = parseInt(document.getElementById('cum_total').value) || 0;
             document.getElementById('round_total').value = total;
-            document.getElementById('total').value = total + cum;
+            document.getElementById('cum_total').value = previousCumulative + total;
+            document.getElementById('total').value = otherRoundsTotal + total;
         }
 
         document.querySelectorAll('.arrow-score').forEach(select => {
